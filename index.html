@@ -258,28 +258,51 @@ async function loadVideos() {
   videos = data.map(v => ({ title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes }));
   document.getElementById('loading').style.display = 'none';
   render();
-}
-
 async function loadMajstori() {
-  const { data, error } = await supabaseClient
+  const { data: majstoriData, error: majstoriError } = await supabaseClient
     .from('majstor_profiles')
-    .select('user_id, category, rating, rating_count, profiles!inner(name, phone, city)');
+    .select('user_id, category, rating, rating_count');
 
-  if (error) { console.error(error); document.getElementById('majstori-loading').textContent = ''; return; }
+  if (majstoriError) {
+    console.error('Грешка majstor_profiles:', majstoriError);
+    document.getElementById('majstori-loading').textContent = 'Грешка при вчитување';
+    return;
+  }
 
-  majstori = data.map(m => ({
+  if (!majstoriData || majstoriData.length === 0) {
+    document.getElementById('majstori-loading').style.display = 'none';
+    document.getElementById('majstori-scroll').innerHTML = '<div class="loading" style="padding:20px;">Сè уште нема регистрирани мајстори</div>';
+    return;
+  }
+
+  const userIds = majstoriData.map(m => m.user_id);
+  const { data: profilesData, error: profilesError } = await supabaseClient
+    .from('profiles')
+    .select('id, name, phone, city')
+    .in('id', userIds);
+
+  if (profilesError) {
+    console.error('Грешка profiles:', profilesError);
+  }
+
+  const profilesMap = {};
+  (profilesData || []).forEach(p => { profilesMap[p.id] = p; });
+
+  majstori = majstoriData.map(m => ({
     userId: m.user_id,
     category: m.category,
     rating: m.rating || 0,
     ratingCount: m.rating_count || 0,
-    name: m.profiles?.name || 'Мајстор',
-    phone: m.profiles?.phone || '',
-    city: m.profiles?.city || ''
+    name: profilesMap[m.user_id]?.name || 'Мајстор',
+    phone: profilesMap[m.user_id]?.phone || '',
+    city: profilesMap[m.user_id]?.city || ''
   }));
 
   document.getElementById('majstori-loading').style.display = 'none';
   renderMajstori();
 }
+
+
 
 function renderMajstori() {
   const scroll = document.getElementById('majstori-scroll');
