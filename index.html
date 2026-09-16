@@ -30,10 +30,8 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .cat-btn.active { background: #ff6b35; border-color: #ff6b35; }
 
 .main-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 0 20px 40px; max-width: 1400px; margin: 0 auto; }
-
 .section-title { padding: 0 20px; margin-bottom: 20px; font-size: 22px; }
 
-/* МАЈСТОРИ */
 .majstori-list { background: #1a1a1a; border-radius: 12px; padding: 15px; max-height: 700px; overflow-y: auto; }
 .majstori-list h3 { color: #ff6b35; margin-bottom: 15px; font-size: 18px; }
 .majstor-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: #252525; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
@@ -45,7 +43,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .majstor-rating { color: #ffb84d; font-weight: 600; }
 .no-majstori { text-align: center; color: #666; padding: 20px; font-size: 13px; }
 
-/* ВИДЕА */
 .loading { text-align: center; color: #999; padding: 40px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
 .card { background: #1a1a1a; border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
@@ -65,7 +62,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 
 footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
-/* MODAL */
 .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .modal.open { display: flex; }
 .modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 450px; width: 100%; border: 1px solid #2a2a2a; margin: auto; }
@@ -89,21 +85,42 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .type-btn .icon { font-size: 30px; display: block; margin-bottom: 8px; }
 .type-btn .label { font-size: 14px; font-weight: 600; }
 
-/* VIDEO MODAL */
 .video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
 .video-modal.open { display: flex; }
 .video-modal-content { max-width: 900px; width: 100%; }
 .video-modal iframe { width: 100%; aspect-ratio: 16/9; border-radius: 12px; border: none; }
 .video-close { position: absolute; top: 20px; right: 20px; background: #ff6b35; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
 
-/* MAJSTOR PROFILE MODAL */
+/* MAJSTOR PROFILE */
 .majstor-profile { text-align: center; }
 .majstor-profile .big-avatar { width: 80px; height: 80px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; margin: 0 auto 15px; }
 .majstor-profile .big-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
 .majstor-profile .big-rating { color: #ffb84d; font-size: 18px; margin-bottom: 15px; }
-.majstor-profile .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2a2a2a; font-size: 14px; }
+.majstor-profile .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2a2a2a; font-size: 14px; text-align: left; }
 .majstor-profile .info-row span:first-child { color: #999; }
-.majstor-profile .info-row span:last-child { font-weight: 600; }
+.majstor-profile .info-row span:last-child { font-weight: 600; text-align: right; }
+
+/* RATING SECTION */
+.rating-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a2a2a; text-align: left; }
+.rating-section h4 { color: #ff6b35; margin-bottom: 12px; font-size: 16px; }
+.stars-input { display: flex; gap: 5px; font-size: 32px; margin-bottom: 12px; cursor: pointer; justify-content: center; }
+.star { color: #444; transition: color 0.15s; }
+.star:hover, .star.active { color: #ffb84d; }
+.rating-section textarea { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; margin-bottom: 10px; font-family: inherit; resize: vertical; min-height: 60px; }
+.rating-section button { width: 100%; padding: 12px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.rating-section button:hover { background: #e55a2b; }
+.rating-msg { padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 13px; display: none; }
+.rating-msg.success { background: #1a3a1a; color: #6bff6b; display: block; }
+.rating-msg.error { background: #3a1a1a; color: #ff6b6b; display: block; }
+
+.rating-list { margin-top: 20px; text-align: left; }
+.rating-list h4 { color: #ff6b35; margin-bottom: 10px; font-size: 15px; }
+.rating-item { padding: 10px; background: #252525; border-radius: 8px; margin-bottom: 8px; }
+.rating-item .stars { color: #ffb84d; margin-bottom: 5px; font-size: 14px; }
+.rating-item .comment { color: #ccc; font-size: 13px; }
+.rating-item .date { color: #666; font-size: 11px; margin-top: 5px; }
+.no-ratings { color: #666; font-size: 13px; text-align: center; padding: 15px; }
+.login-hint { text-align: center; color: #999; font-size: 13px; padding: 15px; background: #252525; border-radius: 8px; }
 
 @media (max-width: 768px) {
   .main-layout { grid-template-columns: 1fr; }
@@ -160,7 +177,6 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <p id="footer-text">© 2026 Мајстор.мк</p>
 </footer>
 
-<!-- MODAL ЛОГИРАЊЕ -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modal-title">🔨 Мајстор.мк</h2>
@@ -169,15 +185,11 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
       <button class="modal-tab" id="modal-tab-register" onclick="showModalTab('register')">Регистрација</button>
     </div>
     <div id="modal-msg" class="modal-msg"></div>
-
-    <!-- LOGIN -->
     <div id="modal-form-login">
       <input type="email" id="login-email" placeholder="Е-пошта">
       <input type="password" id="login-password" placeholder="Лозинка">
       <button onclick="handleLogin()" id="btn-modal-login">Најави се</button>
     </div>
-
-    <!-- REGISTER -->
     <div id="modal-form-register" class="hidden">
       <div id="type-choice">
         <div class="type-choice">
@@ -191,8 +203,6 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
           </button>
         </div>
       </div>
-
-      <!-- ФОРМА МАЈСТОР -->
       <div id="form-majstor" class="hidden">
         <input type="text" id="m-name" placeholder="Име">
         <input type="text" id="m-surname" placeholder="Презиме">
@@ -211,8 +221,6 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
         <button onclick="handleRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
-
-      <!-- ФОРМА ПОСЕТИТЕЛ -->
       <div id="form-posetitel" class="hidden">
         <input type="text" id="p-name" placeholder="Име">
         <input type="email" id="p-email" placeholder="Е-пошта">
@@ -220,12 +228,10 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
         <button onclick="handleRegisterPosetitel()" id="btn-reg-posetitel">Регистрирај се</button>
       </div>
     </div>
-
     <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;" id="btn-close-modal">Затвори</button>
   </div>
 </div>
 
-<!-- МАЈСТОР ПРОФИЛ -->
 <div class="modal" id="majstorModal">
   <div class="modal-content">
     <div id="majstor-profile-content"></div>
@@ -233,7 +239,6 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
-<!-- VIDEO MODAL -->
 <div class="video-modal" id="videoModal">
   <button class="video-close" onclick="closeVideo()">✕</button>
   <div class="video-modal-content">
@@ -253,6 +258,8 @@ let majstori = [];
 let currentLang = 'mk';
 let currentFilter = 'all';
 let selectedType = null;
+let currentUser = null;
+let selectedRating = 0;
 
 async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
@@ -286,6 +293,12 @@ const t = {
     modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација",
     labelMajstor: "Мајстор", labelPosetitel: "Посетител",
     btnClose: "Затвори", noMajstori: "Нема мајстори во оваа категорија",
+    rateTitle: "Оцени го мајсторот",
+    rateComment: "Коментар (опционо)...",
+    rateBtn: "Испрати оценка",
+    loginToRate: "Најави се за да оцениш",
+    reviews: "оценки",
+    noReviews: "Нема оценки сè уште",
     error: "Грешка: "
   },
   en: {
@@ -298,6 +311,12 @@ const t = {
     modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register",
     labelMajstor: "Master", labelPosetitel: "Visitor",
     btnClose: "Close", noMajstori: "No masters in this category",
+    rateTitle: "Rate this master",
+    rateComment: "Comment (optional)...",
+    rateBtn: "Submit rating",
+    loginToRate: "Log in to rate",
+    reviews: "reviews",
+    noReviews: "No reviews yet",
     error: "Error: "
   }
 };
@@ -346,21 +365,115 @@ function renderMajstori() {
   });
 }
 
-function showMajstor(id) {
+async function showMajstor(id) {
   const m = majstori.find(x => x.id === id);
   if (!m) return;
   const initial = (m.name || '?').charAt(0).toUpperCase();
+  selectedRating = 0;
+
   document.getElementById('majstor-profile-content').innerHTML = `
     <div class="majstor-profile">
       <div class="big-avatar">${initial}</div>
       <div class="big-name">${m.name || 'Мајстор'}</div>
-      <div class="big-rating">⭐ ${m.rating || 0} (${m.rating_count || 0} оценки)</div>
+      <div class="big-rating">⭐ ${m.rating || 0} (${m.rating_count || 0} ${t[currentLang].reviews})</div>
       <div class="info-row"><span>Категорија</span><span>${catNames[currentLang][m.category] || m.category}</span></div>
       <div class="info-row"><span>Телефон</span><span>${m.phone || '-'}</span></div>
       <div class="info-row"><span>Град</span><span>${m.city || '-'}</span></div>
       <div class="info-row"><span>Опис</span><span>${m.description || '-'}</span></div>
-    </div>`;
+    </div>
+    <div id="rating-content"></div>
+    <div id="ratings-list"></div>`;
+
   document.getElementById('majstorModal').classList.add('open');
+  loadRatings(id);
+}
+
+async function loadRatings(majstorId) {
+  const ratingContent = document.getElementById('rating-content');
+
+  if (currentUser) {
+    ratingContent.innerHTML = `
+      <div class="rating-section">
+        <h4>${t[currentLang].rateTitle}</h4>
+        <div class="stars-input" id="stars-input">
+          <span class="star" data-val="1">★</span>
+          <span class="star" data-val="2">★</span>
+          <span class="star" data-val="3">★</span>
+          <span class="star" data-val="4">★</span>
+          <span class="star" data-val="5">★</span>
+        </div>
+        <textarea id="rating-comment" placeholder="${t[currentLang].rateComment}"></textarea>
+        <button onclick="submitRating(${majstorId})">${t[currentLang].rateBtn}</button>
+        <div id="rating-msg" class="rating-msg"></div>
+      </div>`;
+    document.querySelectorAll('#stars-input .star').forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.val);
+        document.querySelectorAll('#stars-input .star').forEach(s => {
+          s.classList.toggle('active', parseInt(s.dataset.val) <= selectedRating);
+        });
+      });
+    });
+  } else {
+    ratingContent.innerHTML = `<div class="login-hint">${t[currentLang].loginToRate}</div>`;
+  }
+
+  const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).order('created_at', { ascending: false });
+  const listDiv = document.getElementById('ratings-list');
+  if (!data || data.length === 0) {
+    listDiv.innerHTML = `<div class="no-ratings">${t[currentLang].noReviews}</div>`;
+    return;
+  }
+  listDiv.innerHTML = '<div class="rating-list"><h4>⭐ ' + data.length + ' ' + t[currentLang].reviews + '</h4>' +
+    data.map(r => {
+      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      const date = new Date(r.created_at).toLocaleDateString();
+      return `<div class="rating-item">
+        <div class="stars">${stars}</div>
+        ${r.comment ? '<div class="comment">' + r.comment + '</div>' : ''}
+        <div class="date">${date}</div>
+      </div>`;
+    }).join('') + '</div>';
+}
+
+async function submitRating(majstorId) {
+  const msg = document.getElementById('rating-msg');
+  const comment = document.getElementById('rating-comment').value;
+
+  if (!selectedRating) {
+    msg.textContent = 'Избери ѕвезди';
+    msg.className = 'rating-msg error';
+    return;
+  }
+
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { msg.textContent = 'Не си најавен'; msg.className = 'rating-msg error'; return; }
+
+  const { error } = await supabaseClient.from('ratings').insert({
+    majstor_id: majstorId,
+    user_id: user.id,
+    rating: selectedRating,
+    comment: comment
+  });
+
+  if (error) {
+    msg.textContent = error.message;
+    msg.className = 'rating-msg error';
+    return;
+  }
+
+  // Recalculate average
+  const { data: allRatings } = await supabaseClient.from('ratings').select('rating').eq('majstor_id', majstorId);
+  if (allRatings && allRatings.length > 0) {
+    const avg = (allRatings.reduce((s, r) => s + r.rating, 0) / allRatings.length).toFixed(1);
+    await supabaseClient.from('majstor_profiles').update({ rating: parseFloat(avg), rating_count: allRatings.length }).eq('id', majstorId);
+  }
+
+  msg.textContent = '✅ Благодариме за оценката!';
+  msg.className = 'rating-msg success';
+
+  await loadMajstori();
+  setTimeout(() => { loadRatings(majstorId); }, 500);
 }
 
 function closeMajstorModal() { document.getElementById('majstorModal').classList.remove('open'); }
@@ -502,9 +615,11 @@ async function handleLogout() {
   await supabaseClient.auth.signOut();
   document.getElementById('auth-area').classList.remove('hidden');
   document.getElementById('user-area').classList.add('hidden');
+  currentUser = null;
 }
 
 function showLoggedIn(email) {
+  currentUser = email;
   document.getElementById('auth-area').classList.add('hidden');
   document.getElementById('user-area').classList.remove('hidden');
   document.getElementById('user-email-header').textContent = email;
