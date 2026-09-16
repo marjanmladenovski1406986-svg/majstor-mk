@@ -9,16 +9,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; }
 
-header {
-  background: #1a1a1a;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #2a2a2a;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 10px; }
 .logo { font-size: 20px; font-weight: 700; color: #ff6b35; cursor: pointer; }
 .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .lang-switch { display: flex; gap: 5px; }
@@ -38,9 +29,25 @@ header {
 .cat-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 10px 18px; border-radius: 25px; cursor: pointer; font-size: 14px; font-family: inherit; }
 .cat-btn.active { background: #ff6b35; border-color: #ff6b35; }
 
+.main-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 0 20px 40px; max-width: 1400px; margin: 0 auto; }
+
 .section-title { padding: 0 20px; margin-bottom: 20px; font-size: 22px; }
+
+/* МАЈСТОРИ */
+.majstori-list { background: #1a1a1a; border-radius: 12px; padding: 15px; max-height: 700px; overflow-y: auto; }
+.majstori-list h3 { color: #ff6b35; margin-bottom: 15px; font-size: 18px; }
+.majstor-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: #252525; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
+.majstor-card:hover { background: #2f2f2f; }
+.majstor-avatar { width: 45px; height: 45px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+.majstor-info { flex: 1; min-width: 0; }
+.majstor-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.majstor-meta { font-size: 12px; color: #999; display: flex; gap: 8px; align-items: center; }
+.majstor-rating { color: #ffb84d; font-weight: 600; }
+.no-majstori { text-align: center; color: #666; padding: 20px; font-size: 13px; }
+
+/* ВИДЕА */
 .loading { text-align: center; color: #999; padding: 40px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding: 0 20px 40px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
 .card { background: #1a1a1a; border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
 .card:hover { transform: translateY(-3px); }
 .thumb { width: 100%; aspect-ratio: 16/9; background: #2a2a2a; position: relative; overflow: hidden; }
@@ -58,14 +65,14 @@ header {
 
 footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
-/* MODAL ЛОГИРАЊЕ */
-.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+/* MODAL */
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .modal.open { display: flex; }
-.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 400px; width: 100%; border: 1px solid #2a2a2a; }
+.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 450px; width: 100%; border: 1px solid #2a2a2a; margin: auto; }
 .modal-content h2 { color: #ff6b35; text-align: center; margin-bottom: 20px; }
-.modal-content input { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 15px; margin-bottom: 12px; font-family: inherit; }
-.modal-content input:focus { outline: none; border-color: #ff6b35; }
-.modal-content button { width: 100%; padding: 14px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
+.modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 10px; font-family: inherit; }
+.modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { outline: none; border-color: #ff6b35; }
+.modal-content button { width: 100%; padding: 12px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 .modal-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
 .modal-tab { flex: 1; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #999; cursor: pointer; font-size: 14px; font-family: inherit; }
 .modal-tab.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
@@ -75,12 +82,33 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .modal-msg.info { background: #1a2a3a; color: #6bb8ff; display: block; }
 .hidden { display: none; }
 
-/* ВИДЕО МОДАЛ */
+.type-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.type-btn { padding: 20px 10px; background: #2a2a2a; border: 2px solid #333; border-radius: 12px; color: #fff; cursor: pointer; font-family: inherit; text-align: center; transition: all 0.2s; }
+.type-btn:hover { border-color: #ff6b35; }
+.type-btn.active { background: #3a2515; border-color: #ff6b35; }
+.type-btn .icon { font-size: 30px; display: block; margin-bottom: 8px; }
+.type-btn .label { font-size: 14px; font-weight: 600; }
+
+/* VIDEO MODAL */
 .video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
 .video-modal.open { display: flex; }
 .video-modal-content { max-width: 900px; width: 100%; }
 .video-modal iframe { width: 100%; aspect-ratio: 16/9; border-radius: 12px; border: none; }
 .video-close { position: absolute; top: 20px; right: 20px; background: #ff6b35; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+
+/* MAJSTOR PROFILE MODAL */
+.majstor-profile { text-align: center; }
+.majstor-profile .big-avatar { width: 80px; height: 80px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; margin: 0 auto 15px; }
+.majstor-profile .big-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.majstor-profile .big-rating { color: #ffb84d; font-size: 18px; margin-bottom: 15px; }
+.majstor-profile .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2a2a2a; font-size: 14px; }
+.majstor-profile .info-row span:first-child { color: #999; }
+.majstor-profile .info-row span:last-child { font-weight: 600; }
+
+@media (max-width: 768px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .majstori-list { max-height: none; }
+}
 </style>
 </head>
 <body>
@@ -116,9 +144,17 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <button class="cat-btn" data-cat="finalni" id="cat-finalni">🎨 Финални работи</button>
 </div>
 
-<h2 class="section-title" id="section-title">🔥 Најнови видеа</h2>
-<div class="loading" id="loading">Вчитувам видеа...</div>
-<div class="grid" id="grid"></div>
+<div class="main-layout">
+  <div class="majstori-list">
+    <h3 id="majstori-title">👷 Мајстори</h3>
+    <div id="majstori-grid"></div>
+  </div>
+  <div>
+    <h2 class="section-title" id="section-title">🔥 Најнови видеа</h2>
+    <div class="loading" id="loading">Вчитувам видеа...</div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
 
 <footer>
   <p id="footer-text">© 2026 Мајстор.мк</p>
@@ -133,17 +169,67 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
       <button class="modal-tab" id="modal-tab-register" onclick="showModalTab('register')">Регистрација</button>
     </div>
     <div id="modal-msg" class="modal-msg"></div>
+
+    <!-- LOGIN -->
     <div id="modal-form-login">
       <input type="email" id="login-email" placeholder="Е-пошта">
       <input type="password" id="login-password" placeholder="Лозинка">
       <button onclick="handleLogin()" id="btn-modal-login">Најави се</button>
     </div>
+
+    <!-- REGISTER -->
     <div id="modal-form-register" class="hidden">
-      <input type="email" id="register-email" placeholder="Е-пошта">
-      <input type="password" id="register-password" placeholder="Лозинка (мин. 6 знаци)">
-      <button onclick="handleRegister()" id="btn-modal-register">Регистрирај се</button>
+      <div id="type-choice">
+        <div class="type-choice">
+          <button class="type-btn" id="type-majstor" onclick="selectType('majstor')">
+            <span class="icon">👷</span>
+            <span class="label" id="label-majstor">Мајстор</span>
+          </button>
+          <button class="type-btn" id="type-posetitel" onclick="selectType('posetitel')">
+            <span class="icon">👤</span>
+            <span class="label" id="label-posetitel">Посетител</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ФОРМА МАЈСТОР -->
+      <div id="form-majstor" class="hidden">
+        <input type="text" id="m-name" placeholder="Име">
+        <input type="text" id="m-surname" placeholder="Презиме">
+        <input type="tel" id="m-phone" placeholder="Телефон">
+        <input type="text" id="m-city" placeholder="Град">
+        <select id="m-category">
+          <option value="">Избери категорија...</option>
+          <option value="elektrika">⚡ Електрика</option>
+          <option value="vodovod">💧 Водовод</option>
+          <option value="gradeznistvo">🏗️ Градежништво</option>
+          <option value="popravki">🔧 Поправки</option>
+          <option value="finalni">🎨 Финални работи</option>
+        </select>
+        <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
+        <input type="email" id="m-email" placeholder="Е-пошта">
+        <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
+        <button onclick="handleRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
+      </div>
+
+      <!-- ФОРМА ПОСЕТИТЕЛ -->
+      <div id="form-posetitel" class="hidden">
+        <input type="text" id="p-name" placeholder="Име">
+        <input type="email" id="p-email" placeholder="Е-пошта">
+        <input type="password" id="p-password" placeholder="Лозинка (мин. 6 знаци)">
+        <button onclick="handleRegisterPosetitel()" id="btn-reg-posetitel">Регистрирај се</button>
+      </div>
     </div>
-    <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;">Затвори</button>
+
+    <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;" id="btn-close-modal">Затвори</button>
+  </div>
+</div>
+
+<!-- МАЈСТОР ПРОФИЛ -->
+<div class="modal" id="majstorModal">
+  <div class="modal-content">
+    <div id="majstor-profile-content"></div>
+    <button onclick="closeMajstorModal()" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
   </div>
 </div>
 
@@ -163,30 +249,25 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let videos = [];
+let majstori = [];
+let currentLang = 'mk';
+let currentFilter = 'all';
+let selectedType = null;
 
 async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
-  const { data, error } = await supabaseClient
-    .from('videos')
-    .select('*')
-    .order('id', { ascending: false });
-
-  if (error) {
-    console.error('Грешка при вчитување:', error);
-    document.getElementById('loading').textContent = 'Грешка при вчитување видеа';
-    return;
-  }
-
-  videos = data.map(v => ({
-    title: v.title,
-    titleEn: v.title_en,
-    youtube: v.youtube_id,
-    cat: v.category,
-    likes: v.likes
-  }));
-
+  const { data, error } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
+  if (error) { console.error(error); return; }
+  videos = data.map(v => ({ title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes }));
   document.getElementById('loading').style.display = 'none';
-  render();
+  renderVideos();
+}
+
+async function loadMajstori() {
+  const { data, error } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
+  if (error) { console.error(error); return; }
+  majstori = data || [];
+  renderMajstori();
 }
 
 const catNames = {
@@ -197,47 +278,36 @@ const catNames = {
 const t = {
   mk: {
     logo: "Мајстор.мк", login: "Најава", logout: "Одјави се",
-    heroTitle: "Научи сам. Поправи сам. Или одбери си мајстор.",
+    heroTitle: "Научи сам. Поправи сам.<br>Или одбери си мајстор.",
     heroText: "Најдобрите видеа и мајстори се тука. Логирај се за да ги видиш.",
     all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
     popravki: "🔧 Поправки", finalni: "🎨 Финални работи",
-    latest: "🔥 Најнови видеа", footer: "© 2026 Мајстор.мк",
+    latest: "🔥 Најнови видеа", majstori: "👷 Мајстори", footer: "© 2026 Мајстор.мк",
     modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација",
-    email: "Е-пошта", password: "Лозинка", passwordMin: "Лозинка (мин. 6 знаци)",
-    btnLogin: "Најави се", btnRegister: "Регистрирај се",
-    enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!",
-    registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!",
-    passwordShort: "Лозинката мора да има најмалку 6 знаци", logoutSuccess: "Одјавен си",
+    labelMajstor: "Мајстор", labelPosetitel: "Посетител",
+    btnClose: "Затвори", noMajstori: "Нема мајстори во оваа категорија",
     error: "Грешка: "
   },
   en: {
     logo: "MasterHow", login: "Login", logout: "Sign out",
-    heroTitle: "Learn it. Fix it. Or choose a master.",
+    heroTitle: "Learn it. Fix it.<br>Or choose a master.",
     heroText: "The best videos and masters are here. Log in to see them.",
     all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction",
     popravki: "🔧 Repairs", finalni: "🎨 Finishing",
-    latest: "🔥 Latest Videos", footer: "© 2026 MasterHow",
+    latest: "🔥 Latest Videos", majstori: "👷 Masters", footer: "© 2026 MasterHow",
     modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register",
-    email: "Email", password: "Password", passwordMin: "Password (min. 6 chars)",
-    btnLogin: "Sign in", btnRegister: "Sign up",
-    enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!",
-    registering: "Registering...", registerSuccess: "Registration successful!",
-    passwordShort: "Password must be at least 6 characters", logoutSuccess: "Signed out",
+    labelMajstor: "Master", labelPosetitel: "Visitor",
+    btnClose: "Close", noMajstori: "No masters in this category",
     error: "Error: "
   }
 };
 
-let currentLang = 'mk';
-let currentFilter = 'all';
-
-function render() {
+function renderVideos() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  if (videos.length === 0) {
-    grid.innerHTML = '<div class="loading">Нема видеа</div>';
-    return;
-  }
-  videos.filter(v => currentFilter === "all" || v.cat === currentFilter).forEach(v => {
+  const filtered = videos.filter(v => currentFilter === "all" || v.cat === currentFilter);
+  if (filtered.length === 0) { grid.innerHTML = '<div class="loading">Нема видеа</div>'; return; }
+  filtered.forEach(v => {
     const title = currentLang === 'mk' ? v.title : (v.titleEn || v.title);
     const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
     grid.innerHTML += `
@@ -254,23 +324,61 @@ function render() {
   });
 }
 
+function renderMajstori() {
+  const grid = document.getElementById('majstori-grid');
+  grid.innerHTML = '';
+  const filtered = majstori.filter(m => currentFilter === "all" || m.category === currentFilter);
+  if (filtered.length === 0) { grid.innerHTML = `<div class="no-majstori">${t[currentLang].noMajstori}</div>`; return; }
+  filtered.forEach(m => {
+    const initial = (m.name || '?').charAt(0).toUpperCase();
+    const rating = m.rating ? `⭐ ${m.rating}` : '';
+    grid.innerHTML += `
+      <div class="majstor-card" onclick="showMajstor(${m.id})">
+        <div class="majstor-avatar">${initial}</div>
+        <div class="majstor-info">
+          <div class="majstor-name">${m.name || 'Мајстор'}</div>
+          <div class="majstor-meta">
+            <span>${catNames[currentLang][m.category] || m.category}</span>
+            <span class="majstor-rating">${rating}</span>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+function showMajstor(id) {
+  const m = majstori.find(x => x.id === id);
+  if (!m) return;
+  const initial = (m.name || '?').charAt(0).toUpperCase();
+  document.getElementById('majstor-profile-content').innerHTML = `
+    <div class="majstor-profile">
+      <div class="big-avatar">${initial}</div>
+      <div class="big-name">${m.name || 'Мајстор'}</div>
+      <div class="big-rating">⭐ ${m.rating || 0} (${m.rating_count || 0} оценки)</div>
+      <div class="info-row"><span>Категорија</span><span>${catNames[currentLang][m.category] || m.category}</span></div>
+      <div class="info-row"><span>Телефон</span><span>${m.phone || '-'}</span></div>
+      <div class="info-row"><span>Град</span><span>${m.city || '-'}</span></div>
+      <div class="info-row"><span>Опис</span><span>${m.description || '-'}</span></div>
+    </div>`;
+  document.getElementById('majstorModal').classList.add('open');
+}
+
+function closeMajstorModal() { document.getElementById('majstorModal').classList.remove('open'); }
+
 function openVideo(youtubeId) {
   document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
   document.getElementById('videoModal').classList.add('open');
 }
-
-function closeVideo() {
-  document.getElementById('videoFrame').src = '';
-  document.getElementById('videoModal').classList.remove('open');
-}
+function closeVideo() { document.getElementById('videoFrame').src = ''; document.getElementById('videoModal').classList.remove('open'); }
 
 function switchLang(lang) {
   currentLang = lang;
   const tr = t[lang];
   document.getElementById('logo-text').textContent = tr.logo;
-  document.getElementById('hero-title').textContent = tr.heroTitle;
+  document.getElementById('hero-title').innerHTML = tr.heroTitle;
   document.getElementById('hero-text').textContent = tr.heroText;
   document.getElementById('section-title').textContent = tr.latest;
+  document.getElementById('majstori-title').textContent = tr.majstori;
   document.getElementById('footer-text').textContent = tr.footer;
   document.getElementById('cat-all').textContent = tr.all;
   document.getElementById('cat-elektrika').textContent = tr.elektrika;
@@ -283,14 +391,12 @@ function switchLang(lang) {
   document.getElementById('modal-title').textContent = tr.modalTitle;
   document.getElementById('modal-tab-login').textContent = tr.tabLogin;
   document.getElementById('modal-tab-register').textContent = tr.tabRegister;
-  document.getElementById('login-email').placeholder = tr.email;
-  document.getElementById('login-password').placeholder = tr.password;
-  document.getElementById('register-email').placeholder = tr.email;
-  document.getElementById('register-password').placeholder = tr.passwordMin;
-  document.getElementById('btn-modal-login').textContent = tr.btnLogin;
-  document.getElementById('btn-modal-register').textContent = tr.btnRegister;
+  document.getElementById('label-majstor').textContent = tr.labelMajstor;
+  document.getElementById('label-posetitel').textContent = tr.labelPosetitel;
+  document.getElementById('btn-close-modal').textContent = tr.btnClose;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-  render();
+  renderVideos();
+  renderMajstori();
 }
 
 document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -298,7 +404,8 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentFilter = btn.dataset.cat;
-    render();
+    renderVideos();
+    renderMajstori();
   });
 });
 
@@ -310,6 +417,23 @@ function showModalTab(tab) {
   document.getElementById('modal-tab-register').classList.toggle('active', tab === 'register');
   document.getElementById('modal-form-login').classList.toggle('hidden', tab !== 'login');
   document.getElementById('modal-form-register').classList.toggle('hidden', tab !== 'register');
+  if (tab === 'register') { resetRegisterForm(); }
+}
+
+function resetRegisterForm() {
+  selectedType = null;
+  document.getElementById('type-majstor').classList.remove('active');
+  document.getElementById('type-posetitel').classList.remove('active');
+  document.getElementById('form-majstor').classList.add('hidden');
+  document.getElementById('form-posetitel').classList.add('hidden');
+}
+
+function selectType(type) {
+  selectedType = type;
+  document.getElementById('type-majstor').classList.toggle('active', type === 'majstor');
+  document.getElementById('type-posetitel').classList.toggle('active', type === 'posetitel');
+  document.getElementById('form-majstor').classList.toggle('hidden', type !== 'majstor');
+  document.getElementById('form-posetitel').classList.toggle('hidden', type !== 'posetitel');
 }
 
 function showModalMsg(text, type) {
@@ -319,28 +443,59 @@ function showModalMsg(text, type) {
 }
 
 async function handleLogin() {
-  const tr = t[currentLang];
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
-  if (!email || !password) { showModalMsg(tr.enterBoth, 'error'); return; }
-  showModalMsg(tr.loggingIn, 'info');
+  if (!email || !password) { showModalMsg('Внеси е-пошта и лозинка', 'error'); return; }
+  showModalMsg('Се најавувам...', 'info');
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
-  showModalMsg(tr.loginSuccess, 'success');
+  if (error) { showModalMsg('Грешка: ' + error.message, 'error'); return; }
+  showModalMsg('Успешно најавување!', 'success');
   setTimeout(() => { closeModal(); showLoggedIn(data.user.email); }, 800);
 }
 
-async function handleRegister() {
-  const tr = t[currentLang];
-  const email = document.getElementById('register-email').value;
-  const password = document.getElementById('register-password').value;
-  if (!email || !password) { showModalMsg(tr.enterBoth, 'error'); return; }
-  if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
-  showModalMsg(tr.registering, 'info');
+async function handleRegisterMajstor() {
+  const name = document.getElementById('m-name').value;
+  const surname = document.getElementById('m-surname').value;
+  const phone = document.getElementById('m-phone').value;
+  const city = document.getElementById('m-city').value;
+  const category = document.getElementById('m-category').value;
+  const description = document.getElementById('m-description').value;
+  const email = document.getElementById('m-email').value;
+  const password = document.getElementById('m-password').value;
+
+  if (!name || !email || !password || !category) { showModalMsg('Пополни име, е-пошта, лозинка и категорија', 'error'); return; }
+  if (password.length < 6) { showModalMsg('Лозинката мора да има најмалку 6 знаци', 'error'); return; }
+
+  showModalMsg('Се регистрирам...', 'info');
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
-  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
-  showModalMsg(tr.registerSuccess, 'success');
-  setTimeout(() => { closeModal(); showLoggedIn(data.user.email); }, 800);
+  if (error) { showModalMsg('Грешка: ' + error.message, 'error'); return; }
+
+  const userId = data.user.id;
+  const fullName = name + ' ' + surname;
+
+  await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city });
+  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0 });
+
+  showModalMsg('Успешна регистрација!', 'success');
+  setTimeout(() => { closeModal(); showLoggedIn(email); loadMajstori(); }, 800);
+}
+
+async function handleRegisterPosetitel() {
+  const name = document.getElementById('p-name').value;
+  const email = document.getElementById('p-email').value;
+  const password = document.getElementById('p-password').value;
+
+  if (!name || !email || !password) { showModalMsg('Пополни сите полиња', 'error'); return; }
+  if (password.length < 6) { showModalMsg('Лозинката мора да има најмалку 6 знаци', 'error'); return; }
+
+  showModalMsg('Се регистрирам...', 'info');
+  const { data, error } = await supabaseClient.auth.signUp({ email, password });
+  if (error) { showModalMsg('Грешка: ' + error.message, 'error'); return; }
+
+  await supabaseClient.from('profiles').insert({ id: data.user.id, user_type: 'popravam', name: name });
+
+  showModalMsg('Успешна регистрација!', 'success');
+  setTimeout(() => { closeModal(); showLoggedIn(email); }, 800);
 }
 
 async function handleLogout() {
@@ -362,6 +517,7 @@ async function checkUser() {
 
 checkUser();
 loadVideos();
+loadMajstori();
 </script>
 
 </body>
