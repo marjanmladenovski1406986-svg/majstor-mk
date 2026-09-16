@@ -9,16 +9,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; }
 
-header {
-  background: #1a1a1a;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #2a2a2a;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 10px; }
 .logo { font-size: 20px; font-weight: 700; color: #ff6b35; cursor: pointer; }
 .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .lang-switch { display: flex; gap: 5px; }
@@ -28,7 +19,6 @@ header {
 .user-email { color: #ff6b35; font-size: 13px; font-weight: 600; }
 .btn-auth { background: #ff6b35; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; font-family: inherit; }
 .btn-auth.logout { background: transparent; border: 1px solid #333; color: #999; }
-.btn-auth:hover { opacity: 0.9; }
 
 .hero { text-align: center; padding: 40px 20px 30px; }
 .hero h1 { font-size: 32px; margin-bottom: 15px; color: #ff6b35; }
@@ -58,13 +48,13 @@ header {
 
 footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
-/* MODAL ЛОГИРАЊЕ */
-.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+/* MODAL */
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .modal.open { display: flex; }
-.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 400px; width: 100%; border: 1px solid #2a2a2a; }
+.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 450px; width: 100%; border: 1px solid #2a2a2a; margin: auto; }
 .modal-content h2 { color: #ff6b35; text-align: center; margin-bottom: 20px; }
-.modal-content input { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 15px; margin-bottom: 12px; font-family: inherit; }
-.modal-content input:focus { outline: none; border-color: #ff6b35; }
+.modal-content input, .modal-content select { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 15px; margin-bottom: 12px; font-family: inherit; }
+.modal-content input:focus, .modal-content select:focus { outline: none; border-color: #ff6b35; }
 .modal-content button { width: 100%; padding: 14px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 .modal-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
 .modal-tab { flex: 1; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #999; cursor: pointer; font-size: 14px; font-family: inherit; }
@@ -75,7 +65,17 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .modal-msg.info { background: #1a2a3a; color: #6bb8ff; display: block; }
 .hidden { display: none; }
 
-/* ВИДЕО МОДАЛ */
+/* USER TYPE SELECTOR */
+.user-type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+.user-type-option { flex: 1; padding: 14px 10px; background: #2a2a2a; border: 2px solid #333; border-radius: 10px; cursor: pointer; text-align: center; font-size: 14px; transition: all 0.2s; }
+.user-type-option:hover { border-color: #555; }
+.user-type-option.active { border-color: #ff6b35; background: #3a1a1a; }
+.user-type-option input { display: none; }
+.majstor-fields { display: none; padding-top: 10px; border-top: 1px solid #2a2a2a; margin-top: 5px; }
+.majstor-fields.show { display: block; }
+.majstor-fields label { display: block; color: #999; font-size: 13px; margin-bottom: 5px; }
+
+/* VIDEO MODAL */
 .video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
 .video-modal.open { display: flex; }
 .video-modal-content { max-width: 900px; width: 100%; }
@@ -124,7 +124,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <p id="footer-text">© 2026 Мајстор.мк</p>
 </footer>
 
-<!-- MODAL ЛОГИРАЊЕ -->
+<!-- MODAL ЛОГИРАЊЕ / РЕГИСТРАЦИЈА -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modal-title">🔨 Мајстор.мк</h2>
@@ -133,16 +133,49 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
       <button class="modal-tab" id="modal-tab-register" onclick="showModalTab('register')">Регистрација</button>
     </div>
     <div id="modal-msg" class="modal-msg"></div>
+
+    <!-- LOGIN -->
     <div id="modal-form-login">
       <input type="email" id="login-email" placeholder="Е-пошта">
       <input type="password" id="login-password" placeholder="Лозинка">
       <button onclick="handleLogin()" id="btn-modal-login">Најави се</button>
     </div>
+
+    <!-- REGISTER -->
     <div id="modal-form-register" class="hidden">
+      <div class="user-type-selector">
+        <div class="user-type-option active" id="type-popravam" onclick="selectUserType('popravam')">
+          <input type="radio" name="userType" value="popravam" checked>
+          🔧 Поправам
+        </div>
+        <div class="user-type-option" id="type-majstor" onclick="selectUserType('majstor')">
+          <input type="radio" name="userType" value="majstor">
+          👷 Мајстор
+        </div>
+      </div>
+
       <input type="email" id="register-email" placeholder="Е-пошта">
       <input type="password" id="register-password" placeholder="Лозинка (мин. 6 знаци)">
+
+      <!-- Само за мајстори -->
+      <div id="majstor-fields" class="majstor-fields">
+        <label>Податоци за мајстор:</label>
+        <input type="text" id="register-name" placeholder="Име и презиме">
+        <input type="tel" id="register-phone" placeholder="Телефон (пр. 070 123 456)">
+        <input type="text" id="register-city" placeholder="Град">
+        <select id="register-category">
+          <option value="">Избери категорија...</option>
+          <option value="elektrika">⚡ Електрика</option>
+          <option value="vodovod">💧 Водовод</option>
+          <option value="gradeznistvo">🏗️ Градежништво</option>
+          <option value="popravki">🔧 Поправки</option>
+          <option value="finalni">🎨 Финални работи</option>
+        </select>
+      </div>
+
       <button onclick="handleRegister()" id="btn-modal-register">Регистрирај се</button>
     </div>
+
     <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;">Затвори</button>
   </div>
 </div>
@@ -163,28 +196,13 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let videos = [];
+let currentUserType = 'popravam';
 
 async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
-  const { data, error } = await supabaseClient
-    .from('videos')
-    .select('*')
-    .order('id', { ascending: false });
-
-  if (error) {
-    console.error('Грешка при вчитување:', error);
-    document.getElementById('loading').textContent = 'Грешка при вчитување видеа';
-    return;
-  }
-
-  videos = data.map(v => ({
-    title: v.title,
-    titleEn: v.title_en,
-    youtube: v.youtube_id,
-    cat: v.category,
-    likes: v.likes
-  }));
-
+  const { data, error } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
+  if (error) { console.error(error); document.getElementById('loading').textContent = 'Грешка'; return; }
+  videos = data.map(v => ({ title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes }));
   document.getElementById('loading').style.display = 'none';
   render();
 }
@@ -195,36 +213,8 @@ const catNames = {
 };
 
 const t = {
-  mk: {
-    logo: "Мајстор.мк", login: "Најава", logout: "Одјави се",
-    heroTitle: "Научи сам. Поправи сам. Или одбери си мајстор.",
-    heroText: "Најдобрите видеа и мајстори се тука. Логирај се за да ги видиш.",
-    all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
-    popravki: "🔧 Поправки", finalni: "🎨 Финални работи",
-    latest: "🔥 Најнови видеа", footer: "© 2026 Мајстор.мк",
-    modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација",
-    email: "Е-пошта", password: "Лозинка", passwordMin: "Лозинка (мин. 6 знаци)",
-    btnLogin: "Најави се", btnRegister: "Регистрирај се",
-    enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!",
-    registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!",
-    passwordShort: "Лозинката мора да има најмалку 6 знаци", logoutSuccess: "Одјавен си",
-    error: "Грешка: "
-  },
-  en: {
-    logo: "MasterHow", login: "Login", logout: "Sign out",
-    heroTitle: "Learn it. Fix it. Or choose a master.",
-    heroText: "The best videos and masters are here. Log in to see them.",
-    all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction",
-    popravki: "🔧 Repairs", finalni: "🎨 Finishing",
-    latest: "🔥 Latest Videos", footer: "© 2026 MasterHow",
-    modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register",
-    email: "Email", password: "Password", passwordMin: "Password (min. 6 chars)",
-    btnLogin: "Sign in", btnRegister: "Sign up",
-    enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!",
-    registering: "Registering...", registerSuccess: "Registration successful!",
-    passwordShort: "Password must be at least 6 characters", logoutSuccess: "Signed out",
-    error: "Error: "
-  }
+  mk: { logo: "Мајстор.мк", login: "Најава", logout: "Одјави се", heroTitle: "Научи сам. Поправи сам.<br>Или одбери си мајстор.", heroText: "Најдобрите видеа и мајстори се тука. Логирај се за да ги видиш.", all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво", popravki: "🔧 Поправки", finalni: "🎨 Финални работи", latest: "🔥 Најнови видеа", footer: "© 2026 Мајстор.мк", modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација", email: "Е-пошта", password: "Лозинка", passwordMin: "Лозинка (мин. 6 знаци)", btnLogin: "Најави се", btnRegister: "Регистрирај се", enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!", registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!", passwordShort: "Лозинката мора да има најмалку 6 знаци", logoutSuccess: "Одјавен си", error: "Грешка: " },
+  en: { logo: "MasterHow", login: "Login", logout: "Sign out", heroTitle: "Learn it. Fix it. Or choose a master.", heroText: "The best videos and masters are here. Log in to see them.", all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction", popravki: "🔧 Repairs", finalni: "🎨 Finishing", latest: "🔥 Latest Videos", footer: "© 2026 MasterHow", modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register", email: "Email", password: "Password", passwordMin: "Password (min. 6 chars)", btnLogin: "Sign in", btnRegister: "Sign up", enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!", registering: "Registering...", registerSuccess: "Registration successful!", passwordShort: "Password must be at least 6 characters", logoutSuccess: "Signed out", error: "Error: " }
 };
 
 let currentLang = 'mk';
@@ -233,42 +223,22 @@ let currentFilter = 'all';
 function render() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  if (videos.length === 0) {
-    grid.innerHTML = '<div class="loading">Нема видеа</div>';
-    return;
-  }
+  if (videos.length === 0) { grid.innerHTML = '<div class="loading">Нема видеа</div>'; return; }
   videos.filter(v => currentFilter === "all" || v.cat === currentFilter).forEach(v => {
     const title = currentLang === 'mk' ? v.title : (v.titleEn || v.title);
     const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
-    grid.innerHTML += `
-      <div class="card" onclick="openVideo('${v.youtube}')">
-        <div class="thumb"><img src="${thumbUrl}" alt="${title}"></div>
-        <div class="card-body">
-          <div class="card-title">${title}</div>
-          <div class="card-meta">
-            <span class="cat-tag ${v.cat}">${catNames[currentLang][v.cat] || v.cat}</span>
-            <span>❤️ ${v.likes}</span>
-          </div>
-        </div>
-      </div>`;
+    grid.innerHTML += `<div class="card" onclick="openVideo('${v.youtube}')"><div class="thumb"><img src="${thumbUrl}" alt="${title}"></div><div class="card-body"><div class="card-title">${title}</div><div class="card-meta"><span class="cat-tag ${v.cat}">${catNames[currentLang][v.cat] || v.cat}</span><span>❤️ ${v.likes}</span></div></div></div>`;
   });
 }
 
-function openVideo(youtubeId) {
-  document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
-  document.getElementById('videoModal').classList.add('open');
-}
-
-function closeVideo() {
-  document.getElementById('videoFrame').src = '';
-  document.getElementById('videoModal').classList.remove('open');
-}
+function openVideo(id) { document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`; document.getElementById('videoModal').classList.add('open'); }
+function closeVideo() { document.getElementById('videoFrame').src = ''; document.getElementById('videoModal').classList.remove('open'); }
 
 function switchLang(lang) {
   currentLang = lang;
   const tr = t[lang];
   document.getElementById('logo-text').textContent = tr.logo;
-  document.getElementById('hero-title').textContent = tr.heroTitle;
+  document.getElementById('hero-title').innerHTML = tr.heroTitle;
   document.getElementById('hero-text').textContent = tr.heroText;
   document.getElementById('section-title').textContent = tr.latest;
   document.getElementById('footer-text').textContent = tr.footer;
@@ -312,6 +282,13 @@ function showModalTab(tab) {
   document.getElementById('modal-form-register').classList.toggle('hidden', tab !== 'register');
 }
 
+function selectUserType(type) {
+  currentUserType = type;
+  document.getElementById('type-popravam').classList.toggle('active', type === 'popravam');
+  document.getElementById('type-majstor').classList.toggle('active', type === 'majstor');
+  document.getElementById('majstor-fields').classList.toggle('show', type === 'majstor');
+}
+
 function showModalMsg(text, type) {
   const msg = document.getElementById('modal-msg');
   msg.textContent = text;
@@ -334,11 +311,46 @@ async function handleRegister() {
   const tr = t[currentLang];
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
+
   if (!email || !password) { showModalMsg(tr.enterBoth, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
+
+  let majstorData = null;
+  if (currentUserType === 'majstor') {
+    const name = document.getElementById('register-name').value;
+    const phone = document.getElementById('register-phone').value;
+    const city = document.getElementById('register-city').value;
+    const category = document.getElementById('register-category').value;
+    if (!name || !phone || !city || !category) { showModalMsg('Пополни ги сите полиња за мајстор', 'error'); return; }
+    majstorData = { name, phone, city, category };
+  }
+
   showModalMsg(tr.registering, 'info');
+
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
   if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
+  if (!data.user) { showModalMsg('Грешка при регистрација', 'error'); return; }
+
+  const userId = data.user.id;
+
+  // Внеси во profiles
+  await supabaseClient.from('profiles').insert({
+    id: userId,
+    user_type: currentUserType,
+    name: majstorData ? majstorData.name : null,
+    phone: majstorData ? majstorData.phone : null,
+    city: majstorData ? majstorData.city : null
+  });
+
+  // Ако е мајстор, внеси во majstor_profiles
+  if (currentUserType === 'majstor' && majstorData) {
+    await supabaseClient.from('majstor_profiles').insert({
+      user_id: userId,
+      category: majstorData.category,
+      description: ''
+    });
+  }
+
   showModalMsg(tr.registerSuccess, 'success');
   setTimeout(() => { closeModal(); showLoggedIn(data.user.email); }, 800);
 }
