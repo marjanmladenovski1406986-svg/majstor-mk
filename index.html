@@ -58,6 +58,7 @@ header {
 
 footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
+/* MODAL ЛОГИРАЊЕ */
 .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .modal.open { display: flex; }
 .modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 400px; width: 100%; border: 1px solid #2a2a2a; }
@@ -74,6 +75,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .modal-msg.info { background: #1a2a3a; color: #6bb8ff; display: block; }
 .hidden { display: none; }
 
+/* ВИДЕО МОДАЛ */
 .video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
 .video-modal.open { display: flex; }
 .video-modal-content { max-width: 900px; width: 100%; }
@@ -122,6 +124,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <p id="footer-text">© 2026 Мајстор.мк</p>
 </footer>
 
+<!-- MODAL ЛОГИРАЊЕ -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modal-title">🔨 Мајстор.мк</h2>
@@ -144,6 +147,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
+<!-- VIDEO MODAL -->
 <div class="video-modal" id="videoModal">
   <button class="video-close" onclick="closeVideo()">✕</button>
   <div class="video-modal-content">
@@ -264,7 +268,7 @@ function switchLang(lang) {
   currentLang = lang;
   const tr = t[lang];
   document.getElementById('logo-text').textContent = tr.logo;
-  document.getElementById('hero-title').innerHTML = tr.heroTitle;
+  document.getElementById('hero-title').textContent = tr.heroTitle;
   document.getElementById('hero-text').textContent = tr.heroText;
   document.getElementById('section-title').textContent = tr.latest;
   document.getElementById('footer-text').textContent = tr.footer;
