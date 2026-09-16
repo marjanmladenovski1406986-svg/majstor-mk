@@ -9,7 +9,16 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; }
 
-header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 10px; }
+header {
+  background: #1a1a1a;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #2a2a2a;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .logo { font-size: 20px; font-weight: 700; color: #ff6b35; cursor: pointer; }
 .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .lang-switch { display: flex; gap: 5px; }
@@ -19,6 +28,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .user-email { color: #ff6b35; font-size: 13px; font-weight: 600; }
 .btn-auth { background: #ff6b35; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; font-family: inherit; }
 .btn-auth.logout { background: transparent; border: 1px solid #333; color: #999; }
+.btn-auth:hover { opacity: 0.9; }
 
 .hero { text-align: center; padding: 40px 20px 30px; }
 .hero h1 { font-size: 32px; margin-bottom: 15px; color: #ff6b35; }
@@ -30,21 +40,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 
 .section-title { padding: 0 20px; margin-bottom: 20px; font-size: 22px; }
 .loading { text-align: center; color: #999; padding: 40px; }
-
-/* МАЈСТОРИ */
-.majstori-section { padding: 0 0 30px 0; }
-.majstori-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 0 20px 15px 20px; }
-.majstori-scroll::-webkit-scrollbar { height: 6px; }
-.majstori-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-.majstor-card { flex: 0 0 auto; width: 140px; background: #1a1a1a; border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: transform 0.2s; border: 1px solid #2a2a2a; }
-.majstor-card:hover { transform: translateY(-3px); border-color: #ff6b35; }
-.majstor-photo { width: 60px; height: 60px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 10px; overflow: hidden; }
-.majstor-photo img { width: 100%; height: 100%; object-fit: cover; }
-.majstor-name { font-size: 13px; font-weight: 600; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.majstor-cat { font-size: 11px; color: #999; margin-bottom: 5px; }
-.majstor-rating { font-size: 12px; color: #ffb84d; }
-
-/* ВИДЕА */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding: 0 20px 40px; }
 .card { background: #1a1a1a; border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
 .card:hover { transform: translateY(-3px); }
@@ -63,13 +58,12 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 
 footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
-/* MODAL */
-.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .modal.open { display: flex; }
-.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 450px; width: 100%; border: 1px solid #2a2a2a; margin: auto; }
+.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 400px; width: 100%; border: 1px solid #2a2a2a; }
 .modal-content h2 { color: #ff6b35; text-align: center; margin-bottom: 20px; }
-.modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 15px; margin-bottom: 12px; font-family: inherit; }
-.modal-content input:focus, .modal-content select:focus { outline: none; border-color: #ff6b35; }
+.modal-content input { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 15px; margin-bottom: 12px; font-family: inherit; }
+.modal-content input:focus { outline: none; border-color: #ff6b35; }
 .modal-content button { width: 100%; padding: 14px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 .modal-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
 .modal-tab { flex: 1; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #999; cursor: pointer; font-size: 14px; font-family: inherit; }
@@ -80,33 +74,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .modal-msg.info { background: #1a2a3a; color: #6bb8ff; display: block; }
 .hidden { display: none; }
 
-.user-type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-.user-type-option { flex: 1; padding: 14px 10px; background: #2a2a2a; border: 2px solid #333; border-radius: 10px; cursor: pointer; text-align: center; font-size: 14px; }
-.user-type-option.active { border-color: #ff6b35; background: #3a1a1a; }
-.user-type-option input { display: none; }
-.majstor-fields { display: none; padding-top: 10px; border-top: 1px solid #2a2a2a; margin-top: 5px; }
-.majstor-fields.show { display: block; }
-.majstor-fields label { display: block; color: #999; font-size: 13px; margin-bottom: 5px; }
-
-/* МАЈСТОР ПРОФИЛ МОДАЛ */
-.majstor-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 1001; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
-.majstor-modal.open { display: flex; }
-.majstor-modal-content { background: #1a1a1a; border-radius: 16px; max-width: 600px; width: 100%; border: 1px solid #2a2a2a; margin: 20px auto; overflow: hidden; }
-.majstor-profile-header { padding: 30px; text-align: center; border-bottom: 1px solid #2a2a2a; }
-.majstor-profile-photo { width: 100px; height: 100px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 45px; margin: 0 auto 15px; overflow: hidden; }
-.majstor-profile-photo img { width: 100%; height: 100%; object-fit: cover; }
-.majstor-profile-name { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
-.majstor-profile-cat { color: #ff6b35; font-size: 14px; margin-bottom: 10px; }
-.majstor-profile-rating { font-size: 18px; color: #ffb84d; margin-bottom: 15px; }
-.majstor-profile-info { color: #999; font-size: 14px; line-height: 1.8; }
-.majstor-tabs { display: flex; border-bottom: 1px solid #2a2a2a; }
-.majstor-tab { flex: 1; padding: 15px; background: transparent; border: none; color: #999; cursor: pointer; font-size: 14px; font-family: inherit; border-bottom: 2px solid transparent; }
-.majstor-tab.active { color: #ff6b35; border-bottom-color: #ff6b35; }
-.majstor-tab-content { padding: 20px; min-height: 150px; }
-.majstor-close { position: absolute; top: 20px; right: 20px; background: #ff6b35; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 10; }
-
-/* VIDEO MODAL */
-.video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1002; align-items: center; justify-content: center; padding: 20px; }
+.video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
 .video-modal.open { display: flex; }
 .video-modal-content { max-width: 900px; width: 100%; }
 .video-modal iframe { width: 100%; aspect-ratio: 16/9; border-radius: 12px; border: none; }
@@ -146,13 +114,6 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <button class="cat-btn" data-cat="finalni" id="cat-finalni">🎨 Финални работи</button>
 </div>
 
-<!-- МАЈСТОРИ СЕКЦИЈА -->
-<section class="majstori-section">
-  <h2 class="section-title">👷 <span id="majstori-title">Мајстори</span></h2>
-  <div class="loading" id="majstori-loading">Вчитувам мајстори...</div>
-  <div class="majstori-scroll" id="majstori-scroll"></div>
-</section>
-
 <h2 class="section-title" id="section-title">🔥 Најнови видеа</h2>
 <div class="loading" id="loading">Вчитувам видеа...</div>
 <div class="grid" id="grid"></div>
@@ -161,7 +122,6 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <p id="footer-text">© 2026 Мајстор.мк</p>
 </footer>
 
-<!-- MODAL ЛОГИРАЊЕ -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modal-title">🔨 Мајстор.мк</h2>
@@ -170,66 +130,20 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
       <button class="modal-tab" id="modal-tab-register" onclick="showModalTab('register')">Регистрација</button>
     </div>
     <div id="modal-msg" class="modal-msg"></div>
-
     <div id="modal-form-login">
       <input type="email" id="login-email" placeholder="Е-пошта">
       <input type="password" id="login-password" placeholder="Лозинка">
       <button onclick="handleLogin()" id="btn-modal-login">Најави се</button>
     </div>
-
     <div id="modal-form-register" class="hidden">
-      <div class="user-type-selector">
-        <div class="user-type-option active" id="type-popravam" onclick="selectUserType('popravam')">
-          <input type="radio" name="userType" value="popravam" checked>
-          🔧 Поправам
-        </div>
-        <div class="user-type-option" id="type-majstor" onclick="selectUserType('majstor')">
-          <input type="radio" name="userType" value="majstor">
-          👷 Мајстор
-        </div>
-      </div>
       <input type="email" id="register-email" placeholder="Е-пошта">
       <input type="password" id="register-password" placeholder="Лозинка (мин. 6 знаци)">
-      <div id="majstor-fields" class="majstor-fields">
-        <label>Податоци за мајстор:</label>
-        <input type="text" id="register-name" placeholder="Име и презиме">
-        <input type="tel" id="register-phone" placeholder="Телефон (пр. 070 123 456)">
-        <input type="text" id="register-city" placeholder="Град">
-        <select id="register-category">
-          <option value="">Избери категорија...</option>
-          <option value="elektrika">⚡ Електрика</option>
-          <option value="vodovod">💧 Водовод</option>
-          <option value="gradeznistvo">🏗️ Градежништво</option>
-          <option value="popravki">🔧 Поправки</option>
-          <option value="finalni">🎨 Финални работи</option>
-        </select>
-      </div>
       <button onclick="handleRegister()" id="btn-modal-register">Регистрирај се</button>
     </div>
     <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;">Затвори</button>
   </div>
 </div>
 
-<!-- МАЈСТОР ПРОФИЛ МОДАЛ -->
-<div class="majstor-modal" id="majstorModal">
-  <button class="majstor-close" onclick="closeMajstor()">✕</button>
-  <div class="majstor-modal-content">
-    <div class="majstor-profile-header">
-      <div class="majstor-profile-photo" id="mp-photo">👷</div>
-      <div class="majstor-profile-name" id="mp-name">-</div>
-      <div class="majstor-profile-cat" id="mp-cat">-</div>
-      <div class="majstor-profile-rating" id="mp-rating">⭐ 0 (0)</div>
-      <div class="majstor-profile-info" id="mp-info"></div>
-    </div>
-    <div class="majstor-tabs">
-      <button class="majstor-tab active" onclick="showMajstorTab('videos')" id="mpt-videos">🎬 Видеа</button>
-      <button class="majstor-tab" onclick="showMajstorTab('images')" id="mpt-images">🖼️ Слики</button>
-    </div>
-    <div class="majstor-tab-content" id="mp-content">Нема содржина</div>
-  </div>
-</div>
-
-<!-- VIDEO MODAL -->
 <div class="video-modal" id="videoModal">
   <button class="video-close" onclick="closeVideo()">✕</button>
   <div class="video-modal-content">
@@ -245,104 +159,30 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let videos = [];
-let majstori = [];
-let currentUserType = 'popravam';
-let currentLang = 'mk';
-let currentFilter = 'all';
-let currentMajstor = null;
 
 async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
-  const { data, error } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
-  if (error) { document.getElementById('loading').textContent = 'Грешка'; return; }
-  videos = data.map(v => ({ title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes }));
-  document.getElementById('loading').style.display = 'none';
-  render();
-async function loadMajstori() {
-  const { data: majstoriData, error: majstoriError } = await supabaseClient
-    .from('majstor_profiles')
-    .select('user_id, category, rating, rating_count');
+  const { data, error } = await supabaseClient
+    .from('videos')
+    .select('*')
+    .order('id', { ascending: false });
 
-  if (majstoriError) {
-    console.error('Грешка majstor_profiles:', majstoriError);
-    document.getElementById('majstori-loading').textContent = 'Грешка при вчитување';
+  if (error) {
+    console.error('Грешка при вчитување:', error);
+    document.getElementById('loading').textContent = 'Грешка при вчитување видеа';
     return;
   }
 
-  if (!majstoriData || majstoriData.length === 0) {
-    document.getElementById('majstori-loading').style.display = 'none';
-    document.getElementById('majstori-scroll').innerHTML = '<div class="loading" style="padding:20px;">Сè уште нема регистрирани мајстори</div>';
-    return;
-  }
-
-  const userIds = majstoriData.map(m => m.user_id);
-  const { data: profilesData, error: profilesError } = await supabaseClient
-    .from('profiles')
-    .select('id, name, phone, city')
-    .in('id', userIds);
-
-  if (profilesError) {
-    console.error('Грешка profiles:', profilesError);
-  }
-
-  const profilesMap = {};
-  (profilesData || []).forEach(p => { profilesMap[p.id] = p; });
-
-  majstori = majstoriData.map(m => ({
-    userId: m.user_id,
-    category: m.category,
-    rating: m.rating || 0,
-    ratingCount: m.rating_count || 0,
-    name: profilesMap[m.user_id]?.name || 'Мајстор',
-    phone: profilesMap[m.user_id]?.phone || '',
-    city: profilesMap[m.user_id]?.city || ''
+  videos = data.map(v => ({
+    title: v.title,
+    titleEn: v.title_en,
+    youtube: v.youtube_id,
+    cat: v.category,
+    likes: v.likes
   }));
 
-  document.getElementById('majstori-loading').style.display = 'none';
-  renderMajstori();
-}
-
-
-
-function renderMajstori() {
-  const scroll = document.getElementById('majstori-scroll');
-  scroll.innerHTML = '';
-  if (majstori.length === 0) {
-    scroll.innerHTML = '<div class="loading" style="padding:20px;">Сè уште нема регистрирани мајстори</div>';
-    return;
-  }
-  majstori.forEach(m => {
-    const catName = catNames[currentLang][m.category] || m.category;
-    scroll.innerHTML += `
-      <div class="majstor-card" onclick="openMajstor('${m.userId}')">
-        <div class="majstor-photo">👷</div>
-        <div class="majstor-name">${m.name}</div>
-        <div class="majstor-cat">${catName}</div>
-        <div class="majstor-rating">⭐ ${m.rating} (${m.ratingCount})</div>
-      </div>`;
-  });
-}
-
-function openMajstor(userId) {
-  const m = majstori.find(x => x.userId === userId);
-  if (!m) return;
-  currentMajstor = m;
-  document.getElementById('mp-name').textContent = m.name;
-  document.getElementById('mp-cat').textContent = catNames[currentLang][m.category] || m.category;
-  document.getElementById('mp-rating').textContent = `⭐ ${m.rating} (${m.ratingCount})`;
-  document.getElementById('mp-info').innerHTML = `📍 ${m.city || '-'}<br>📞 ${m.phone || '-'}`;
-  document.getElementById('mp-content').innerHTML = 'Нема содржина';
-  document.getElementById('majstorModal').classList.add('open');
-}
-
-function closeMajstor() {
-  document.getElementById('majstorModal').classList.remove('open');
-}
-
-function showMajstorTab(tab) {
-  document.getElementById('mpt-videos').classList.toggle('active', tab === 'videos');
-  document.getElementById('mpt-images').classList.toggle('active', tab === 'images');
-  document.getElementById('mp-content').innerHTML = 'Нема содржина';
+  document.getElementById('loading').style.display = 'none';
+  render();
 }
 
 const catNames = {
@@ -351,23 +191,74 @@ const catNames = {
 };
 
 const t = {
-  mk: { logo: "Мајстор.мк", login: "Најава", logout: "Одјави се", heroTitle: "Научи сам. Поправи сам.<br>Или одбери си мајстор.", heroText: "Најдобрите видеа и мајстори се тука. Логирај се за да ги видиш.", all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво", popravki: "🔧 Поправки", finalni: "🎨 Финални работи", latest: "🔥 Најнови видеа", majstori: "Мајстори", footer: "© 2026 Мајстор.мк", modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација", email: "Е-пошта", password: "Лозинка", passwordMin: "Лозинка (мин. 6 знаци)", btnLogin: "Најави се", btnRegister: "Регистрирај се", enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!", registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!", passwordShort: "Лозинката мора да има најмалку 6 знаци", logoutSuccess: "Одјавен си", error: "Грешка: " },
-  en: { logo: "MasterHow", login: "Login", logout: "Sign out", heroTitle: "Learn it. Fix it. Or choose a master.", heroText: "The best videos and masters are here. Log in to see them.", all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction", popravki: "🔧 Repairs", finalni: "🎨 Finishing", latest: "🔥 Latest Videos", majstori: "Masters", footer: "© 2026 MasterHow", modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register", email: "Email", password: "Password", passwordMin: "Password (min. 6 chars)", btnLogin: "Sign in", btnRegister: "Sign up", enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!", registering: "Registering...", registerSuccess: "Registration successful!", passwordShort: "Password must be at least 6 characters", logoutSuccess: "Signed out", error: "Error: " }
+  mk: {
+    logo: "Мајстор.мк", login: "Најава", logout: "Одјави се",
+    heroTitle: "Научи сам. Поправи сам. Или одбери си мајстор.",
+    heroText: "Најдобрите видеа и мајстори се тука. Логирај се за да ги видиш.",
+    all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
+    popravki: "🔧 Поправки", finalni: "🎨 Финални работи",
+    latest: "🔥 Најнови видеа", footer: "© 2026 Мајстор.мк",
+    modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација",
+    email: "Е-пошта", password: "Лозинка", passwordMin: "Лозинка (мин. 6 знаци)",
+    btnLogin: "Најави се", btnRegister: "Регистрирај се",
+    enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!",
+    registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!",
+    passwordShort: "Лозинката мора да има најмалку 6 знаци", logoutSuccess: "Одјавен си",
+    error: "Грешка: "
+  },
+  en: {
+    logo: "MasterHow", login: "Login", logout: "Sign out",
+    heroTitle: "Learn it. Fix it. Or choose a master.",
+    heroText: "The best videos and masters are here. Log in to see them.",
+    all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction",
+    popravki: "🔧 Repairs", finalni: "🎨 Finishing",
+    latest: "🔥 Latest Videos", footer: "© 2026 MasterHow",
+    modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register",
+    email: "Email", password: "Password", passwordMin: "Password (min. 6 chars)",
+    btnLogin: "Sign in", btnRegister: "Sign up",
+    enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!",
+    registering: "Registering...", registerSuccess: "Registration successful!",
+    passwordShort: "Password must be at least 6 characters", logoutSuccess: "Signed out",
+    error: "Error: "
+  }
 };
+
+let currentLang = 'mk';
+let currentFilter = 'all';
 
 function render() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  if (videos.length === 0) { grid.innerHTML = '<div class="loading">Нема видеа</div>'; return; }
+  if (videos.length === 0) {
+    grid.innerHTML = '<div class="loading">Нема видеа</div>';
+    return;
+  }
   videos.filter(v => currentFilter === "all" || v.cat === currentFilter).forEach(v => {
     const title = currentLang === 'mk' ? v.title : (v.titleEn || v.title);
     const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
-    grid.innerHTML += `<div class="card" onclick="openVideo('${v.youtube}')"><div class="thumb"><img src="${thumbUrl}" alt="${title}"></div><div class="card-body"><div class="card-title">${title}</div><div class="card-meta"><span class="cat-tag ${v.cat}">${catNames[currentLang][v.cat] || v.cat}</span><span>❤️ ${v.likes}</span></div></div></div>`;
+    grid.innerHTML += `
+      <div class="card" onclick="openVideo('${v.youtube}')">
+        <div class="thumb"><img src="${thumbUrl}" alt="${title}"></div>
+        <div class="card-body">
+          <div class="card-title">${title}</div>
+          <div class="card-meta">
+            <span class="cat-tag ${v.cat}">${catNames[currentLang][v.cat] || v.cat}</span>
+            <span>❤️ ${v.likes}</span>
+          </div>
+        </div>
+      </div>`;
   });
 }
 
-function openVideo(id) { document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`; document.getElementById('videoModal').classList.add('open'); }
-function closeVideo() { document.getElementById('videoFrame').src = ''; document.getElementById('videoModal').classList.remove('open'); }
+function openVideo(youtubeId) {
+  document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+  document.getElementById('videoModal').classList.add('open');
+}
+
+function closeVideo() {
+  document.getElementById('videoFrame').src = '';
+  document.getElementById('videoModal').classList.remove('open');
+}
 
 function switchLang(lang) {
   currentLang = lang;
@@ -376,7 +267,6 @@ function switchLang(lang) {
   document.getElementById('hero-title').innerHTML = tr.heroTitle;
   document.getElementById('hero-text').textContent = tr.heroText;
   document.getElementById('section-title').textContent = tr.latest;
-  document.getElementById('majstori-title').textContent = tr.majstori;
   document.getElementById('footer-text').textContent = tr.footer;
   document.getElementById('cat-all').textContent = tr.all;
   document.getElementById('cat-elektrika').textContent = tr.elektrika;
@@ -397,7 +287,6 @@ function switchLang(lang) {
   document.getElementById('btn-modal-register').textContent = tr.btnRegister;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   render();
-  renderMajstori();
 }
 
 document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -411,18 +300,14 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 
 function openModal() { document.getElementById('modal').classList.add('open'); }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
 function showModalTab(tab) {
   document.getElementById('modal-tab-login').classList.toggle('active', tab === 'login');
   document.getElementById('modal-tab-register').classList.toggle('active', tab === 'register');
   document.getElementById('modal-form-login').classList.toggle('hidden', tab !== 'login');
   document.getElementById('modal-form-register').classList.toggle('hidden', tab !== 'register');
 }
-function selectUserType(type) {
-  currentUserType = type;
-  document.getElementById('type-popravam').classList.toggle('active', type === 'popravam');
-  document.getElementById('type-majstor').classList.toggle('active', type === 'majstor');
-  document.getElementById('majstor-fields').classList.toggle('show', type === 'majstor');
-}
+
 function showModalMsg(text, type) {
   const msg = document.getElementById('modal-msg');
   msg.textContent = text;
@@ -445,41 +330,13 @@ async function handleRegister() {
   const tr = t[currentLang];
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
-
   if (!email || !password) { showModalMsg(tr.enterBoth, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
-
-  let majstorData = null;
-  if (currentUserType === 'majstor') {
-    const name = document.getElementById('register-name').value;
-    const phone = document.getElementById('register-phone').value;
-    const city = document.getElementById('register-city').value;
-    const category = document.getElementById('register-category').value;
-    if (!name || !phone || !city || !category) { showModalMsg('Пополни ги сите полиња за мајстор', 'error'); return; }
-    majstorData = { name, phone, city, category };
-  }
-
   showModalMsg(tr.registering, 'info');
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
   if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
-  if (!data.user) { showModalMsg('Грешка', 'error'); return; }
-
-  const userId = data.user.id;
-  await supabaseClient.from('profiles').insert({
-    id: userId, user_type: currentUserType,
-    name: majstorData ? majstorData.name : null,
-    phone: majstorData ? majstorData.phone : null,
-    city: majstorData ? majstorData.city : null
-  });
-
-  if (currentUserType === 'majstor' && majstorData) {
-    await supabaseClient.from('majstor_profiles').insert({
-      user_id: userId, category: majstorData.category, description: ''
-    });
-  }
-
   showModalMsg(tr.registerSuccess, 'success');
-  setTimeout(() => { closeModal(); showLoggedIn(data.user.email); loadMajstori(); }, 800);
+  setTimeout(() => { closeModal(); showLoggedIn(data.user.email); }, 800);
 }
 
 async function handleLogout() {
@@ -501,7 +358,6 @@ async function checkUser() {
 
 checkUser();
 loadVideos();
-loadMajstori();
 </script>
 
 </body>
