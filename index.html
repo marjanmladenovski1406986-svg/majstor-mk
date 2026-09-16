@@ -273,7 +273,17 @@ async function loadVideos() {
 async function loadMajstori() {
   const { data, error } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
   if (error) { console.error(error); return; }
-  majstori = data || [];
+  
+  const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating');
+  
+  majstori = (data || []).map(m => {
+    const mRatings = (allRatings || []).filter(r => r.majstor_id === m.id);
+    const baseSum = (m.rating || 0) * (m.rating_count || 0);
+    const newSum = mRatings.reduce((s, r) => s + r.rating, 0);
+    const totalCount = (m.rating_count || 0) + mRatings.length;
+    const rating = totalCount > 0 ? parseFloat(((baseSum + newSum) / totalCount).toFixed(1)) : 0;
+    return { ...m, computed_rating: rating, computed_count: totalCount };
+  });
   renderMajstori();
 }
 
@@ -350,7 +360,7 @@ function renderMajstori() {
   if (filtered.length === 0) { grid.innerHTML = `<div class="no-majstori">${t[currentLang].noMajstori}</div>`; return; }
   filtered.forEach(m => {
     const initial = (m.name || '?').charAt(0).toUpperCase();
-    const rating = m.rating ? `⭐ ${m.rating}` : '';
+    const rating = m.computed_rating ? `⭐ ${m.computed_rating}` : '';
     grid.innerHTML += `
       <div class="majstor-card" onclick="showMajstor(${m.id})">
         <div class="majstor-avatar">${initial}</div>
@@ -375,7 +385,7 @@ async function showMajstor(id) {
     <div class="majstor-profile">
       <div class="big-avatar">${initial}</div>
       <div class="big-name">${m.name || 'Мајстор'}</div>
-      <div class="big-rating">⭐ ${m.rating || 0} (${m.rating_count || 0} ${t[currentLang].reviews})</div>
+      <div class="big-rating">⭐ ${m.computed_rating || 0} (${m.computed_count || 0} ${t[currentLang].reviews})</div>
       <div class="info-row"><span>Категорија</span><span>${catNames[currentLang][m.category] || m.category}</span></div>
       <div class="info-row"><span>Телефон</span><span>${m.phone || '-'}</span></div>
       <div class="info-row"><span>Град</span><span>${m.city || '-'}</span></div>
