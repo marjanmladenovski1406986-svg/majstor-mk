@@ -134,7 +134,35 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
 @media (max-width: 768px) {
   .main-layout { grid-template-columns: 1fr; }
-  .majstori-list { max-height: none; }
+  .majstori-list { max-height: none; padding: 15px 0; }
+  .majstori-list h3 { padding: 0 15px; }
+  #majstori-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 0 15px 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  #majstori-grid::-webkit-scrollbar { display: none; }
+  .majstor-card {
+    min-width: 130px;
+    max-width: 130px;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 0;
+    scroll-snap-align: start;
+    padding: 15px 10px;
+  }
+  .majstor-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+  .majstor-info { width: 100%; }
+  .majstor-name { font-size: 13px; }
+  .majstor-meta { justify-content: center; flex-wrap: wrap; }
 }
 </style>
 </head>
