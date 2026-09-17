@@ -332,6 +332,7 @@ const t = {
     rateTitle: "Оцени го мајсторот", rateComment: "Коментар (опционо)...", rateBtn: "Испрати оценка",
     loginToRate: "🔒 Најави се за да оцениш", reviews: "оценки", noReviews: "Нема оценки сè уште",
     loginToSeePhone: "🔒 Најави се за да го видиш телефонот",
+        loginToSeeReviews: "🔒 Најави се за да ги видиш коментарите",
     infoCat: "Категорија", infoPhone: "Телефон", infoCity: "Град", infoDesc: "Опис",
     enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!",
     registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!",
@@ -360,6 +361,7 @@ const t = {
     rateTitle: "Rate this master", rateComment: "Comment (optional)...", rateBtn: "Submit rating",
     loginToRate: "🔒 Log in to rate", reviews: "reviews", noReviews: "No reviews yet",
     loginToSeePhone: "🔒 Log in to see the phone",
+        loginToSeeReviews: "🔒 Log in to see the comments",
     infoCat: "Category", infoPhone: "Phone", infoCity: "City", infoDesc: "Description",
     enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!",
     registering: "Registering...", registerSuccess: "Registration successful!",
@@ -473,6 +475,7 @@ async function showMajstor(id) {
 async function loadRatings(majstorId) {
   const tr = t[currentLang];
   const ratingContent = document.getElementById('rating-content');
+  const listDiv = document.getElementById('ratings-list');
 
   if (currentUser) {
     ratingContent.innerHTML = `
@@ -501,8 +504,12 @@ async function loadRatings(majstorId) {
     ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
   }
 
+    if (!currentUser) {
+    listDiv.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToSeeReviews}</div>`;
+    return;
+  }
+
   const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).order('created_at', { ascending: false });
-  const listDiv = document.getElementById('ratings-list');
   if (!data || data.length === 0) {
     listDiv.innerHTML = `<div class="no-ratings">${tr.noReviews}</div>`;
     return;
