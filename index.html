@@ -163,9 +163,9 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 </section>
 
 <div class="welcome-box" id="welcome-box">
-  <h3>🔨 Добредојдовте!</h3>
-  <p><strong>👷 Мајстори</strong> → Регистрирајте се бесплатно. Првите 6 месеци без плаќање.</p>
-  <p><strong>🔍 Барате мајстор?</strong> → Бесплатно засекогаш. Регистрирајте се и контактирајте ги сите.</p>
+  <h3 id="welcome-title">🔨 Добредојдовте!</h3>
+  <p id="welcome-p1"><strong>👷 Мајстори</strong> → Регистрирајте се бесплатно. Првите 6 месеци без плаќање.</p>
+  <p id="welcome-p2"><strong>🔍 Барате мајстор?</strong> → Бесплатно засекогаш. Регистрирајте се и контактирајте ги сите.</p>
 </div>
 
 <div class="categories">
@@ -223,23 +223,23 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
         <input type="tel" id="m-phone" placeholder="Телефон">
         <input type="text" id="m-city" placeholder="Град">
         <select id="m-category">
-          <option value="">Избери категорија...</option>
-          <option value="elektrika">⚡ Електрика</option>
-          <option value="vodovod">💧 Водовод</option>
-          <option value="gradeznistvo">🏗️ Градежништво</option>
-          <option value="popravki">🔧 Поправки</option>
-          <option value="finalni">🎨 Финални работи</option>
+          <option value="" id="opt-choose">Избери категорија...</option>
+          <option value="elektrika" id="opt-el">⚡ Електрика</option>
+          <option value="vodovod" id="opt-vod">💧 Водовод</option>
+          <option value="gradeznistvo" id="opt-grad">🏗️ Градежништво</option>
+          <option value="popravki" id="opt-pop">🔧 Поправки</option>
+          <option value="finalni" id="opt-fin">🎨 Финални работи</option>
         </select>
         <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
         <input type="email" id="m-email" placeholder="Е-пошта">
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
-        <button onclick="handleRegisterMajstor()">Регистрирај се како мајстор</button>
+        <button onclick="handleRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
       <div id="form-baram" class="hidden">
         <input type="text" id="b-name" placeholder="Име">
         <input type="email" id="b-email" placeholder="Е-пошта">
         <input type="password" id="b-password" placeholder="Лозинка (мин. 6 знаци)">
-        <button onclick="handleRegisterBaram()">Регистрирај се</button>
+        <button onclick="handleRegisterBaram()" id="btn-reg-baram">Регистрирај се</button>
       </div>
     </div>
     <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;" id="btn-close-modal">Затвори</button>
@@ -249,7 +249,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 <div class="modal" id="majstorModal">
   <div class="modal-content">
     <div id="majstor-profile-content"></div>
-    <button onclick="closeMajstorModal()" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+    <button onclick="closeMajstorModal()" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;" id="btn-close-majstor">Затвори</button>
   </div>
 </div>
 
@@ -276,8 +276,73 @@ let currentUser = null;
 let currentUserType = null;
 let selectedRating = 0;
 
+const catNames = {
+  mk: { elektrika: "Електрика", vodovod: "Водовод", gradeznistvo: "Градежништво", popravki: "Поправки", finalni: "Финални работи" },
+  en: { elektrika: "Electric", vodovod: "Plumbing", gradeznistvo: "Construction", popravki: "Repairs", finalni: "Finishing" }
+};
+
+const t = {
+  mk: {
+    logo: "Мајстор.мк", login: "Најава", logout: "Одјави се",
+    heroText: "Најдобрите видеа и мајстори се тука.",
+    welcomeTitle: "🔨 Добредојдовте!",
+    welcomeP1: "👷 Мајстори → Регистрирајте се бесплатно. Првите 6 месеци без плаќање.",
+    welcomeP2: "🔍 Барате мајстор? → Бесплатно засекогаш. Регистрирајте се и контактирајте ги сите.",
+    all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
+    popravki: "🔧 Поправки", finalni: "🎨 Финални работи",
+    latest: "🔥 Најнови видеа", majstori: "👷 Мајстори", loadingText: "Вчитувам видеа...", footer: "© 2026 Мајстор.мк",
+    modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација",
+    labelMajstor: "Мајстор", labelBaram: "Барам мајстор",
+    phEmail: "Е-пошта", phPassword: "Лозинка", phPasswordMin: "Лозинка (мин. 6 знаци)",
+    phName: "Име", phSurname: "Презиме", phPhone: "Телефон", phCity: "Град", phDescription: "Опис на услугите...",
+    optChoose: "Избери категорија...",
+    btnLogin: "Најави се", btnRegMajstor: "Регистрирај се како мајстор", btnRegBaram: "Регистрирај се",
+    btnClose: "Затвори", noMajstori: "Нема мајстори во оваа категорија",
+    rateTitle: "Оцени го мајсторот", rateComment: "Коментар (опционо)...", rateBtn: "Испрати оценка",
+    loginToRate: "🔒 Најави се за да оцениш", reviews: "оценки", noReviews: "Нема оценки сè уште",
+    loginToSeePhone: "🔒 Најави се за да го видиш телефонот",
+    catLabel: "Категорија", phoneLabel: "Телефон", cityLabel: "Град", descLabel: "Опис",
+    infoCat: "Категорија", infoPhone: "Телефон", infoCity: "Град", infoDesc: "Опис",
+    enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!",
+    registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!",
+    fillAll: "Пополни име, е-пошта, лозинка и категорија", fillAllSimple: "Пополни сите полиња",
+    passwordShort: "Лозинката мора да има најмалку 6 знаци", pickStars: "Избери ѕвезди",
+    thanksRating: "✅ Благодариме за оценката!",
+    error: "Грешка: ", noVideos: "Нема видеа"
+  },
+  en: {
+    logo: "MasterHow", login: "Login", logout: "Sign out",
+    heroText: "The best videos and masters are here.",
+    welcomeTitle: "🔨 Welcome!",
+    welcomeP1: "👷 Masters → Register for free. First 6 months free of charge.",
+    welcomeP2: "🔍 Looking for a master? → Free forever. Register and contact them all.",
+    all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction",
+    popravki: "🔧 Repairs", finalni: "🎨 Finishing",
+    latest: "🔥 Latest Videos", majstori: "👷 Masters", loadingText: "Loading videos...", footer: "© 2026 MasterHow",
+    modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register",
+    labelMajstor: "Master", labelBaram: "Looking for a master",
+    phEmail: "Email", phPassword: "Password", phPasswordMin: "Password (min. 6 chars)",
+    phName: "Name", phSurname: "Surname", phPhone: "Phone", phCity: "City", phDescription: "Services description...",
+    optChoose: "Choose category...",
+    btnLogin: "Sign in", btnRegMajstor: "Register as master", btnRegBaram: "Register",
+    btnClose: "Close", noMajstori: "No masters in this category",
+    rateTitle: "Rate this master", rateComment: "Comment (optional)...", rateBtn: "Submit rating",
+    loginToRate: "🔒 Log in to rate", reviews: "reviews", noReviews: "No reviews yet",
+    loginToSeePhone: "🔒 Log in to see the phone",
+    catLabel: "Category", phoneLabel: "Phone", cityLabel: "City", descLabel: "Description",
+    infoCat: "Category", infoPhone: "Phone", infoCity: "City", infoDesc: "Description",
+    enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!",
+    registering: "Registering...", registerSuccess: "Registration successful!",
+    fillAll: "Fill name, email, password and category", fillAllSimple: "Fill all fields",
+    passwordShort: "Password must be at least 6 characters", pickStars: "Pick stars",
+    thanksRating: "✅ Thanks for the rating!",
+    error: "Error: ", noVideos: "No videos"
+  }
+};
+
 async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
+  document.getElementById('loading').textContent = t[currentLang].loadingText;
   const { data, error } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
   if (error) { console.error(error); return; }
   videos = data.map(v => ({ title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes }));
@@ -300,47 +365,11 @@ async function loadMajstori() {
   renderMajstori();
 }
 
-const catNames = {
-  mk: { elektrika: "Електрика", vodovod: "Водовод", gradeznistvo: "Градежништво", popravki: "Поправки", finalni: "Финални работи" },
-  en: { elektrika: "Electric", vodovod: "Plumbing", gradeznistvo: "Construction", popravki: "Repairs", finalni: "Finishing" }
-};
-
-const t = {
-  mk: {
-    logo: "Мајстор.мк", login: "Најава", logout: "Одјави се",
-    heroText: "Најдобрите видеа и мајстори се тука.",
-    all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
-    popravki: "🔧 Поправки", finalni: "🎨 Финални работи",
-    latest: "🔥 Најнови видеа", majstori: "👷 Мајстори", footer: "© 2026 Мајстор.мк",
-    modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација",
-    labelMajstor: "Мајстор", labelBaram: "Барам мајстор",
-    btnClose: "Затвори", noMajstori: "Нема мајстори во оваа категорија",
-    rateTitle: "Оцени го мајсторот", rateComment: "Коментар (опционо)...", rateBtn: "Испрати оценка",
-    loginToRate: "🔒 Најави се за да оцениш", reviews: "оценки", noReviews: "Нема оценки сè уште",
-    loginToSeePhone: "🔒 Најави се за да го видиш телефонот",
-    error: "Грешка: "
-  },
-  en: {
-    logo: "MasterHow", login: "Login", logout: "Sign out",
-    heroText: "The best videos and masters are here.",
-    all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction",
-    popravki: "🔧 Repairs", finalni: "🎨 Finishing",
-    latest: "🔥 Latest Videos", majstori: "👷 Masters", footer: "© 2026 MasterHow",
-    modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register",
-    labelMajstor: "Master", labelBaram: "Looking for a master",
-    btnClose: "Close", noMajstori: "No masters in this category",
-    rateTitle: "Rate this master", rateComment: "Comment (optional)...", rateBtn: "Submit rating",
-    loginToRate: "🔒 Log in to rate", reviews: "reviews", noReviews: "No reviews yet",
-    loginToSeePhone: "🔒 Log in to see the phone",
-    error: "Error: "
-  }
-};
-
 function renderVideos() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
   const filtered = videos.filter(v => currentFilter === "all" || v.cat === currentFilter);
-  if (filtered.length === 0) { grid.innerHTML = '<div class="loading">Нема видеа</div>'; return; }
+  if (filtered.length === 0) { grid.innerHTML = '<div class="loading">' + t[currentLang].noVideos + '</div>'; return; }
   filtered.forEach(v => {
     const title = currentLang === 'mk' ? v.title : (v.titleEn || v.title);
     const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
@@ -388,20 +417,21 @@ async function showMajstor(id) {
   const avatar = m.photo_url
     ? `<img src="${m.photo_url}" alt="${m.name}">`
     : (m.name || '?').charAt(0).toUpperCase();
+  const tr = t[currentLang];
 
   const phoneDisplay = currentUser
     ? (m.phone || '-')
-    : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${t[currentLang].loginToSeePhone}</span>`;
+    : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${tr.loginToSeePhone}</span>`;
 
   document.getElementById('majstor-profile-content').innerHTML = `
     <div class="majstor-profile">
       <div class="big-avatar">${avatar}</div>
       <div class="big-name">${m.name || 'Мајстор'}</div>
-      <div class="big-rating">⭐ ${m.computed_rating || 0} (${m.computed_count || 0} ${t[currentLang].reviews})</div>
-      <div class="info-row"><span>Категорија</span><span>${catNames[currentLang][m.category] || m.category}</span></div>
-      <div class="info-row"><span>Телефон</span><span>${phoneDisplay}</span></div>
-      <div class="info-row"><span>Град</span><span>${m.city || '-'}</span></div>
-      <div class="info-row"><span>Опис</span><span>${m.description || '-'}</span></div>
+      <div class="big-rating">⭐ ${m.computed_rating || 0} (${m.computed_count || 0} ${tr.reviews})</div>
+      <div class="info-row"><span>${tr.infoCat}</span><span>${catNames[currentLang][m.category] || m.category}</span></div>
+      <div class="info-row"><span>${tr.infoPhone}</span><span>${phoneDisplay}</span></div>
+      <div class="info-row"><span>${tr.infoCity}</span><span>${m.city || '-'}</span></div>
+      <div class="info-row"><span>${tr.infoDesc}</span><span>${m.description || '-'}</span></div>
     </div>
     <div id="rating-content"></div>
     <div id="ratings-list"></div>`;
@@ -411,12 +441,13 @@ async function showMajstor(id) {
 }
 
 async function loadRatings(majstorId) {
+  const tr = t[currentLang];
   const ratingContent = document.getElementById('rating-content');
 
   if (currentUser) {
     ratingContent.innerHTML = `
       <div class="rating-section">
-        <h4>${t[currentLang].rateTitle}</h4>
+        <h4>${tr.rateTitle}</h4>
         <div class="stars-input" id="stars-input">
           <span class="star" data-val="1">★</span>
           <span class="star" data-val="2">★</span>
@@ -424,8 +455,8 @@ async function loadRatings(majstorId) {
           <span class="star" data-val="4">★</span>
           <span class="star" data-val="5">★</span>
         </div>
-        <textarea id="rating-comment" placeholder="${t[currentLang].rateComment}"></textarea>
-        <button onclick="submitRating(${majstorId})">${t[currentLang].rateBtn}</button>
+        <textarea id="rating-comment" placeholder="${tr.rateComment}"></textarea>
+        <button onclick="submitRating(${majstorId})">${tr.rateBtn}</button>
         <div id="rating-msg" class="rating-msg"></div>
       </div>`;
     document.querySelectorAll('#stars-input .star').forEach(star => {
@@ -437,16 +468,16 @@ async function loadRatings(majstorId) {
       });
     });
   } else {
-    ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${t[currentLang].loginToRate}</div>`;
+    ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
   }
 
   const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).order('created_at', { ascending: false });
   const listDiv = document.getElementById('ratings-list');
   if (!data || data.length === 0) {
-    listDiv.innerHTML = `<div class="no-ratings">${t[currentLang].noReviews}</div>`;
+    listDiv.innerHTML = `<div class="no-ratings">${tr.noReviews}</div>`;
     return;
   }
-  listDiv.innerHTML = '<div class="rating-list"><h4>⭐ ' + data.length + ' ' + t[currentLang].reviews + '</h4>' +
+  listDiv.innerHTML = '<div class="rating-list"><h4>⭐ ' + data.length + ' ' + tr.reviews + '</h4>' +
     data.map(r => {
       const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
       const date = new Date(r.created_at).toLocaleDateString();
@@ -459,17 +490,18 @@ async function loadRatings(majstorId) {
 }
 
 async function submitRating(majstorId) {
+  const tr = t[currentLang];
   const msg = document.getElementById('rating-msg');
   const comment = document.getElementById('rating-comment').value;
 
   if (!selectedRating) {
-    msg.textContent = 'Избери ѕвезди';
+    msg.textContent = tr.pickStars;
     msg.className = 'rating-msg error';
     return;
   }
 
   const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) { msg.textContent = 'Не си најавен'; msg.className = 'rating-msg error'; return; }
+  if (!user) { msg.textContent = 'Not logged in'; msg.className = 'rating-msg error'; return; }
 
   const { error } = await supabaseClient.from('ratings').insert({
     majstor_id: majstorId,
@@ -490,7 +522,7 @@ async function submitRating(majstorId) {
     await supabaseClient.from('majstor_profiles').update({ rating: parseFloat(avg), rating_count: allRatings.length }).eq('id', majstorId);
   }
 
-  msg.textContent = '✅ Благодариме за оценката!';
+  msg.textContent = tr.thanksRating;
   msg.className = 'rating-msg success';
 
   await loadMajstori();
@@ -508,25 +540,61 @@ function closeVideo() { document.getElementById('videoFrame').src = ''; document
 function switchLang(lang) {
   currentLang = lang;
   const tr = t[lang];
+
   document.getElementById('logo-text').textContent = tr.logo;
   document.getElementById('hero-text').textContent = tr.heroText;
+  document.getElementById('welcome-title').textContent = tr.welcomeTitle;
+  document.getElementById('welcome-p1').innerHTML = tr.welcomeP1;
+  document.getElementById('welcome-p2').innerHTML = tr.welcomeP2;
   document.getElementById('section-title').textContent = tr.latest;
   document.getElementById('majstori-title').textContent = tr.majstori;
+  document.getElementById('loading').textContent = tr.loadingText;
   document.getElementById('footer-text').textContent = tr.footer;
+
   document.getElementById('cat-all').textContent = tr.all;
   document.getElementById('cat-elektrika').textContent = tr.elektrika;
   document.getElementById('cat-vodovod').textContent = tr.vodovod;
   document.getElementById('cat-gradeznistvo').textContent = tr.gradeznistvo;
   document.getElementById('cat-popravki').textContent = tr.popravki;
   document.getElementById('cat-finalni').textContent = tr.finalni;
+
   document.getElementById('btn-login-header').textContent = tr.login;
   document.getElementById('btn-logout-header').textContent = tr.logout;
+
   document.getElementById('modal-title').textContent = tr.modalTitle;
   document.getElementById('modal-tab-login').textContent = tr.tabLogin;
   document.getElementById('modal-tab-register').textContent = tr.tabRegister;
+  document.getElementById('login-email').placeholder = tr.phEmail;
+  document.getElementById('login-password').placeholder = tr.phPassword;
+  document.getElementById('btn-modal-login').textContent = tr.btnLogin;
+
   document.getElementById('label-majstor').textContent = tr.labelMajstor;
   document.getElementById('label-baram').textContent = tr.labelBaram;
+
+  document.getElementById('m-name').placeholder = tr.phName;
+  document.getElementById('m-surname').placeholder = tr.phSurname;
+  document.getElementById('m-phone').placeholder = tr.phPhone;
+  document.getElementById('m-city').placeholder = tr.phCity;
+  document.getElementById('m-description').placeholder = tr.phDescription;
+  document.getElementById('m-email').placeholder = tr.phEmail;
+  document.getElementById('m-password').placeholder = tr.phPasswordMin;
+  document.getElementById('btn-reg-majstor').textContent = tr.btnRegMajstor;
+
+  document.getElementById('opt-choose').textContent = tr.optChoose;
+  document.getElementById('opt-el').textContent = tr.elektrika;
+  document.getElementById('opt-vod').textContent = tr.vodovod;
+  document.getElementById('opt-grad').textContent = tr.gradeznistvo;
+  document.getElementById('opt-pop').textContent = tr.popravki;
+  document.getElementById('opt-fin').textContent = tr.finalni;
+
+  document.getElementById('b-name').placeholder = tr.phName;
+  document.getElementById('b-email').placeholder = tr.phEmail;
+  document.getElementById('b-password').placeholder = tr.phPasswordMin;
+  document.getElementById('btn-reg-baram').textContent = tr.btnRegBaram;
+
   document.getElementById('btn-close-modal').textContent = tr.btnClose;
+  document.getElementById('btn-close-majstor').textContent = tr.btnClose;
+
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   renderVideos();
   renderMajstori();
@@ -576,17 +644,19 @@ function showModalMsg(text, type) {
 }
 
 async function handleLogin() {
+  const tr = t[currentLang];
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
-  if (!email || !password) { showModalMsg('Внеси е-пошта и лозинка', 'error'); return; }
-  showModalMsg('Се најавувам...', 'info');
+  if (!email || !password) { showModalMsg(tr.enterBoth, 'error'); return; }
+  showModalMsg(tr.loggingIn, 'info');
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) { showModalMsg('Грешка: ' + error.message, 'error'); return; }
-  showModalMsg('Успешно најавување!', 'success');
+  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
+  showModalMsg(tr.loginSuccess, 'success');
   setTimeout(() => { closeModal(); checkUser(); }, 800);
 }
 
 async function handleRegisterMajstor() {
+  const tr = t[currentLang];
   const name = document.getElementById('m-name').value;
   const surname = document.getElementById('m-surname').value;
   const phone = document.getElementById('m-phone').value;
@@ -596,12 +666,12 @@ async function handleRegisterMajstor() {
   const email = document.getElementById('m-email').value;
   const password = document.getElementById('m-password').value;
 
-  if (!name || !email || !password || !category) { showModalMsg('Пополни име, е-пошта, лозинка и категорија', 'error'); return; }
-  if (password.length < 6) { showModalMsg('Лозинката мора да има најмалку 6 знаци', 'error'); return; }
+  if (!name || !email || !password || !category) { showModalMsg(tr.fillAll, 'error'); return; }
+  if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
 
-  showModalMsg('Се регистрирам...', 'info');
+  showModalMsg(tr.registering, 'info');
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
-  if (error) { showModalMsg('Грешка: ' + error.message, 'error'); return; }
+  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
 
   const userId = data.user.id;
   const fullName = (name + ' ' + surname).trim();
@@ -609,25 +679,26 @@ async function handleRegisterMajstor() {
   await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city });
   await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0 });
 
-  showModalMsg('Успешна регистрација!', 'success');
+  showModalMsg(tr.registerSuccess, 'success');
   setTimeout(() => { closeModal(); checkUser(); loadMajstori(); }, 800);
 }
 
 async function handleRegisterBaram() {
+  const tr = t[currentLang];
   const name = document.getElementById('b-name').value;
   const email = document.getElementById('b-email').value;
   const password = document.getElementById('b-password').value;
 
-  if (!name || !email || !password) { showModalMsg('Пополни сите полиња', 'error'); return; }
-  if (password.length < 6) { showModalMsg('Лозинката мора да има најмалку 6 знаци', 'error'); return; }
+  if (!name || !email || !password) { showModalMsg(tr.fillAllSimple, 'error'); return; }
+  if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
 
-  showModalMsg('Се регистрирам...', 'info');
+  showModalMsg(tr.registering, 'info');
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
-  if (error) { showModalMsg('Грешка: ' + error.message, 'error'); return; }
+  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
 
   await supabaseClient.from('profiles').insert({ id: data.user.id, user_type: 'baram', name: name });
 
-  showModalMsg('Успешна регистрација!', 'success');
+  showModalMsg(tr.registerSuccess, 'success');
   setTimeout(() => { closeModal(); checkUser(); }, 800);
 }
 
