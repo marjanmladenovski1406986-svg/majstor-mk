@@ -66,6 +66,8 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .cat-tag.gradeznistvo { background: #3a2a1a; color: #d4a373; }
 .cat-tag.popravki { background: #2a3a1a; color: #8bc34a; }
 .cat-tag.finalni { background: #3a1a3a; color: #e91e63; }
+.cat-tag.plockari { background: #3a2515; color: #ff9966; }
+.cat-tag.gipsari { background: #3a3a3a; color: #cccccc; }
 
 footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
@@ -155,11 +157,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     scroll-snap-align: start;
     padding: 15px 10px;
   }
-  .majstor-avatar {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-  }
+  .majstor-avatar { width: 60px; height: 60px; font-size: 24px; }
   .majstor-info { width: 100%; }
   .majstor-name { font-size: 13px; }
   .majstor-meta { justify-content: center; flex-wrap: wrap; }
@@ -203,6 +201,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <button class="cat-btn" data-cat="gradeznistvo" id="cat-gradeznistvo">🏗️ Градежништво</button>
   <button class="cat-btn" data-cat="popravki" id="cat-popravki">🔧 Поправки</button>
   <button class="cat-btn" data-cat="finalni" id="cat-finalni">🎨 Финални работи</button>
+  <button class="cat-btn" data-cat="plockari" id="cat-plockari">🔲 Плочкари</button>
+  <button class="cat-btn" data-cat="gipsari" id="cat-gipsari">🧱 Гипсари</button>
 </div>
 
 <div class="main-layout">
@@ -257,6 +257,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
           <option value="gradeznistvo" id="opt-grad">🏗️ Градежништво</option>
           <option value="popravki" id="opt-pop">🔧 Поправки</option>
           <option value="finalni" id="opt-fin">🎨 Финални работи</option>
+          <option value="plockari" id="opt-ploc">🔲 Плочкари</option>
+          <option value="gipsari" id="opt-gips">🧱 Гипсари</option>
         </select>
         <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
         <input type="email" id="m-email" placeholder="Е-пошта">
@@ -305,20 +307,20 @@ let currentUserType = null;
 let selectedRating = 0;
 
 const catNames = {
-  mk: { elektrika: "Електрика", vodovod: "Водовод", gradeznistvo: "Градежништво", popravki: "Поправки", finalni: "Финални работи" },
-  en: { elektrika: "Electric", vodovod: "Plumbing", gradeznistvo: "Construction", popravki: "Repairs", finalni: "Finishing" }
+  mk: { elektrika: "Електрика", vodovod: "Водовод", gradeznistvo: "Градежништво", popravki: "Поправки", finalni: "Финални работи", plockari: "Плочкари", gipsari: "Гипсари" },
+  en: { elektrika: "Electric", vodovod: "Plumbing", gradeznistvo: "Construction", popravki: "Repairs", finalni: "Finishing", plockari: "Tilers", gipsari: "Drywall" }
 };
 
 const t = {
   mk: {
     logo: "Мајстор.мк", login: "Најава", logout: "Одјави се",
-        heroTitle: "Научи сам. Поправи сам.<br>Или одбери си мајстор.",
+    heroTitle: "Научи сам. Поправи сам.<br>Или одбери си мајстор.",
     heroText: "Најдобрите видеа и мајстори се тука.",
     welcomeTitle: "🔨 Добредојдовте!",
     welcomeP1: "👷 Мајстори → Регистрирајте се бесплатно. Првите 6 месеци без плаќање.",
     welcomeP2: "🔍 Барате мајстор? → Бесплатно засекогаш. Регистрирајте се и контактирајте ги сите.",
     all: "Сите", elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
-    popravki: "🔧 Поправки", finalni: "🎨 Финални работи",
+    popravki: "🔧 Поправки", finalni: "🎨 Финални работи", plockari: "🔲 Плочкари", gipsari: "🧱 Гипсари",
     latest: "🔥 Најнови видеа", majstori: "👷 Мајстори", loadingText: "Вчитувам видеа...", footer: "© 2026 Мајстор.мк",
     modalTitle: "🔨 Мајстор.мк", tabLogin: "Најава", tabRegister: "Регистрација",
     labelMajstor: "Мајстор", labelBaram: "Барам мајстор",
@@ -330,7 +332,6 @@ const t = {
     rateTitle: "Оцени го мајсторот", rateComment: "Коментар (опционо)...", rateBtn: "Испрати оценка",
     loginToRate: "🔒 Најави се за да оцениш", reviews: "оценки", noReviews: "Нема оценки сè уште",
     loginToSeePhone: "🔒 Најави се за да го видиш телефонот",
-    catLabel: "Категорија", phoneLabel: "Телефон", cityLabel: "Град", descLabel: "Опис",
     infoCat: "Категорија", infoPhone: "Телефон", infoCity: "Град", infoDesc: "Опис",
     enterBoth: "Внеси е-пошта и лозинка", loggingIn: "Се најавувам...", loginSuccess: "Успешно најавување!",
     registering: "Се регистрирам...", registerSuccess: "Успешна регистрација!",
@@ -341,14 +342,13 @@ const t = {
   },
   en: {
     logo: "MasterHow", login: "Login", logout: "Sign out",
-        heroTitle: "Learn it. Fix it.<br>Or choose a master.",
-        heroTitle: "Learn it. Fix it.<br>Or choose a master.",
+    heroTitle: "Learn it. Fix it.<br>Or choose a master.",
     heroText: "The best videos and masters are here.",
     welcomeTitle: "🔨 Welcome!",
     welcomeP1: "👷 Masters → Register for free. First 6 months free of charge.",
     welcomeP2: "🔍 Looking for a master? → Free forever. Register and contact them all.",
     all: "All", elektrika: "⚡ Electric", vodovod: "💧 Plumbing", gradeznistvo: "🏗️ Construction",
-    popravki: "🔧 Repairs", finalni: "🎨 Finishing",
+    popravki: "🔧 Repairs", finalni: "🎨 Finishing", plockari: "🔲 Tilers", gipsari: "🧱 Drywall",
     latest: "🔥 Latest Videos", majstori: "👷 Masters", loadingText: "Loading videos...", footer: "© 2026 MasterHow",
     modalTitle: "🔨 MasterHow", tabLogin: "Login", tabRegister: "Register",
     labelMajstor: "Master", labelBaram: "Looking for a master",
@@ -360,7 +360,6 @@ const t = {
     rateTitle: "Rate this master", rateComment: "Comment (optional)...", rateBtn: "Submit rating",
     loginToRate: "🔒 Log in to rate", reviews: "reviews", noReviews: "No reviews yet",
     loginToSeePhone: "🔒 Log in to see the phone",
-    catLabel: "Category", phoneLabel: "Phone", cityLabel: "City", descLabel: "Description",
     infoCat: "Category", infoPhone: "Phone", infoCity: "City", infoDesc: "Description",
     enterBoth: "Enter email and password", loggingIn: "Signing in...", loginSuccess: "Login successful!",
     registering: "Registering...", registerSuccess: "Registration successful!",
@@ -573,7 +572,7 @@ function switchLang(lang) {
   const tr = t[lang];
 
   document.getElementById('logo-text').textContent = tr.logo;
-    document.getElementById('hero-title').innerHTML = tr.heroTitle;
+  document.getElementById('hero-title').innerHTML = tr.heroTitle;
   document.getElementById('hero-text').textContent = tr.heroText;
   document.getElementById('welcome-title').textContent = tr.welcomeTitle;
   document.getElementById('welcome-p1').innerHTML = tr.welcomeP1;
@@ -589,6 +588,8 @@ function switchLang(lang) {
   document.getElementById('cat-gradeznistvo').textContent = tr.gradeznistvo;
   document.getElementById('cat-popravki').textContent = tr.popravki;
   document.getElementById('cat-finalni').textContent = tr.finalni;
+  document.getElementById('cat-plockari').textContent = tr.plockari;
+  document.getElementById('cat-gipsari').textContent = tr.gipsari;
 
   document.getElementById('btn-login-header').textContent = tr.login;
   document.getElementById('btn-logout-header').textContent = tr.logout;
@@ -618,6 +619,8 @@ function switchLang(lang) {
   document.getElementById('opt-grad').textContent = tr.gradeznistvo;
   document.getElementById('opt-pop').textContent = tr.popravki;
   document.getElementById('opt-fin').textContent = tr.finalni;
+  document.getElementById('opt-ploc').textContent = tr.plockari;
+  document.getElementById('opt-gips').textContent = tr.gipsari;
 
   document.getElementById('b-name').placeholder = tr.phName;
   document.getElementById('b-email').placeholder = tr.phEmail;
