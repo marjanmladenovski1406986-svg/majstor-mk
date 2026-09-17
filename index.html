@@ -284,6 +284,7 @@ const catNames = {
 const t = {
   mk: {
     logo: "Мајстор.мк", login: "Најава", logout: "Одјави се",
+        heroTitle: "Научи сам. Поправи сам.<br>Или одбери си мајстор.",
     heroText: "Најдобрите видеа и мајстори се тука.",
     welcomeTitle: "🔨 Добредојдовте!",
     welcomeP1: "👷 Мајстори → Регистрирајте се бесплатно. Првите 6 месеци без плаќање.",
@@ -312,6 +313,8 @@ const t = {
   },
   en: {
     logo: "MasterHow", login: "Login", logout: "Sign out",
+        heroTitle: "Learn it. Fix it.<br>Or choose a master.",
+        heroTitle: "Learn it. Fix it.<br>Or choose a master.",
     heroText: "The best videos and masters are here.",
     welcomeTitle: "🔨 Welcome!",
     welcomeP1: "👷 Masters → Register for free. First 6 months free of charge.",
@@ -542,6 +545,7 @@ function switchLang(lang) {
   const tr = t[lang];
 
   document.getElementById('logo-text').textContent = tr.logo;
+    document.getElementById('hero-title').innerHTML = tr.heroTitle;
   document.getElementById('hero-text').textContent = tr.heroText;
   document.getElementById('welcome-title').textContent = tr.welcomeTitle;
   document.getElementById('welcome-p1').innerHTML = tr.welcomeP1;
