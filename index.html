@@ -654,11 +654,47 @@ async function showMajstor(id) {
       <div class="info-row"><span>${tr.infoCity}</span><span>${m.city || '-'}</span></div>
       <div class="info-row"><span>${tr.infoDesc}</span><span>${m.description || '-'}</span></div>
     </div>
+    <div id="majstor-images-section"></div>
+    <div id="majstor-videos-section"></div>
     <div id="rating-content"></div>
     <div id="ratings-list"></div>`;
 
   document.getElementById('majstorModal').classList.add('open');
+  loadPublicMajstorMedia(id);
   loadRatings(id);
+}
+
+async function loadPublicMajstorMedia(majstorId) {
+  const tr = t[currentLang];
+  const imgSection = document.getElementById('majstor-images-section');
+  const vidSection = document.getElementById('majstor-videos-section');
+
+  const { data: images } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'image');
+  const { data: vids } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'video');
+
+  if (images && images.length > 0) {
+    imgSection.innerHTML = `
+      <div class="media-section">
+        <h4>📸 ${tr.myMedia}</h4>
+        <div class="media-grid">
+          ${images.map(img => `<div class="media-item"><img src="${img.url}" alt="" onclick="openImageFull('${img.url}')"></div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  if (vids && vids.length > 0) {
+    vidSection.innerHTML = `
+      <div class="media-section">
+        <h4>📹 ${tr.myVideos}</h4>
+        <div class="video-list">
+          ${vids.map(v => `<div class="video-item"><span class="title" onclick="openVideo('${v.url}')">▶️ ${v.title}</span></div>`).join('')}
+        </div>
+      </div>`;
+  }
+}
+
+function openImageFull(url) {
+  window.open(url, '_blank');
 }
 
 async function loadRatings(majstorId) {
