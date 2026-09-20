@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="mk">
 <head>
@@ -29,8 +28,8 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .admin-panel { display: none; }
 .admin-panel.active { display: block; }
 
-.tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-.tab { padding: 12px 20px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 14px; color: #999; font-weight: 600; }
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab { padding: 12px 18px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px; color: #999; font-weight: 600; }
 .tab.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
 
 .tab-content { display: none; }
@@ -41,10 +40,10 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .btn-add { background: #ff6b35; border: none; color: #fff; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 14px; }
 .btn-add:hover { background: #e55a2b; }
 
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
 .stat-card { background: #1a1a1a; border: 1px solid #2a2a2a; padding: 20px; border-radius: 12px; }
-.stat-card .number { font-size: 36px; font-weight: 700; color: #ff6b35; }
-.stat-card .label { color: #999; font-size: 14px; margin-top: 5px; }
+.stat-card .number { font-size: 32px; font-weight: 700; color: #ff6b35; }
+.stat-card .label { color: #999; font-size: 13px; margin-top: 5px; }
 
 .category-list { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; }
 .category-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2a2a2a; }
@@ -64,11 +63,19 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .item-info { flex: 1; min-width: 200px; }
 .item-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
 .item-meta { font-size: 12px; color: #999; }
-.item-actions { display: flex; gap: 8px; }
-.btn-edit { background: transparent; border: 1px solid #4db8ff; color: #4db8ff; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 13px; }
+.item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-edit { background: transparent; border: 1px solid #4db8ff; color: #4db8ff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
 .btn-edit:hover { background: #4db8ff; color: #fff; }
-.btn-delete { background: transparent; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 13px; }
+.btn-delete { background: transparent; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
 .btn-delete:hover { background: #ff6b6b; color: #fff; }
+.btn-verify { background: transparent; border: 1px solid #4db8ff; color: #4db8ff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.btn-verify.active { background: #4db8ff; color: #fff; }
+.btn-feature { background: transparent; border: 1px solid #ffb84d; color: #ffb84d; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.btn-feature.active { background: #ffb84d; color: #fff; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; margin-left: 5px; font-weight: 600; }
+.badge.verified { background: #4db8ff; color: #fff; }
+.badge.featured { background: #ffb84d; color: #fff; }
 
 .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .modal.open { display: flex; }
@@ -76,6 +83,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .modal-content h2 { color: #ff6b35; text-align: center; margin-bottom: 20px; }
 .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 10px; font-family: inherit; }
 .modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { outline: none; border-color: #ff6b35; }
+.modal-content textarea { min-height: 120px; resize: vertical; }
 .modal-content button { width: 100%; padding: 12px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 .modal-msg { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; display: none; }
 .modal-msg.error { background: #3a1a1a; color: #ff6b6b; display: block; }
@@ -85,11 +93,12 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 
 .no-access { max-width: 400px; margin: 100px auto; padding: 40px 30px; background: #1a1a1a; border: 1px solid #3a1a1a; border-radius: 16px; text-align: center; }
 .no-access h1 { color: #ff6b6b; margin-bottom: 15px; }
+
+.help-text { font-size: 12px; color: #666; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN BOX -->
 <div class="login-box" id="loginBox">
   <h1>🔐 Админ Панел</h1>
   <div class="msg" id="loginMsg"></div>
@@ -98,14 +107,12 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <button onclick="handleAdminLogin()">Најави се</button>
 </div>
 
-<!-- NO ACCESS -->
 <div class="no-access hidden" id="noAccess">
   <h1>❌ Нема пристап</h1>
   <p style="color: #999;">Само администраторот може да влезе.</p>
   <button onclick="window.location.href='/'" style="margin-top: 20px; padding: 12px 20px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; cursor: pointer; font-family: inherit;">← Кон сајтот</button>
 </div>
 
-<!-- ADMIN PANEL -->
 <div class="admin-panel" id="adminPanel">
   <header>
     <div class="logo">🔨 Админ — Мајстор.мк</div>
@@ -118,36 +125,69 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 
   <div class="container">
     <div class="tabs">
-      <button class="tab active" onclick="showTab('stats')">📊 Статистика</button>
-      <button class="tab" onclick="showTab('videos')">🎬 Видеа</button>
-      <button class="tab" onclick="showTab('majstori')">👷 Мајстори</button>
+      <button class="tab active" onclick="showTab(event, 'stats')">📊 Dashboard</button>
+      <button class="tab" onclick="showTab(event, 'videos')">🎬 Видеа</button>
+      <button class="tab" onclick="showTab(event, 'majstori')">👷 Мајстори</button>
+      <button class="tab" onclick="showTab(event, 'users')">👥 Корисници</button>
+      <button class="tab" onclick="showTab(event, 'categories')">📁 Категории</button>
+      <button class="tab" onclick="showTab(event, 'backup')">💾 Backup</button>
     </div>
 
-    <!-- STATS TAB -->
+    <!-- DASHBOARD -->
     <div class="tab-content active" id="tab-stats">
-      <h2 style="color: #ff6b35; margin-bottom: 20px;">📊 Статистика</h2>
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">📊 Dashboard</h2>
       <div class="stats-grid" id="statsGrid"></div>
       <h3 style="color: #ff6b35; margin-bottom: 15px;">По категорија</h3>
       <div class="category-list" id="categoryList"></div>
     </div>
 
-    <!-- VIDEOS TAB -->
+    <!-- VIDEOS -->
     <div class="tab-content" id="tab-videos">
       <div class="section-header">
         <h2>🎬 Видеа (<span id="videosCount">0</span>)</h2>
-        <button class="btn-add" onclick="openAddVideo()">+ Додај видео</button>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-add" onclick="openBulkUpload()">📦 Bulk Upload</button>
+          <button class="btn-add" onclick="openAddVideo()">+ Додај видео</button>
+        </div>
       </div>
       <input type="text" class="search-bar" id="videoSearch" placeholder="🔍 Пребарај по наслов..." oninput="renderVideosList()">
       <div class="items-list" id="videosList"></div>
     </div>
 
-    <!-- MAJSTORI TAB -->
+    <!-- MAJSTORI -->
     <div class="tab-content" id="tab-majstori">
       <div class="section-header">
         <h2>👷 Мајстори (<span id="majstoriCount">0</span>)</h2>
       </div>
       <input type="text" class="search-bar" id="majstorSearch" placeholder="🔍 Пребарај по име или град..." oninput="renderMajstoriList()">
       <div class="items-list" id="majstoriList"></div>
+    </div>
+
+    <!-- USERS -->
+    <div class="tab-content" id="tab-users">
+      <div class="section-header">
+        <h2>👥 Корисници (<span id="usersCount">0</span>)</h2>
+      </div>
+      <input type="text" class="search-bar" id="userSearch" placeholder="🔍 Пребарај по мејл..." oninput="renderUsersList()">
+      <div class="items-list" id="usersList"></div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="tab-content" id="tab-categories">
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">📁 Категории</h2>
+      <div class="category-list" id="categoriesFullList"></div>
+    </div>
+
+    <!-- BACKUP -->
+    <div class="tab-content" id="tab-backup">
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">💾 Backup & Export</h2>
+      <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 25px; margin-bottom: 15px;">
+        <h3 style="color: #fff; margin-bottom: 10px;">📥 Експорт на податоци</h3>
+        <p style="color: #999; font-size: 13px; margin-bottom: 15px;">Симни ги сите податоци како JSON фајл.</p>
+        <button class="btn-add" onclick="exportData('videos')">🎬 Експорт видеа</button>
+        <button class="btn-add" onclick="exportData('majstori')">👷 Експорт мајстори</button>
+        <button class="btn-add" onclick="exportAll()">📦 Експорт сè</button>
+      </div>
     </div>
   </div>
 </div>
@@ -161,9 +201,22 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <input type="text" id="vTitleEn" placeholder="Title (English)">
     <input type="text" id="vYoutube" placeholder="YouTube линк или ID">
     <select id="vCategory"></select>
-    <input type="number" id="vLikes" placeholder="Лајкови (0)" value="0">
+    <input type="number" id="vLikes" placeholder="Лајкови" value="0">
     <button onclick="handleSaveVideo()">Зачувај</button>
     <button onclick="closeVideoModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+  </div>
+</div>
+
+<!-- BULK UPLOAD MODAL -->
+<div class="modal" id="bulkModal">
+  <div class="modal-content">
+    <h2>📦 Bulk Upload видеа</h2>
+    <div class="modal-msg" id="bulkMsg"></div>
+    <p class="help-text">Внеси по 1 видео на линија: Наслов | YouTube линк</p>
+    <textarea id="bulkData" placeholder="Како да сменам штекер | https://youtu.be/ABC123&#10;Како да поставам плочка | https://youtu.be/DEF456"></textarea>
+    <select id="bulkCategory"></select>
+    <button onclick="handleBulkUpload()">Качи ги сите</button>
+    <button onclick="closeBulkModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
 </div>
 
@@ -193,15 +246,16 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const ADMIN_EMAIL = 'marjanmladenovski1406986@gmail.com';
 
 const CAT_NAMES = {
-  elektrika: "Електрика", vodovod: "Водовод", gradeznistvo: "Градежништво",
-  popravki: "Поправки", finalni: "Финални работи", plockari: "Плочкари",
-  gipsari: "Гипсари и Молери", stolari: "Столари", klima: "Клима",
-  greenje: "Греење", krov: "Кров", sanitarii: "Санитарии",
-  pvc: "ПВЦ прозори и врати", dvorovi: "Уредување дворови", cistenje: "Чистење"
+  elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
+  popravki: "🔧 Поправки", finalni: "🎨 Финални работи", plockari: "🔲 Плочкари",
+  gipsari: "🧱 Гипсари и Молери", stolari: "🚪 Столари", klima: "❄️ Клима",
+  greenje: "🔥 Греење", krov: "🏠 Кров", sanitarii: "🚿 Санитарии",
+  pvc: "🪟 ПВЦ прозори и врати", dvorovi: "🌳 Уредување дворови", cistenje: "🧹 Чистење"
 };
 
 let allVideos = [];
 let allMajstori = [];
+let allUsers = [];
 let editingVideoId = null;
 let editingMajstorId = null;
 
@@ -229,8 +283,7 @@ async function handleAdminLogin() {
   const password = document.getElementById('adminPassword').value;
   const msg = document.getElementById('loginMsg');
   if (!email || !password) { msg.textContent = 'Внеси мејл и лозинка'; msg.className = 'msg error'; return; }
-  msg.textContent = 'Се најавувам...'; msg.className = 'msg';
-  msg.style.display = 'block'; msg.style.background = '#1a2a3a'; msg.style.color = '#6bb8ff';
+  msg.textContent = 'Се најавувам...'; msg.className = 'msg'; msg.style.display = 'block'; msg.style.background = '#1a2a3a'; msg.style.color = '#6bb8ff';
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) { msg.textContent = 'Грешка: ' + error.message; msg.className = 'msg error'; return; }
   if (data.user.email !== ADMIN_EMAIL) {
@@ -247,7 +300,7 @@ async function handleAdminLogout() {
   document.getElementById('loginBox').classList.remove('hidden');
 }
 
-function showTab(tab) {
+function showTab(event, tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   event.target.classList.add('active');
@@ -258,6 +311,7 @@ function populateCategorySelects() {
   const opts = Object.entries(CAT_NAMES).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
   document.getElementById('vCategory').innerHTML = opts;
   document.getElementById('mCategory').innerHTML = opts;
+  document.getElementById('bulkCategory').innerHTML = opts;
 }
 
 async function loadAllData() {
@@ -265,21 +319,31 @@ async function loadAllData() {
   allVideos = vids || [];
   const { data: maj } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
   allMajstori = maj || [];
+  
+  // Load users from profiles
+  const { data: usrs } = await supabaseClient.from('profiles').select('*').order('id', { ascending: false });
+  allUsers = usrs || [];
+  
   renderStats();
   renderVideosList();
   renderMajstoriList();
+  renderUsersList();
+  renderCategoriesFull();
 }
 
 function renderStats() {
-  const { data: users } = { data: [] };
   const totalVideos = allVideos.length;
   const totalMajstori = allMajstori.length;
+  const totalUsers = allUsers.length;
+  const verifiedCount = allMajstori.filter(m => m.verified).length;
   const bezMajstor = allVideos.filter(v => !v.majstor_id).length;
 
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card"><div class="number">${totalVideos}</div><div class="label">🎬 Видеа</div></div>
     <div class="stat-card"><div class="number">${totalMajstori}</div><div class="label">👷 Мајстори</div></div>
-    <div class="stat-card"><div class="number">${bezMajstor}</div><div class="label">📹 Генерални видеа</div></div>
+    <div class="stat-card"><div class="number">${totalUsers}</div><div class="label">👥 Корисници</div></div>
+    <div class="stat-card"><div class="number">${verifiedCount}</div><div class="label">✅ Верификувани</div></div>
+    <div class="stat-card"><div class="number">${bezMajstor}</div><div class="label">📹 Генерални</div></div>
   `;
 
   const counts = {};
@@ -288,6 +352,22 @@ function renderStats() {
   document.getElementById('categoryList').innerHTML = sorted.map(([cat, count]) =>
     `<div class="category-row"><span class="name">${CAT_NAMES[cat] || cat}</span><span class="count">${count} видеа</span></div>`
   ).join('') || '<p style="color:#666;">Нема видеа</p>';
+}
+
+function renderCategoriesFull() {
+  const counts = {};
+  allVideos.forEach(v => { counts[v.category] = (counts[v.category] || 0) + 1; });
+  const majCounts = {};
+  allMajstori.forEach(m => { majCounts[m.category] = (majCounts[m.category] || 0) + 1; });
+  const html = Object.entries(CAT_NAMES).map(([k, v]) => {
+    const vc = counts[k] || 0;
+    const mc = majCounts[k] || 0;
+    return `<div class="category-row">
+      <span class="name">${v}</span>
+      <span class="count">🎬 ${vc} видеа · 👷 ${mc} мајстори</span>
+    </div>`;
+  }).join('');
+  document.getElementById('categoriesFullList').innerHTML = html;
 }
 
 function renderVideosList() {
@@ -301,7 +381,7 @@ function renderVideosList() {
       <div class="item-thumb"><img src="https://img.youtube.com/vi/${v.youtube_id}/hqdefault.jpg" onerror="this.style.display='none'"></div>
       <div class="item-info">
         <div class="item-title">${v.title}</div>
-        <div class="item-meta">${CAT_NAMES[v.category] || v.category} • ID: ${v.id} ${v.majstor_id ? '• Мајстор ID: ' + v.majstor_id : '• Генерално'}</div>
+        <div class="item-meta">${CAT_NAMES[v.category] || v.category} · ID: ${v.id} ${v.majstor_id ? '· Мајстор ID: ' + v.majstor_id : '· Генерално'}</div>
       </div>
       <div class="item-actions">
         <button class="btn-edit" onclick="openEditVideo(${v.id})">✏️ Уреди</button>
@@ -319,19 +399,39 @@ function renderMajstoriList() {
   if (filtered.length === 0) { list.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема мајстори</p>'; return; }
   list.innerHTML = filtered.map(m => {
     const avatar = m.photo_url ? `<img src="${m.photo_url}">` : (m.name||'?').charAt(0).toUpperCase();
+    const badges = (m.verified ? '<span class="badge verified">✅ Верификуван</span>' : '') + (m.featured ? '<span class="badge featured">⭐ Featured</span>' : '');
     return `
     <div class="item">
       <div class="item-avatar">${avatar}</div>
       <div class="item-info">
-        <div class="item-title">${m.name || 'Мајстор'}</div>
-        <div class="item-meta">${CAT_NAMES[m.category] || m.category} • ${m.city || '-'} • ${m.phone || '-'} • ⭐ ${m.rating || 0}</div>
+        <div class="item-title">${m.name || 'Мајстор'} ${badges}</div>
+        <div class="item-meta">${CAT_NAMES[m.category] || m.category} · ${m.city || '-'} · ${m.phone || '-'} · ⭐ ${m.rating || 0}</div>
       </div>
       <div class="item-actions">
+        <button class="btn-verify ${m.verified ? 'active' : ''}" onclick="toggleVerify(${m.id})">${m.verified ? '✅ Верификуван' : '✅ Верификувај'}</button>
+        <button class="btn-feature ${m.featured ? 'active' : ''}" onclick="toggleFeatured(${m.id})">${m.featured ? '⭐ Featured' : '⭐ Истакни'}</button>
         <button class="btn-edit" onclick="openEditMajstor(${m.id})">✏️ Уреди</button>
         <button class="btn-delete" onclick="deleteMajstor(${m.id})">🗑️ Избриши</button>
       </div>
     </div>`;
   }).join('');
+}
+
+function renderUsersList() {
+  const search = document.getElementById('userSearch').value.toLowerCase();
+  const filtered = allUsers.filter(u => !search || (u.name||'').toLowerCase().includes(search) || (u.phone||'').toLowerCase().includes(search));
+  document.getElementById('usersCount').textContent = filtered.length;
+  const list = document.getElementById('usersList');
+  if (filtered.length === 0) { list.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема корисници</p>'; return; }
+  list.innerHTML = filtered.map(u => `
+    <div class="item">
+      <div class="item-avatar">${(u.name||'?').charAt(0).toUpperCase()}</div>
+      <div class="item-info">
+        <div class="item-title">${u.name || 'Без име'}</div>
+        <div class="item-meta">${u.user_type === 'majstor' ? '👷 Мајстор' : u.user_type === 'baram' ? '🔍 Барам мајстор' : '❓ Непознат'} · ${u.phone || '-'} · ${u.city || '-'}</div>
+      </div>
+    </div>
+  `).join('');
 }
 
 // VIDEO CRUD
@@ -396,6 +496,47 @@ async function deleteVideo(id) {
   loadAllData();
 }
 
+// BULK UPLOAD
+function openBulkUpload() {
+  document.getElementById('bulkData').value = '';
+  document.getElementById('bulkMsg').className = 'modal-msg';
+  document.getElementById('bulkModal').classList.add('open');
+}
+
+function closeBulkModal() { document.getElementById('bulkModal').classList.remove('open'); }
+
+async function handleBulkUpload() {
+  const msg = document.getElementById('bulkMsg');
+  const data = document.getElementById('bulkData').value.trim();
+  const category = document.getElementById('bulkCategory').value;
+  if (!data) { msg.textContent = 'Внеси податоци'; msg.className = 'modal-msg error'; return; }
+
+  const lines = data.split('\n').filter(l => l.trim());
+  let successCount = 0;
+  let errorCount = 0;
+
+  msg.textContent = 'Се качуваат... 0/' + lines.length;
+  msg.className = 'modal-msg info';
+
+  for (let i = 0; i < lines.length; i++) {
+    const parts = lines[i].split('|').map(p => p.trim());
+    if (parts.length < 2) { errorCount++; continue; }
+    const title = parts[0];
+    const youtube = parts[1];
+    let videoId = youtube;
+    const match = youtube.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+    if (match) videoId = match[1];
+
+    const { error } = await supabaseClient.from('videos').insert({ title, title_en: title, youtube_id: videoId, category, likes: 0 });
+    if (error) errorCount++; else successCount++;
+    msg.textContent = 'Се качуваат... ' + (i + 1) + '/' + lines.length;
+  }
+
+  msg.textContent = '✅ Успешно: ' + successCount + ' · Грешки: ' + errorCount;
+  msg.className = 'modal-msg success';
+  setTimeout(() => { closeBulkModal(); loadAllData(); }, 2000);
+}
+
 // MAJSTOR CRUD
 function openEditMajstor(id) {
   const m = allMajstori.find(x => x.id === id);
@@ -437,7 +578,41 @@ async function deleteMajstor(id) {
   loadAllData();
 }
 
-// INIT
+async function toggleVerify(id) {
+  const m = allMajstori.find(x => x.id === id);
+  if (!m) return;
+  await supabaseClient.from('majstor_profiles').update({ verified: !m.verified }).eq('id', id);
+  loadAllData();
+}
+
+async function toggleFeatured(id) {
+  const m = allMajstori.find(x => x.id === id);
+  if (!m) return;
+  await supabaseClient.from('majstor_profiles').update({ featured: !m.featured }).eq('id', id);
+  loadAllData();
+}
+
+// BACKUP
+function exportData(type) {
+  let data, filename;
+  if (type === 'videos') { data = allVideos; filename = 'majstor-videos-' + Date.now() + '.json'; }
+  else if (type === 'majstori') { data = allMajstori; filename = 'majstor-majstori-' + Date.now() + '.json'; }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportAll() {
+  const all = { videos: allVideos, majstori: allMajstori, users: allUsers, exported: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'majstor-mk-backup-' + Date.now() + '.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
 checkAdminAuth();
 </script>
 
