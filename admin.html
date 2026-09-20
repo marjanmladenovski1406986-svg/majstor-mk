@@ -133,7 +133,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <button class="tab" onclick="showTab(event, 'backup')">💾 Backup</button>
     </div>
 
-    <!-- DASHBOARD -->
     <div class="tab-content active" id="tab-stats">
       <h2 style="color: #ff6b35; margin-bottom: 20px;">📊 Dashboard</h2>
       <div class="stats-grid" id="statsGrid"></div>
@@ -141,7 +140,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <div class="category-list" id="categoryList"></div>
     </div>
 
-    <!-- VIDEOS -->
     <div class="tab-content" id="tab-videos">
       <div class="section-header">
         <h2>🎬 Видеа (<span id="videosCount">0</span>)</h2>
@@ -154,7 +152,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <div class="items-list" id="videosList"></div>
     </div>
 
-    <!-- MAJSTORI -->
     <div class="tab-content" id="tab-majstori">
       <div class="section-header">
         <h2>👷 Мајстори (<span id="majstoriCount">0</span>)</h2>
@@ -163,22 +160,20 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <div class="items-list" id="majstoriList"></div>
     </div>
 
-    <!-- USERS -->
     <div class="tab-content" id="tab-users">
       <div class="section-header">
         <h2>👥 Корисници (<span id="usersCount">0</span>)</h2>
       </div>
-      <input type="text" class="search-bar" id="userSearch" placeholder="🔍 Пребарај по мејл..." oninput="renderUsersList()">
+      <input type="text" class="search-bar" id="userSearch" placeholder="🔍 Пребарај по име..." oninput="renderUsersList()">
       <div class="items-list" id="usersList"></div>
     </div>
 
-    <!-- CATEGORIES -->
     <div class="tab-content" id="tab-categories">
       <h2 style="color: #ff6b35; margin-bottom: 20px;">📁 Категории</h2>
+      <p style="color: #999; font-size: 13px; margin-bottom: 20px;">Категориите се фиксни. За промена, контактирај програмер.</p>
       <div class="category-list" id="categoriesFullList"></div>
     </div>
 
-    <!-- BACKUP -->
     <div class="tab-content" id="tab-backup">
       <h2 style="color: #ff6b35; margin-bottom: 20px;">💾 Backup & Export</h2>
       <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 25px; margin-bottom: 15px;">
@@ -192,7 +187,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   </div>
 </div>
 
-<!-- VIDEO MODAL -->
 <div class="modal" id="videoModal">
   <div class="modal-content">
     <h2 id="videoModalTitle">Додај видео</h2>
@@ -207,7 +201,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   </div>
 </div>
 
-<!-- BULK UPLOAD MODAL -->
 <div class="modal" id="bulkModal">
   <div class="modal-content">
     <h2>📦 Bulk Upload видеа</h2>
@@ -220,14 +213,15 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   </div>
 </div>
 
-<!-- MAJSTOR MODAL -->
 <div class="modal" id="majstorModal">
   <div class="modal-content">
     <h2>Уреди мајстор</h2>
     <div class="modal-msg" id="majstorMsg"></div>
     <input type="text" id="mName" placeholder="Име и презиме">
     <input type="tel" id="mPhone" placeholder="Телефон">
-    <input type="text" id="mCity" placeholder="Град">
+    <select id="mCity">
+      <option value="">Избери град...</option>
+    </select>
     <select id="mCategory"></select>
     <textarea id="mDescription" placeholder="Опис" rows="3"></textarea>
     <input type="number" id="mRating" placeholder="Оценка (0-5)" step="0.1" min="0" max="5">
@@ -244,6 +238,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const ADMIN_EMAIL = 'marjanmladenovski1406986@gmail.com';
+
+const CITIES = ['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
 
 const CAT_NAMES = {
   elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
@@ -275,7 +271,14 @@ function showAdminPanel(email) {
   document.getElementById('adminPanel').classList.add('active');
   document.getElementById('adminUserEmail').textContent = email;
   populateCategorySelects();
+  populateCities();
   loadAllData();
+}
+
+function populateCities() {
+  const sel = document.getElementById('mCity');
+  if (!sel) return;
+  CITIES.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
 }
 
 async function handleAdminLogin() {
@@ -319,11 +322,8 @@ async function loadAllData() {
   allVideos = vids || [];
   const { data: maj } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
   allMajstori = maj || [];
-  
-  // Load users from profiles
   const { data: usrs } = await supabaseClient.from('profiles').select('*').order('id', { ascending: false });
   allUsers = usrs || [];
-  
   renderStats();
   renderVideosList();
   renderMajstoriList();
@@ -364,7 +364,7 @@ function renderCategoriesFull() {
     const mc = majCounts[k] || 0;
     return `<div class="category-row">
       <span class="name">${v}</span>
-      <span class="count">🎬 ${vc} видеа · 👷 ${mc} мајстори</span>
+      <span class="count">🎬 ${vc} · 👷 ${mc}</span>
     </div>`;
   }).join('');
   document.getElementById('categoriesFullList').innerHTML = html;
@@ -430,11 +430,21 @@ function renderUsersList() {
         <div class="item-title">${u.name || 'Без име'}</div>
         <div class="item-meta">${u.user_type === 'majstor' ? '👷 Мајстор' : u.user_type === 'baram' ? '🔍 Барам мајстор' : '❓ Непознат'} · ${u.phone || '-'} · ${u.city || '-'}</div>
       </div>
+      <div class="item-actions">
+        <button class="btn-delete" onclick="deleteUserProfile('${u.id}')">🗑️ Избриши профил</button>
+      </div>
     </div>
   `).join('');
 }
 
-// VIDEO CRUD
+async function deleteUserProfile(id) {
+  if (!confirm('Дали си сигурен? Ова ќе го избрише само профилот.')) return;
+  const { error } = await supabaseClient.from('profiles').delete().eq('id', id);
+  if (error) { alert('Грешка: ' + error.message); return; }
+  alert('✅ Профилот е избришан');
+  loadAllData();
+}
+
 function openAddVideo() {
   editingVideoId = null;
   document.getElementById('videoModalTitle').textContent = 'Додај видео';
@@ -496,7 +506,6 @@ async function deleteVideo(id) {
   loadAllData();
 }
 
-// BULK UPLOAD
 function openBulkUpload() {
   document.getElementById('bulkData').value = '';
   document.getElementById('bulkMsg').className = 'modal-msg';
@@ -537,7 +546,6 @@ async function handleBulkUpload() {
   setTimeout(() => { closeBulkModal(); loadAllData(); }, 2000);
 }
 
-// MAJSTOR CRUD
 function openEditMajstor(id) {
   const m = allMajstori.find(x => x.id === id);
   if (!m) return;
@@ -558,7 +566,7 @@ async function handleSaveMajstor() {
   const msg = document.getElementById('majstorMsg');
   const name = document.getElementById('mName').value.trim();
   const phone = document.getElementById('mPhone').value.trim();
-  const city = document.getElementById('mCity').value.trim();
+  const city = document.getElementById('mCity').value;
   const category = document.getElementById('mCategory').value;
   const description = document.getElementById('mDescription').value.trim();
   const rating = parseFloat(document.getElementById('mRating').value) || 0;
@@ -592,7 +600,6 @@ async function toggleFeatured(id) {
   loadAllData();
 }
 
-// BACKUP
 function exportData(type) {
   let data, filename;
   if (type === 'videos') { data = allVideos; filename = 'majstor-videos-' + Date.now() + '.json'; }
