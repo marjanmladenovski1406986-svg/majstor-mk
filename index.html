@@ -642,7 +642,7 @@ async function showMajstor(id) {
   if (!m) return;
   const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
   const tr = t[currentLang];
-  const phoneDisplay = currentUser ? (m.phone || '-') : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${tr.loginToSeePhone}</span>`;
+  const phoneDisplay = currentUser ? (m.phone ? `<a href="tel:${m.phone}" onclick="trackPhoneClick(${m.id})" style="color: #ff6b35; text-decoration: none; font-weight: 700;">📞 ${m.phone}</a>` : '-') : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${tr.loginToSeePhone}</span>`;
 
   document.getElementById('majstor-profile-content').innerHTML = `
     <div class="majstor-profile">
@@ -1276,6 +1276,14 @@ async function checkUser() {
 }
 
 populateCities();
+async function trackPhoneClick(majstorId) {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  await supabaseClient.from('phone_clicks').insert({
+    majstor_id: majstorId,
+    user_id: user ? user.id : null
+  });
+}
+
 checkUser();
 loadVideos();
 loadMajstori();
