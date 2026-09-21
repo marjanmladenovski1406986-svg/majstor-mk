@@ -129,6 +129,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <button class="tab" onclick="showTab(event, 'videos')">🎬 Видеа</button>
       <button class="tab" onclick="showTab(event, 'majstori')">👷 Мајстори</button>
       <button class="tab" onclick="showTab(event, 'users')">👥 Корисници</button>
+      <button class="tab" onclick="showTab(event, 'clicks')">📞 Кликови</button>
       <button class="tab" onclick="showTab(event, 'categories')">📁 Категории</button>
       <button class="tab" onclick="showTab(event, 'backup')">💾 Backup</button>
     </div>
@@ -166,6 +167,13 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       </div>
       <input type="text" class="search-bar" id="userSearch" placeholder="🔍 Пребарај по име..." oninput="renderUsersList()">
       <div class="items-list" id="usersList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-clicks">
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">📞 Кликови на телефон</h2>
+      <div class="stats-grid" id="clicksStats"></div>
+      <h3 style="color: #ff6b35; margin-bottom: 15px;">По мајстор</h3>
+      <div class="category-list" id="clicksList"></div>
     </div>
 
     <div class="tab-content" id="tab-categories">
@@ -246,12 +254,14 @@ const CAT_NAMES = {
   popravki: "🔧 Поправки", finalni: "🎨 Финални работи", plockari: "🔲 Плочкари",
   gipsari: "🧱 Гипсари и Молери", stolari: "🚪 Столари", klima: "❄️ Клима",
   greenje: "🔥 Греење", krov: "🏠 Кров", sanitarii: "🚿 Санитарии",
-  pvc: "🪟 ПВЦ прозори и врати", dvorovi: "🌳 Уредување дворови", cistenje: "🧹 Чистење"
+  pvc: "🪟 ПВЦ прозори и врати", dvorovi: "🌳 Уредување дворови", cistenje: "🧹 Чистење",
+  opti: "🔨 Општи работници"
 };
 
 let allVideos = [];
 let allMajstori = [];
 let allUsers = [];
+let allClicks = [];
 let editingVideoId = null;
 let editingMajstorId = null;
 
@@ -329,6 +339,52 @@ async function loadAllData() {
   renderMajstoriList();
   renderUsersList();
   renderCategoriesFull();
+  loadClicks();
+}
+
+async function loadClicks() {
+  const { data } = await supabaseClient.from('phone_clicks').select('*').order('clicked_at', { ascending: false });
+  allClicks = data || [];
+  renderClicks();
+}
+
+function renderClicks() {
+  const total = allClicks.length;
+  const now = new Date();
+  const today = allClicks.filter(c => new Date(c.clicked_at).toDateString() === now.toDateString()).length;
+  const week = allClicks.filter(c => {
+    const diff = (now - new Date(c.clicked_at)) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }).length;
+  const month = allClicks.filter(c => {
+    const diff = (now - new Date(c.clicked_at)) / (1000 * 60 * 60 * 24);
+    return diff <= 30;
+  }).length;
+
+  document.getElementById('clicksStats').innerHTML = `
+    <div class="stat-card"><div class="number">${total}</div><div class="label">📞 Вкупно</div></div>
+    <div class="stat-card"><div class="number">${today}</div><div class="label">📅 Денес</div></div>
+    <div class="stat-card"><div class="number">${week}</div><div class="label">📆 Оваа недела</div></div>
+    <div class="stat-card"><div class="number">${month}</div><div class="label">🗓️ Овој месец</div></div>
+  `;
+
+  const counts = {};
+  allClicks.forEach(c => { counts[c.majstor_id] = (counts[c.majstor_id] || 0) + 1; });
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  if (sorted.length === 0) {
+    document.getElementById('clicksList').innerHTML = '<p style="color:#666;">Нема кликови сè уште</p>';
+    return;
+  }
+  document.getElementById('clicksList').innerHTML = sorted.map(([id, count]) => {
+    const m = allMajstori.find(x => x.id === parseInt(id));
+    const name = m ? m.name : 'Непознат';
+    const cat = m ? (CAT_NAMES[m.category] || m.category) : '';
+    const city = m ? m.city : '';
+    return `<div class="category-row">
+      <span class="name">👷 ${name} <span style="color:#666; font-size:12px;">(${cat} · ${city})</span></span>
+      <span class="count">📞 ${count} кликови</span>
+    </div>`;
+  }).join('');
 }
 
 function renderStats() {
@@ -400,12 +456,13 @@ function renderMajstoriList() {
   list.innerHTML = filtered.map(m => {
     const avatar = m.photo_url ? `<img src="${m.photo_url}">` : (m.name||'?').charAt(0).toUpperCase();
     const badges = (m.verified ? '<span class="badge verified">✅ Верификуван</span>' : '') + (m.featured ? '<span class="badge featured">⭐ Featured</span>' : '');
+    const clicks = allClicks.filter(c => c.majstor_id === m.id).length;
     return `
     <div class="item">
       <div class="item-avatar">${avatar}</div>
       <div class="item-info">
         <div class="item-title">${m.name || 'Мајстор'} ${badges}</div>
-        <div class="item-meta">${CAT_NAMES[m.category] || m.category} · ${m.city || '-'} · ${m.phone || '-'} · ⭐ ${m.rating || 0}</div>
+        <div class="item-meta">${CAT_NAMES[m.category] || m.category} · ${m.city || '-'} · ${m.phone || '-'} · ⭐ ${m.rating || 0} · 📞 ${clicks} кликови</div>
       </div>
       <div class="item-actions">
         <button class="btn-verify ${m.verified ? 'active' : ''}" onclick="toggleVerify(${m.id})">${m.verified ? '✅ Верификуван' : '✅ Верификувај'}</button>
@@ -511,7 +568,6 @@ function openBulkUpload() {
   document.getElementById('bulkMsg').className = 'modal-msg';
   document.getElementById('bulkModal').classList.add('open');
 }
-
 function closeBulkModal() { document.getElementById('bulkModal').classList.remove('open'); }
 
 async function handleBulkUpload() {
@@ -612,7 +668,7 @@ function exportData(type) {
 }
 
 function exportAll() {
-  const all = { videos: allVideos, majstori: allMajstori, users: allUsers, exported: new Date().toISOString() };
+  const all = { videos: allVideos, majstori: allMajstori, users: allUsers, clicks: allClicks, exported: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
