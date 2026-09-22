@@ -1255,7 +1255,7 @@ async function confirmMajstorRegistration() {
   const fullName = (name + ' ' + surname).trim();
 
   await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city });
-  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK' });
+  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK'  , facebook_url: facebook || null });
 
   pendingMajstorData = null;
   await checkUser();
