@@ -331,6 +331,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
           <option value="opti" id="opt-opti">🔨 Општи работници</option>
         </select>
         <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
+        <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)">
         <input type="email" id="m-email" placeholder="Е-пошта">
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
         <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
@@ -411,6 +412,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <select id="edit-city"></select>
     <select id="edit-category"></select>
     <textarea id="edit-description" placeholder="Опис" rows="3"></textarea>
+    <input type="url" id="edit-facebook" placeholder="📘 Facebook профил (опционо)">
     <button onclick="handleEditInfo()" id="btn-edit-info">Зачувај</button>
     <button onclick="closeEditInfo()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
@@ -1217,6 +1219,7 @@ function prepareRegisterMajstor() {
   const description = document.getElementById('m-description').value.trim();
   const email = document.getElementById('m-email').value.trim();
   const password = document.getElementById('m-password').value;
+    const facebook = document.getElementById('m-facebook').value.trim();
 
   if (!name || !email || !password || !category || !city) { showModalMsg(tr.fillAll, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
