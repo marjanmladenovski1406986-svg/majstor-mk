@@ -627,12 +627,13 @@ async function handleSaveMajstor() {
   const city = document.getElementById('mCity').value;
   const category = document.getElementById('mCategory').value;
   const description = document.getElementById('mDescription').value.trim();
+    const facebook = document.getElementById('mFacebook').value.trim();
   const rating = parseFloat(document.getElementById('mRating').value) || 0;
 
   if (!name) { msg.textContent = 'Пополни име'; msg.className = 'modal-msg error'; return; }
   msg.textContent = 'Се зачувува...'; msg.className = 'modal-msg info';
 
-  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, rating }).eq('id', editingMajstorId);
+  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, rating, facebook_url: facebook || null }).eq('id', editingMajstorId);
   if (error) { msg.textContent = error.message; msg.className = 'modal-msg error'; return; }
   msg.textContent = '✅ Зачувано!'; msg.className = 'modal-msg success';
   setTimeout(() => { closeMajstorModal(); loadAllData(); }, 800);
