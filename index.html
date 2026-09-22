@@ -697,6 +697,7 @@ async function showMajstor(id) {
       <div class="info-row"><span>${tr.infoPhone}</span><span>${phoneDisplay}</span></div>
       <div class="info-row"><span>${tr.infoCity}</span><span>${m.city || '-'}</span></div>
       <div class="info-row"><span>${tr.infoDesc}</span><span>${m.description || '-'}</span></div>
+        ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 15px; padding: 12px 20px; background: #1877f2; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">📘 Facebook профил</a>` : ''}
     </div>
     <div id="majstor-images-section"></div>
     <div id="majstor-videos-section"></div>
