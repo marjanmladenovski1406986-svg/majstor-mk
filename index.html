@@ -972,9 +972,10 @@ async function handleEditInfo() {
   const city = document.getElementById('edit-city').value;
   const category = document.getElementById('edit-category').value;
   const description = document.getElementById('edit-description').value.trim();
+    const facebook = document.getElementById('edit-facebook').value.trim();
   const msg = document.getElementById('edit-info-msg');
   if (!name || !category) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description }).eq('id', currentMajstorProfile.id);
+  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, facebook_url: facebook || null }).eq('id', currentMajstorProfile.id);
   if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
   msg.textContent = tr.infoChanged;
   msg.className = 'modal-msg success';
@@ -983,6 +984,7 @@ async function handleEditInfo() {
   currentMajstorProfile.city = city;
   currentMajstorProfile.category = category;
   currentMajstorProfile.description = description;
+    currentMajstorProfile.facebook_url = facebook || null;
   await loadMajstori();
   setTimeout(() => { closeEditInfo(); renderMyProfile(currentMajstorProfile); }, 1000);
 }
