@@ -1228,7 +1228,7 @@ function prepareRegisterMajstor() {
   if (!name || !email || !password || !category || !city) { showModalMsg(tr.fillAll, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
 
-  pendingMajstorData = { name, surname, phone, city, category, description, email, password };
+    pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook };
   closeModal();
   document.getElementById('confirmModal').classList.add('open');
 }
@@ -1244,7 +1244,7 @@ function cancelMajstorRegistration() {
 async function confirmMajstorRegistration() {
   if (!pendingMajstorData) return;
   const tr = t[currentLang];
-  const { name, surname, phone, city, category, description, email, password } = pendingMajstorData;
+    const { name, surname, phone, city, category, description, email, password, facebook } = pendingMajstorData;
 
   document.getElementById('confirmModal').classList.remove('open');
 
