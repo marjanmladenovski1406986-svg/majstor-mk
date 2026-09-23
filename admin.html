@@ -333,7 +333,7 @@ async function loadAllData() {
   allVideos = vids || [];
   const { data: maj } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
   allMajstori = maj || [];
-  const { data: usrs } = await supabaseClient.from('profiles').select('*').order('id', { ascending: false });
+    const { data: usrs } = await supabaseClient.from('profiles').select('*').neq('user_type', 'majstor').order('id', { ascending: false });
   allUsers = usrs || [];
   renderStats();
   renderVideosList();
