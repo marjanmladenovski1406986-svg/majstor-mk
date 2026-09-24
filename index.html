@@ -351,18 +351,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
   </label>
 </div>
-       <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
-  <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
-    <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-    <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
-  </label>
-</div>
-       <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
-  <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
-    <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-    <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
-  </label>
-</div> 
+    
         <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
       <div id="form-baram" class="hidden">
@@ -387,12 +376,15 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <div class="modal-content">
     <div class="confirm-box">
       <h2 id="confirm-title">📢 Добредојдовте!</h2>
-      <div class="text" id="confirm-text">
-        <p><strong>Мајстор.мк</strong> е нова платформа и сè уште растеме.</p>
-        <p>Сега е <strong>бесплатно за сите</strong>. Ќе остане така додека не застанеме цврсто на нозе. <strong>Ќе ве известиме навреме</strong> кога ќе има промени.</p>
-        <p>Вашиот профил денес = <strong>вашата реклама утре</strong>.</p>
-      </div>
-      <button class="btn-register" onclick="confirmMajstorRegistration()" id="btn-confirm-register">Регистрирај се</button>
+      <div class="text" id="confirm-text" style="max-height: 50vh; overflow-y: auto;">
+  <p><strong>Пред да се регистрираш, прочитај ги Условите:</strong></p>
+  <p><strong>1. Природа на платформата:</strong> majstor.mk е само посредник. Не одговараме за квалитетот на извршените работи.</p>
+  <p><strong>2. Твои обврски:</strong> Податоците мора да се вистинити. Ти си одговорен за својата лозинка.</p>
+  <p><strong>3. Забрането:</strong> Лажни податоци, клеветење, несоодветна содржина, автоматизиран пристап.</p>
+  <p><strong>4. Период:</strong> Првите 6 месеци се бесплатни. Потоа ќе те известиме за претплата.</p>
+  <p>Со кликнување на копчето подолу, потврдуваш дека ги прифаќаш <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</p>
+</div>
+      <button class="btn-register" onclick="confirmMajstorRegistration()" id="btn-confirm-register">✅ Се согласувам и се регистрирам</button>
       <button class="btn-cancel" onclick="cancelMajstorRegistration()" id="btn-cancel-register">Откажи</button>
     </div>
   </div>
