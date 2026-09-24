@@ -39,7 +39,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .welcome-box p strong { color: #ff6b35; }
 .welcome-box p:last-child { margin-bottom: 0; }
 
-.city-filter { max-width: 600px; margin:  25px auto 20px; text-align: center; padding: 0 20px; }
+.city-filter { max-width: 600px; margin: 25px auto 20px; text-align: center; padding: 0 20px; }
 .city-filter select { width: 100%; max-width: 280px; padding: 10px 18px; background: #1a1a1a; border: 1px solid #333; border-radius: 25px; color: #fff; font-size: 14px; font-family: inherit; cursor: pointer; text-align: center; }
 .city-filter select:focus { outline: none; border-color: #ff6b35; }
 
@@ -126,8 +126,9 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 /* CONFIRM REGISTRATION MODAL */
 .confirm-box { text-align: center; }
 .confirm-box h2 { color: #ff6b35; font-size: 24px; margin-bottom: 20px; }
-.confirm-box .text { color: #ddd; font-size: 15px; line-height: 1.8; margin-bottom: 25px; text-align: left; }
+.confirm-box .text { color: #ddd; font-size: 14px; line-height: 1.7; margin-bottom: 25px; text-align: left; }
 .confirm-box .text strong { color: #ff6b35; }
+.confirm-box .text a { color: #ff6b35; }
 .confirm-box .btn-register { background: #ff6b35; }
 .confirm-box .btn-cancel { background: transparent; border: 1px solid #333; color: #999; }
 
@@ -218,7 +219,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
         <div class="profile-avatar-mini" id="profile-avatar-mini">?</div>
         <span id="btn-my-profile-text">Мој Профил</span>
       </button>
-     <span class="user-email hidden" id="user-email-header"></span>
+      <span class="user-email hidden" id="user-email-header"></span>
       <button class="btn-auth logout" onclick="handleLogout()" id="btn-logout-header">Одјави се</button>
     </div>
   </div>
@@ -232,7 +233,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 <div class="welcome-box" id="welcome-box">
   <h3 id="welcome-title">🔨 Добредојдовте!</h3>
   <p id="welcome-p1"><strong>👷 Мајстори</strong> → Регистрирајте се. Покажете ја вашата работа. Најдете нови клиенти.</p>
-  <p id="welcome-p2"><strong>🔍 Барате мајстор?</strong> →  Регистрирајте се и контактирајте ги сите.</p>
+  <p id="welcome-p2"><strong>🔍 Барате мајстор?</strong> → Регистрирајте се и контактирајте ги сите.</p>
 </div>
 
 <div class="city-filter" id="city-filter">
@@ -339,31 +340,24 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
         <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)">
         <input type="email" id="m-email" placeholder="Е-пошта">
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
-       <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
-  <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
-    <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-    <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
-  </label>
-</div>
-       <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
-  <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
-    <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-    <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
-  </label>
-</div>
-    
+        <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
+            <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+            <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
+          </label>
+        </div>
         <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
       <div id="form-baram" class="hidden">
         <input type="text" id="b-name" placeholder="Име">
         <input type="email" id="b-email" placeholder="Е-пошта">
         <input type="password" id="b-password" placeholder="Лозинка (мин. 6 знаци)">
-       <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
-  <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
-    <input type="checkbox" id="b-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-    <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
-  </label>
-</div>
+        <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
+            <input type="checkbox" id="b-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+            <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
+          </label>
+        </div>
         <button onclick="handleRegisterBaram()" id="btn-reg-baram">Регистрирај се</button>
       </div>
     </div>
@@ -376,14 +370,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <div class="modal-content">
     <div class="confirm-box">
       <h2 id="confirm-title">📢 Добредојдовте!</h2>
-      <div class="text" id="confirm-text" style="max-height: 50vh; overflow-y: auto;">
-  <p><strong>Пред да се регистрираш, прочитај ги Условите:</strong></p>
-  <p><strong>1. Природа на платформата:</strong> majstor.mk е само посредник. Не одговараме за квалитетот на извршените работи.</p>
-  <p><strong>2. Твои обврски:</strong> Податоците мора да се вистинити. Ти си одговорен за својата лозинка.</p>
-  <p><strong>3. Забрането:</strong> Лажни податоци, клеветење, несоодветна содржина, автоматизиран пристап.</p>
-  <p><strong>4. Период:</strong> Првите 6 месеци се бесплатни. Потоа ќе те известиме за претплата.</p>
-  <p>Со кликнување на копчето подолу, потврдуваш дека ги прифаќаш <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</p>
-</div>
+      <div class="text" id="confirm-text" style="max-height: 50vh; overflow-y: auto;"></div>
       <button class="btn-register" onclick="confirmMajstorRegistration()" id="btn-confirm-register">✅ Се согласувам и се регистрирам</button>
       <button class="btn-cancel" onclick="cancelMajstorRegistration()" id="btn-cancel-register">Откажи</button>
     </div>
@@ -475,6 +462,70 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
+<!-- TERMS MODAL -->
+<div class="modal" id="termsModal">
+  <div class="modal-content">
+    <h2 id="terms-title">📋 Услови за користење</h2>
+    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
+      <p><strong>1. Општи одредби</strong></p>
+      <p>Овие Услови го регулираат користењето на веб-страницата majstor.mk (во натамошниот текст: „Платформа"). Со влегување и користење на Платформата, се согласуваш со овие Услови.</p>
+      <p><strong>2. Природа на Платформата</strong></p>
+      <p>majstor.mk е само посредник — не е изведувач на работи. Платформата не одговара за квалитетот, безбедноста или навременоста на извршените работи.</p>
+      <p><strong>3. Регистрација и сметки</strong></p>
+      <p>Податоците што ги внесуваш мора да бидат вистинити и точни. Секој корисник е одговорен за заштита на својата лозинка. Едно лице/фирма има право на една сметка.</p>
+      <p><strong>4. Профили на мајстори</strong></p>
+      <p>Првите 6 месеци од регистрацијата се бесплатни. По истекот, ќе биде понудена претплата. Мајсторите се должни да ги наведат вистинити податоци за своите квалификации.</p>
+      <p><strong>5. Забрането однесување</strong></p>
+      <p>Забрането е: внесување лажни податоци, клеветење, објавување несоодветна содржина, автоматизиран пристап (ботови) и копирање на содржина без дозвола.</p>
+      <p><strong>6. Интелектуална сопственост</strong></p>
+      <p>Сите видеа, текстови и слики се заштитени. Не смееш да ги копираш без писмена согласност.</p>
+      <p><strong>7. Ограничување на одговорност</strong></p>
+      <p>Платформата не гарантира дека ќе најдеш мајстор или дека работата ќе биде без проблеми. Користењето е на сопствена одговорност.</p>
+      <p><strong>8. Меродавно право</strong></p>
+      <p>За сите спорови надлежен е Основниот суд во Скопје, согласно законите на Северна Македонија.</p>
+    </div>
+    <button onclick="closeDoc('termsModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+  </div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="modal" id="privacyModal">
+  <div class="modal-content">
+    <h2 id="privacy-title">🔒 Политика за приватност</h2>
+    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
+      <p><strong>1. Вовед</strong></p>
+      <p>Заштитата на твоите лични податоци е важна за нас. Оваа Политика објаснува кои податоци ги собираме и како ги користиме.</p>
+      <p><strong>2. Податоци што ги собираме</strong></p>
+      <p>Име, е-пошта, телефон, град. Автоматски податоци: IP адреса, уред, прегледани страници, време на посета. Колачиња за подобро искуство.</p>
+      <p><strong>3. Како ги користиме</strong></p>
+      <p>За одржување на Платформата, комуникација помеѓу корисници и мајстори, испраќање известувања и законски обврски. Нема да продадеме твои податоци на трети лица без согласност.</p>
+      <p><strong>4. Чување и безбедност</strong></p>
+      <p>Податоците се чуваат на безбедни сервери со ограничен пристап. Ги преземаме разумни мерки за заштита.</p>
+      <p><strong>5. Твои права</strong></p>
+      <p>Пристап до твоите податоци, исправка, бришење („право да се биде заборавен") и повлекување на согласност. Барања: kontakt@majstor.mk</p>
+      <p><strong>6. Колачиња</strong></p>
+      <p>Користиме неопходни и аналитички колачиња. Може да ги исклучиш во поставувањата на пребарувачот.</p>
+      <p><strong>7. Промени</strong></p>
+      <p>Оваа Политика може да се ажурира. Промените стапуваат во сила со објавувањето.</p>
+    </div>
+    <button onclick="closeDoc('privacyModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+  </div>
+</div>
+
+<!-- COOKIES MODAL -->
+<div class="modal" id="cookiesDocModal">
+  <div class="modal-content">
+    <h2 id="cookies-doc-title">🍪 Извештај за колачиња</h2>
+    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
+      <p>Оваа веб-страница користи колачиња за да го подобри твоето искуство.</p>
+      <p><strong>Неопходни колачиња:</strong> Потребни за функционирање на страницата (најава, сесија). Не може да се исклучат.</p>
+      <p><strong>Аналитички колачиња:</strong> Ни помагаат да разбереме како се користи страницата — анонимни податоци (Vercel Analytics).</p>
+      <p>Со продолжување на користењето на страницата, се согласуваш со употреба на колачиња.</p>
+    </div>
+    <button onclick="closeDoc('cookiesDocModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -508,7 +559,7 @@ const t = {
     heroText:"Најдобрите видеа и мајстори се тука.",
     welcomeTitle:"🔨 Добредојдовте!",
     welcomeP1:"👷 Мајстори → Регистрирајте се. Покажете ја вашата работа. Најдете нови клиенти.",
-    welcomeP2:"🔍 Барате мајстор? →  Регистрирајте се и контактирајте ги сите.",
+    welcomeP2:"🔍 Барате мајстор? → Регистрирајте се и контактирајте ги сите.",
     all:"Сите", elektrika:"⚡ Електрика", vodovod:"💧 Водовод", gradeznistvo:"🏗️ Градежништво", popravki:"🔧 Поправки", finalni:"🎨 Финални работи", plockari:"🔲 Плочкари", gipsari:"🧱 Гипсари и Молери", stolari:"🚪 Столари", klima:"❄️ Клима", greenje:"🔥 Греење", krov:"🏠 Кров", sanitarii:"🚿 Санитарии", pvc:"🪟 ПВЦ прозори и врати", dvorovi:"🌳 Уредување дворови", cistenje:"🧹 Чистење", opti:"🔨 Општи работници",
     latest:"🔥 Најнови видеа", majstori:"👷 Мајстори", loadingText:"Вчитувам видеа...", footer:"© 2026 Мајстор.мк",
     allCities:"📍 Сите градови",
@@ -544,9 +595,9 @@ const t = {
     avatarChanged:"✅ Сликата е променета!", deleteConfirm:"Дали си сигурен?",
     maxImages:"Максимум 10 слики. Избриши некоја прво.",
     errorAdd:"Грешка: ", images:"слики",
-    confirmTitle:"📢 Добредојдовте!",
-    confirmText:"<p><strong>Мајстор.мк</strong> е нова платформа и сè уште растеме.</p><p>Сега е <strong>бесплатно за сите</strong>. Ќе остане така додека не застанеме цврсто на нозе. <strong>Ќе ве известиме навреме</strong> кога ќе има промени.</p><p>Вашиот профил денес = <strong>вашата реклама утре</strong>.</p>",
-    btnConfirmRegister:"Регистрирај се"
+    confirmTitle:"📢 Пред да продолжиш",
+    confirmText:"<p><strong>Пред да се регистрираш, прочитај ги Условите:</strong></p><p><strong>1. Природа на платформата:</strong> majstor.mk е само посредник. Не одговараме за квалитетот на извршените работи.</p><p><strong>2. Твои обврски:</strong> Податоците мора да се вистинити. Ти си одговорен за својата лозинка.</p><p><strong>3. Забрането:</strong> Лажни податоци, клеветење, несоодветна содржина, автоматизиран пристап.</p><p><strong>4. Период:</strong> Првите 6 месеци се бесплатни. Потоа ќе те известиме за претплата.</p><p>Со кликнување на копчето подолу, потврдуваш дека ги прифаќаш <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Условите за користење</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Политиката за приватност</a> и <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Колачињата</a>.</p>",
+    btnConfirmRegister:"✅ Се согласувам и се регистрирам"
   },
   en: {
     logo:"MasterHow", login:"Login", logout:"Sign out", myProfile:"My Profile",
@@ -590,9 +641,9 @@ const t = {
     avatarChanged:"✅ Picture changed!", deleteConfirm:"Are you sure?",
     maxImages:"Maximum 10 images. Delete one first.",
     errorAdd:"Error: ", images:"images",
-    confirmTitle:"📢 Welcome!",
-    confirmText:"<p><strong>MasterHow</strong> is a new platform and we are still growing.</p><p>It is <strong>free for everyone now</strong>. It will stay that way until we stand firm. <strong>We will notify you in time</strong> when there are changes.</p><p>Your profile today = <strong>your advertisement tomorrow</strong>.</p>",
-    btnConfirmRegister:"Register"
+    confirmTitle:"📢 Before you continue",
+    confirmText:"<p><strong>Before you register, read the Terms:</strong></p><p><strong>1. Nature of platform:</strong> majstor.mk is only an intermediary. We are not responsible for the quality of work performed.</p><p><strong>2. Your obligations:</strong> Data must be truthful. You are responsible for your password.</p><p><strong>3. Forbidden:</strong> False data, defamation, inappropriate content, automated access.</p><p><strong>4. Period:</strong> First 6 months are free. Then we will notify you about subscription.</p><p>By clicking below, you confirm that you accept the <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Terms</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Privacy Policy</a> and <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Cookies</a>.</p>",
+    btnConfirmRegister:"✅ I agree and register"
   }
 };
 
@@ -724,7 +775,7 @@ async function showMajstor(id) {
       <div class="info-row"><span>${tr.infoPhone}</span><span>${phoneDisplay}</span></div>
       <div class="info-row"><span>${tr.infoCity}</span><span>${m.city || '-'}</span></div>
       <div class="info-row"><span>${tr.infoDesc}</span><span>${m.description || '-'}</span></div>
-        ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 15px; padding: 12px 20px; background: #1877f2; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">📘 Facebook профил</a>` : ''}
+      ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 15px; padding: 12px 20px; background: #1877f2; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">📘 Facebook профил</a>` : ''}
     </div>
     <div id="majstor-images-section"></div>
     <div id="majstor-videos-section"></div>
@@ -979,7 +1030,6 @@ async function handleChangePassword() {
 
 function openEditInfo() {
   if (!currentMajstorProfile) return;
-  const tr = t[currentLang];
   populateEditCategories();
   populateEditCities();
   document.getElementById('edit-name').value = currentMajstorProfile.name || '';
@@ -987,7 +1037,7 @@ function openEditInfo() {
   document.getElementById('edit-city').value = currentMajstorProfile.city || '';
   document.getElementById('edit-category').value = currentMajstorProfile.category || 'elektrika';
   document.getElementById('edit-description').value = currentMajstorProfile.description || '';
-    document.getElementById('edit-facebook').value = currentMajstorProfile.facebook_url || '';
+  document.getElementById('edit-facebook').value = currentMajstorProfile.facebook_url || '';
   document.getElementById('edit-info-msg').className = 'modal-msg';
   document.getElementById('editInfoModal').classList.add('open');
 }
@@ -1000,7 +1050,7 @@ async function handleEditInfo() {
   const city = document.getElementById('edit-city').value;
   const category = document.getElementById('edit-category').value;
   const description = document.getElementById('edit-description').value.trim();
-    const facebook = document.getElementById('edit-facebook').value.trim();
+  const facebook = document.getElementById('edit-facebook').value.trim();
   const msg = document.getElementById('edit-info-msg');
   if (!name || !category) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
   const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, facebook_url: facebook || null }).eq('id', currentMajstorProfile.id);
@@ -1012,7 +1062,7 @@ async function handleEditInfo() {
   currentMajstorProfile.city = city;
   currentMajstorProfile.category = category;
   currentMajstorProfile.description = description;
-    currentMajstorProfile.facebook_url = facebook || null;
+  currentMajstorProfile.facebook_url = facebook || null;
   await loadMajstori();
   setTimeout(() => { closeEditInfo(); renderMyProfile(currentMajstorProfile); }, 1000);
 }
@@ -1239,54 +1289,6 @@ async function handleLogin() {
   setTimeout(() => { closeModal(); checkUser(); }, 800);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-// PREPARE MAJSTOR (shows confirm screen first)
 function prepareRegisterMajstor() {
   const tr = t[currentLang];
   const name = document.getElementById('m-name').value.trim();
@@ -1297,13 +1299,13 @@ function prepareRegisterMajstor() {
   const description = document.getElementById('m-description').value.trim();
   const email = document.getElementById('m-email').value.trim();
   const password = document.getElementById('m-password').value;
-    const facebook = document.getElementById('m-facebook').value.trim();
+  const facebook = document.getElementById('m-facebook').value.trim();
 
   if (!name || !email || !password || !category || !city) { showModalMsg(tr.fillAll, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
-    if (!document.getElementById('m-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
+  if (!document.getElementById('m-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
-    pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook };
+  pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook };
   closeModal();
   document.getElementById('confirmModal').classList.add('open');
 }
@@ -1319,8 +1321,8 @@ function cancelMajstorRegistration() {
 async function confirmMajstorRegistration() {
   if (!pendingMajstorData) return;
   const tr = t[currentLang];
-    const { name, surname, phone, city, category, description, email, password, facebook } = pendingMajstorData;
-    let userIP = 'unknown';
+  const { name, surname, phone, city, category, description, email, password, facebook } = pendingMajstorData;
+  let userIP = 'unknown';
   try {
     const ipRes = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipRes.json();
@@ -1340,8 +1342,7 @@ async function confirmMajstorRegistration() {
   const userId = data.user.id;
   const fullName = (name + ' ' + surname).trim();
 
-  
-    await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
+  await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
   await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
 
   pendingMajstorData = null;
@@ -1358,13 +1359,13 @@ async function handleRegisterBaram() {
 
   if (!name || !email || !password) { showModalMsg(tr.fillAllSimple, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
-    if (!document.getElementById('b-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
+  if (!document.getElementById('b-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
   showModalMsg(tr.registering, 'info');
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
   if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
 
-    let userIP = 'unknown';
+  let userIP = 'unknown';
   try {
     const ipRes = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipRes.json();
@@ -1444,74 +1445,11 @@ function closeDoc(id) {
   document.getElementById(id).classList.remove('open');
 }
 
- populateCities();
+populateCities();
 checkUser();
 loadVideos();
 loadMajstori();
 </script>
-<!-- TERMS MODAL -->
-<div class="modal" id="termsModal">
-  <div class="modal-content">
-    <h2 id="terms-title">📋 Услови за користење</h2>
-    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
-      <p><strong>1. Општи одредби</strong></p>
-      <p>Овие Услови го регулираат користењето на веб-страницата majstor.mk (во натамошниот текст: „Платформа"). Со влегување и користење на Платформата, се согласуваш со овие Услови.</p>
-      <p><strong>2. Природа на Платформата</strong></p>
-      <p>majstor.mk е само посредник — не е изведувач на работи. Платформата не одговара за квалитетот, безбедноста или навременоста на извршените работи. Сите договори се склучуваат директно помеѓу странките.</p>
-      <p><strong>3. Регистрација и сметки</strong></p>
-      <p>Податоците што ги внесуваш мора да бидат вистинити и точни. Секој корисник е одговорен за заштита на својата лозинка. Едно лице/фирма има право на една сметка.</p>
-      <p><strong>4. Профили на мајстори</strong></p>
-      <p>Првите 6 месеци од регистрацијата се бесплатни. По истекот, ќе биде понудена претплата. Мајсторите се должни да ги наведат вистинити податоци за своите квалификации.</p>
-      <p><strong>5. Забрането однесување</strong></p>
-      <p>Забрането е: внесување лажни податоци, клеветење, објавување несоодветна содржина, автоматизиран пристап (ботови) и копирање на содржина без дозвола.</p>
-      <p><strong>6. Интелектуална сопственост</strong></p>
-      <p>Сите видеа, текстови и слики се заштитени. Не смееш да ги копираш без писмена согласност.</p>
-      <p><strong>7. Ограничување на одговорност</strong></p>
-      <p>Платформата не гарантира дека ќе најдеш мајстор или дека работата ќе биде без проблеми. Користењето е на сопствена одговорност.</p>
-      <p><strong>8. Меродавно право</strong></p>
-      <p>За сите спорови надлежен е Основниот суд во Скопје, согласно законите на Северна Македонија.</p>
-    </div>
-    <button onclick="closeDoc('termsModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
-  </div>
-</div>
 
-<!-- PRIVACY MODAL -->
-<div class="modal" id="privacyModal">
-  <div class="modal-content">
-    <h2 id="privacy-title">🔒 Политика за приватност</h2>
-    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
-      <p><strong>1. Вовед</strong></p>
-      <p>Заштитата на твоите лични податоци е важна за нас. Оваа Политика објаснува кои податоци ги собираме и како ги користиме.</p>
-      <p><strong>2. Податоци што ги собираме</strong></p>
-      <p>Име, е-пошта, телефон, град. Автоматски податоци: IP адреса, уред, прегледани страници, време на посета. Колачиња за подобро искуство.</p>
-      <p><strong>3. Како ги користиме</strong></p>
-      <p>За одржување на Платформата, комуникација помеѓу корисници и мајстори, испраќање известувања и законски обврски. Нема да продадеме твои податоци на трети лица без согласност.</p>
-      <p><strong>4. Чување и безбедност</strong></p>
-      <p>Податоците се чуваат на безбедни сервери со ограничен пристап. Ги преземаме разумни мерки за заштита.</p>
-      <p><strong>5. Твои права</strong></p>
-      <p>Пристап до твоите податоци, исправка, бришење („право да се биде заборавен") и повлекување на согласност. Барања: kontakt@majstor.mk</p>
-      <p><strong>6. Колачиња</strong></p>
-      <p>Користиме неопходни и аналитички колачиња. Може да ги исклучиш во поставувањата на пребарувачот.</p>
-      <p><strong>7. Промени</strong></p>
-      <p>Оваа Политика може да се ажурира. Промените стапуваат во сила со објавувањето.</p>
-    </div>
-    <button onclick="closeDoc('privacyModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
-  </div>
-</div>
-
-<!-- COOKIES MODAL -->
-<div class="modal" id="cookiesDocModal">
-  <div class="modal-content">
-    <h2 id="cookies-doc-title">🍪 Извештај за колачиња</h2>
-    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
-      <p>Оваа веб-страница користи колачиња за да го подобри твоето искуство.</p>
-      <p><strong>Неопходни колачиња:</strong> Потребни за функционирање на страницата (најава, сесија). Не може да се исклучат.</p>
-      <p><strong>Аналитички колачиња:</strong> Ни помагаат да разбереме како се користи страницата — анонимни податоци (Vercel Analytics).</p>
-      <p>Со продолжување на користењето на страницата, се согласуваш со употреба на колачиња.</p>
-    </div>
-    <button onclick="closeDoc('cookiesDocModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
-  </div>
-</div>
 </body>
-  
 </html>
