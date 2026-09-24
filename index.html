@@ -1244,6 +1244,7 @@ function prepareRegisterMajstor() {
 
   if (!name || !email || !password || !category || !city) { showModalMsg(tr.fillAll, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
+    if (!document.getElementById('m-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
     pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook };
   closeModal();
@@ -1262,6 +1263,13 @@ async function confirmMajstorRegistration() {
   if (!pendingMajstorData) return;
   const tr = t[currentLang];
     const { name, surname, phone, city, category, description, email, password, facebook } = pendingMajstorData;
+    let userIP = 'unknown';
+  try {
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipRes.json();
+    userIP = ipData.ip;
+  } catch(e) { console.log('IP error:', e); }
+  const userAgent = navigator.userAgent;
 
   document.getElementById('confirmModal').classList.remove('open');
 
@@ -1275,8 +1283,9 @@ async function confirmMajstorRegistration() {
   const userId = data.user.id;
   const fullName = (name + ' ' + surname).trim();
 
-  await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city });
-  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK'  , facebook_url: facebook || null });
+  
+    await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
+  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
 
   pendingMajstorData = null;
   await checkUser();
@@ -1292,12 +1301,21 @@ async function handleRegisterBaram() {
 
   if (!name || !email || !password) { showModalMsg(tr.fillAllSimple, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
+    if (!document.getElementById('b-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
   showModalMsg(tr.registering, 'info');
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
   if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
 
-  await supabaseClient.from('profiles').insert({ id: data.user.id, user_type: 'baram', name: name });
+    let userIP = 'unknown';
+  try {
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipRes.json();
+    userIP = ipData.ip;
+  } catch(e) { console.log('IP error:', e); }
+  const userAgent = navigator.userAgent;
+
+  await supabaseClient.from('profiles').insert({ id: data.user.id, user_type: 'baram', name: name, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
 
   showModalMsg(tr.registerSuccess, 'success');
   setTimeout(() => { closeModal(); checkUser(); }, 800);
