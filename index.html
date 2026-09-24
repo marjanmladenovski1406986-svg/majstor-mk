@@ -345,6 +345,12 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
   </label>
 </div>
+       <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
+  <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
+    <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+    <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
+  </label>
+</div>
         <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
       <div id="form-baram" class="hidden">
@@ -1228,6 +1234,53 @@ async function handleLogin() {
   showModalMsg(tr.loginSuccess, 'success');
   setTimeout(() => { closeModal(); checkUser(); }, 800);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
 // PREPARE MAJSTOR (shows confirm screen first)
 function prepareRegisterMajstor() {
