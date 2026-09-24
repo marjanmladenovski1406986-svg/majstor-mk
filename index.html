@@ -277,6 +277,11 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
 <footer>
   <p id="footer-text">© 2026 Мајстор.мк</p>
+  <p style="margin-top: 15px; font-size: 13px;">
+    <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">📋 Услови</a> ·
+    <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🔒 Приватност</a> ·
+    <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🍪 Колачиња</a>
+  </p>
 </footer>
 
 <!-- LOGIN/REGISTER MODAL -->
@@ -1344,7 +1349,15 @@ async function checkUser() {
   }
 }
 
-populateCities();
+function openDoc(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeDoc(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+ populateCities();
 checkUser();
 loadVideos();
 loadMajstori();
