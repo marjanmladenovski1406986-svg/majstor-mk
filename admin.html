@@ -464,7 +464,7 @@ function renderMajstoriList() {
       <div class="item-info">
         <div class="item-title">${m.name || 'Мајстор'} ${badges}</div>
         <div class="item-meta">${CAT_NAMES[m.category] || m.category} · ${m.city || '-'} · ${m.phone || '-'} · ⭐ ${m.rating || 0} · 📞 ${clicks} кликови</div>
-                ${m.agreed_to_terms ? `<div class="item-meta" style="color: #6bff6b; margin-top: 5px;">✅ Се согласил: ${new Date(m.agreed_at).toLocaleString('mk-MK')} · IP: ${m.agreed_ip || '-'}</div>` : ''}
+                ${m.agreed_to_terms ? `<div class="item-meta" style="color: #6bff6b; margin-top: 5px;">✅ Се согласил: ${new Date(m.agreed_at).toLocaleString('mk-MK', { timeZone: 'Europe/Skopje' })} · IP: ${m.agreed_ip || '-'}</div>` : ''}
       </div>
       <div class="item-actions">
         <button class="btn-verify ${m.verified ? 'active' : ''}" onclick="toggleVerify(${m.id})">${m.verified ? '✅ Верификуван' : '✅ Верификувај'}</button>
@@ -488,7 +488,7 @@ function renderUsersList() {
       <div class="item-info">
         <div class="item-title">${u.name || 'Без име'}</div>
         <div class="item-meta">${u.user_type === 'majstor' ? '👷 Мајстор' : u.user_type === 'baram' ? '🔍 Барам мајстор' : '❓ Непознат'} · ${u.phone || '-'} · ${u.city || '-'}</div>
-                ${u.agreed_to_terms ? `<div class="item-meta" style="color: #6bff6b; margin-top: 5px;">✅ Се согласил: ${new Date(u.agreed_at).toLocaleString('mk-MK')} · IP: ${u.agreed_ip || '-'}</div>` : ''}
+                ${u.agreed_to_terms ? `<div class="item-meta" style="color: #6bff6b; margin-top: 5px;">✅ Се согласил: ${new Date(u.agreed_at).toLocaleString('mk-MK', { timeZone: 'Europe/Skopje' })} · IP: ${u.agreed_ip || '-'}</div>` : ''}
       </div>
       <div class="item-actions">
         <button class="btn-delete" onclick="deleteUserProfile('${u.id}')">🗑️ Избриши профил</button>
