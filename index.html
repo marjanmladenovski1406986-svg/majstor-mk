@@ -817,20 +817,16 @@ async function loadPublicMajstorMedia(majstorId) {
 
 function openImageFull(url) { window.open(url, '_blank'); }
 
-async function loadRatings(majstorId) {
-  const tr = t[currentLang];
-  const ratingContent = document.getElementById('rating-content');
-  const listDiv = document.getElementById('ratings-list');
-
-  // 🆕 Директно провери во база (поправка за baram/majstor тип)
+  // 🆕 Провери преку majstor_profiles (ова е јавно читливо)
   const { data: { user } } = await supabaseClient.auth.getUser();
-  let userType = null;
+  let isMajstor = false;
   if (user) {
-    const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).single();
-    userType = profile?.user_type || null;
+    const { data: mp } = await supabaseClient.from('majstor_profiles').select('id').eq('user_id', user.id).maybeSingle();
+    isMajstor = !!mp;
   }
 
-  if (user && userType === 'baram') {
+  if (user && !isMajstor) {
+
     ratingContent.innerHTML = `
       <div class="rating-section">
         <h4>${tr.rateTitle}</h4>
@@ -853,12 +849,12 @@ async function loadRatings(majstorId) {
       });
     });
   
-    } else if (user && userType === 'majstor') {
+      } else if (user && isMajstor) {
     ratingContent.innerHTML = `<div class="login-hint" style="cursor:default; background:#1a2a3a; color:#6bb8ff;">👷 Само клиенти кои бараат мајстор можат да остават оценка</div>`;
   } else {
     ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
   }
-  if (!currentUser) {
+    if (!user) {
     listDiv.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToSeeReviews}</div>`;
     return;
   }
