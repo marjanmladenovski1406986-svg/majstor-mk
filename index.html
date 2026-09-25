@@ -844,10 +844,12 @@ async function loadRatings(majstorId) {
         document.querySelectorAll('#stars-input .star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= selectedRating));
       });
     });
+  
+  } else if (currentUser && currentUserType === 'majstor') {
+    ratingContent.innerHTML = `<div class="login-hint" style="cursor:default; background:#1a2a3a; color:#6bb8ff;">👷 Само клиенти кои бараат мајстор можат да остават оценка</div>`;
   } else {
-    } else if (currentUser && currentUserType === 'majstor') {     ratingContent.innerHTML = `<div class="login-hint" style="cursor:default; background:#1a2a3a; color:#6bb8ff;">👷 Само клиенти кои бараат мајстор можат да остават оценка</div>`;   } else {     ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
+    ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
   }
-
   if (!currentUser) {
     listDiv.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToSeeReviews}</div>`;
     return;
