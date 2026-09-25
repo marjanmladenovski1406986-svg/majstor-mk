@@ -323,10 +323,15 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 </div>
 
 <script>
-// ===== Supabase конфигурација (иста како во админ панелот) =====
+// ===== Supabase конфигурација =====
 const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Спречи двојна декларација
+if (!window.supabase) {
+  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+const sb = window.supabase;
 
 // ===== Податоци =====
 const CITIES = ['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
@@ -361,114 +366,16 @@ function populateCities() {
   const regCitySel = document.getElementById('regCity');
   CITIES.forEach(city => {
     sel.innerHTML += `<option value="${city}">${city}</option>`;
-    regCitySel.innerHTML += `<option value="${city}">${city}</option>`;
+    if (regCitySel) regCitySel.innerHTML += `<option value="${city}">${city}</option>`;
   });
 }
 
 function populateCategories() {
   const sel = document.getElementById('regCategory');
+  if (!sel) return;
   Object.entries(CAT_NAMES).forEach(([key, name]) => {
     sel.innerHTML += `<option value="${key}">${name}</option>`;
   });
-}
-
-// ===== Автентикација =====
-async function checkAuth() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    currentUser = user;
-    await updateAuthUI(user);
-  }
-  document.getElementById('loading').style.display = 'none';
-}
-
-async function updateAuthUI(user) {
-  document.getElementById('auth-area').classList.add('hidden');
-  document.getElementById('user-area').classList.remove('hidden');
-  document.getElementById('user-email-header').textContent = user.email;
-  document.getElementById('user-email-header').classList.remove('hidden');
-  document.getElementById('btn-my-profile').classList.remove('hidden');
-}
-
-async function handleLogin() {
-  const email = document.getElementById('authEmail').value;
-  const password = document.getElementById('authPassword').value;
-  const msg = document.getElementById('loginMsg');
-  
-  if (!email || !password) {
-    msg.textContent = 'Пополни ги полињата';
-    msg.className = 'modal-msg error';
-    return;
-  }
-  
-  msg.textContent = 'Се најавувам...';
-  msg.className = 'modal-msg info';
-  msg.style.display = 'block';
-  
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    msg.textContent = 'Грешка: ' + error.message;
-    msg.className = 'modal-msg error';
-    return;
-  }
-  
-  currentUser = data.user;
-  closeModal('login');
-  await updateAuthUI(data.user);
-  await loadData();
-}
-
-async function handleLogout() {
-  await supabase.auth.signOut();
-  currentUser = null;
-  document.getElementById('auth-area').classList.remove('hidden');
-  document.getElementById('user-area').classList.add('hidden');
-}
-
-function selectRegType(type) {
-  regType = type;
-  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`.type-btn[data-type="${type}"]`).classList.add('active');
-  document.getElementById('majstorRegFields').classList.toggle('hidden', type !== 'majstor');
-}
-
-async function handleRegister() {
-  const email = document.getElementById('regEmail').value;
-  const password = document.getElementById('regPassword').value;
-  const msg = document.getElementById('regMsg');
-  
-  if (!email || !password) {
-    msg.textContent = 'Пополни ги полињата';
-    msg.className = 'modal-msg error';
-    return;
-  }
-  
-  msg.textContent = 'Се регистрирам...';
-  msg.className = 'modal-msg info';
-  msg.style.display = 'block';
-  
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) {
-    msg.textContent = 'Грешка: ' + error.message;
-    msg.className = 'modal-msg error';
-    return;
-  }
-  
-  if (regType === 'majstor' && data.user) {
-    const name = document.getElementById('regName').value;
-    const phone = document.getElementById('regPhone').value;
-    const city = document.getElementById('regCity').value;
-    const category = document.getElementById('regCategory').value;
-    const desc = document.getElementById('regDesc').value;
-    
-    await supabase.from('majstor_profiles').insert({
-      user_id: data.user.id,
-      name, phone, city, category, description: desc
-    });
-  }
-  
-  msg.textContent = 'Успешно! Провери ја е-поштата за потврда.';
-  msg.className = 'modal-msg success';
 }
 
 // ===== Филтрирање =====
@@ -485,25 +392,131 @@ function filterByCategory(cat) {
   renderVideos();
 }
 
+// ===== Автентикација =====
+async function checkAuth() {
+  if (!sb) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if (user) {
+    currentUser = user;
+    updateAuthUI(user);
+  }
+  const loading = document.getElementById('loading');
+  if (loading) loading.style.display = 'none';
+}
+
+function updateAuthUI(user) {
+  const authArea = document.getElementById('auth-area');
+  const userArea = document.getElementById('user-area');
+  const userEmail = document.getElementById('user-email-header');
+  const btnProfile = document.getElementById('btn-my-profile');
+  
+  if (authArea) authArea.classList.add('hidden');
+  if (userArea) userArea.classList.remove('hidden');
+  if (userEmail) { userEmail.textContent = user.email; userEmail.classList.remove('hidden'); }
+  if (btnProfile) btnProfile.classList.remove('hidden');
+}
+
+async function handleLogin() {
+  const email = document.getElementById('authEmail')?.value;
+  const password = document.getElementById('authPassword')?.value;
+  const msg = document.getElementById('loginMsg');
+  
+  if (!email || !password || !msg) return;
+  
+  msg.textContent = 'Се најавувам...';
+  msg.className = 'modal-msg info';
+  msg.style.display = 'block';
+  
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    msg.textContent = 'Грешка: ' + error.message;
+    msg.className = 'modal-msg error';
+    return;
+  }
+  
+  currentUser = data.user;
+  closeModal('login');
+  updateAuthUI(data.user);
+  await loadData();
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  const authArea = document.getElementById('auth-area');
+  const userArea = document.getElementById('user-area');
+  if (authArea) authArea.classList.remove('hidden');
+  if (userArea) userArea.classList.add('hidden');
+}
+
+function selectRegType(type) {
+  regType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const fields = document.getElementById('majstorRegFields');
+  if (fields) fields.classList.toggle('hidden', type !== 'majstor');
+}
+
+async function handleRegister() {
+  const email = document.getElementById('regEmail')?.value;
+  const password = document.getElementById('regPassword')?.value;
+  const msg = document.getElementById('regMsg');
+  
+  if (!email || !password || !msg) return;
+  
+  msg.textContent = 'Се регистрирам...';
+  msg.className = 'modal-msg info';
+  msg.style.display = 'block';
+  
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if (error) {
+    msg.textContent = 'Грешка: ' + error.message;
+    msg.className = 'modal-msg error';
+    return;
+  }
+  
+  if (regType === 'majstor' && data.user) {
+    const name = document.getElementById('regName')?.value;
+    const phone = document.getElementById('regPhone')?.value;
+    const city = document.getElementById('regCity')?.value;
+    const category = document.getElementById('regCategory')?.value;
+    const desc = document.getElementById('regDesc')?.value;
+    
+    await sb.from('majstor_profiles').insert({
+      user_id: data.user.id,
+      name, phone, city, category, description: desc
+    });
+  }
+  
+  msg.textContent = 'Успешно! Провери ја е-поштата.';
+  msg.className = 'modal-msg success';
+}
+
 // ===== Вчитување податоци =====
 async function loadData() {
-  const { data: vids } = await supabase.from('videos').select('*').order('id', { ascending: false });
+  if (!sb) return;
+  
+  const { data: vids } = await sb.from('videos').select('*').order('id', { ascending: false });
   allVideos = vids || [];
   
-  const { data: maj } = await supabase.from('majstor_profiles').select('*').order('id', { ascending: true });
+  const { data: maj } = await sb.from('majstor_profiles').select('*').order('id', { ascending: true });
   allMajstori = maj || [];
   
-  document.getElementById('loading').style.display = 'none';
+  const loading = document.getElementById('loading');
+  if (loading) loading.style.display = 'none';
+  
   renderMajstori();
   renderVideos();
 }
 
 function renderMajstori() {
-  let filtered = allMajstori;
+  const grid = document.getElementById('majstori-grid');
+  if (!grid) return;
+  
+  let filtered = [...allMajstori];
   if (selectedCity) filtered = filtered.filter(m => m.city === selectedCity);
   if (selectedCategory !== 'all') filtered = filtered.filter(m => m.category === selectedCategory);
   
-  const grid = document.getElementById('majstori-grid');
   if (!filtered.length) {
     grid.innerHTML = '<p class="no-majstori">Нема пронајдено мајстори</p>';
     return;
@@ -524,10 +537,12 @@ function renderMajstori() {
 }
 
 function renderVideos() {
-  let filtered = allVideos;
+  const grid = document.getElementById('grid');
+  if (!grid) return;
+  
+  let filtered = [...allVideos];
   if (selectedCategory !== 'all') filtered = filtered.filter(v => v.category === selectedCategory);
   
-  const grid = document.getElementById('grid');
   if (!filtered.length) {
     grid.innerHTML = '<p class="no-majstori">Нема видеа во оваа категорија</p>';
     return;
@@ -575,12 +590,13 @@ function openMajstorProfile(id) {
 
 // ===== Модали =====
 function openModal(type) {
-  if (type === 'login') document.getElementById('loginModal').classList.add('open');
-  if (type === 'register') document.getElementById('registerModal').classList.add('open');
+  const m = document.getElementById(`${type}Modal`);
+  if (m) m.classList.add('open');
 }
 
 function closeModal(type) {
-  document.getElementById(`${type}Modal`).classList.remove('open');
+  const m = document.getElementById(`${type}Modal`);
+  if (m) m.classList.remove('open');
 }
 
 function switchToRegister() {
@@ -597,13 +613,8 @@ function openMyProfile() {
   alert('Профил страница — овде ќе се прикажат твоите податоци');
 }
 
-// ===== Јазик =====
 function switchLang(lang) {
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
-  // Прошири со преводи по потреба
 }
 </script>
-
-</body>
-</html>
