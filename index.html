@@ -845,7 +845,7 @@ async function loadRatings(majstorId) {
       });
     });
   } else {
-    ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
+    } else if (currentUser && currentUserType === 'majstor') {     ratingContent.innerHTML = `<div class="login-hint" style="cursor:default; background:#1a2a3a; color:#6bb8ff;">👷 Само клиенти кои бараат мајстор можат да остават оценка</div>`;   } else {     ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
   }
 
   if (!currentUser) {
