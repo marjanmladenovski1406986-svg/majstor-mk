@@ -822,7 +822,7 @@ async function loadRatings(majstorId) {
   const ratingContent = document.getElementById('rating-content');
   const listDiv = document.getElementById('ratings-list');
 
-  if (currentUser) {
+  if (currentUser && currentUserType === 'baram') {
     ratingContent.innerHTML = `
       <div class="rating-section">
         <h4>${tr.rateTitle}</h4>
