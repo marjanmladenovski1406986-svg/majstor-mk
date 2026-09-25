@@ -1,104 +1,81 @@
 <!DOCTYPE html>
 <html lang="mk">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Мајстор.мк</title>
-<link rel="icon" type="image/png" href="/icon.png">
-<link rel="apple-touch-icon" href="/icon.png">
-<meta name="theme-color" content="#ff6b35">
-<script defer src="/_vercel/insights/script.js"></script>
+<title>Админ — Мајстор.мк</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; }
+body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; }
 
 header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 10px; }
-.logo { font-size: 20px; font-weight: 700; color: #ff6b35; cursor: pointer; }
-.header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.lang-switch { display: flex; gap: 5px; }
-.lang-btn { background: #2a2a2a; border: 1px solid #333; color: #999; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-family: inherit; }
-.lang-btn.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
-.user-box { display: flex; align-items: center; gap: 10px; }
-.user-email { color: #ff6b35; font-size: 13px; font-weight: 600; }
-.btn-auth { background: #ff6b35; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; font-family: inherit; }
-.btn-auth.logout { background: transparent; border: 1px solid #333; color: #999; }
-.btn-auth:hover { opacity: 0.9; }
-.btn-profile { background: #2a2a2a; color: #fff; border: 1px solid #ff6b35; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 14px; font-family: inherit; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.btn-profile:hover { background: #3a2515; }
-.profile-avatar-mini { width: 28px; height: 28px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; overflow: hidden; flex-shrink: 0; }
-.profile-avatar-mini img { width: 100%; height: 100%; object-fit: cover; }
+.logo { font-size: 20px; font-weight: 700; color: #ff6b35; }
+.header-right { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+.user-email { color: #999; font-size: 13px; }
+.btn-logout { background: transparent; border: 1px solid #333; color: #999; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px; }
+.btn-logout:hover { border-color: #ff6b35; color: #ff6b35; }
 
-.hero { text-align: center; padding: 40px 20px 20px; }
-.hero h1 { font-size: 32px; margin-bottom: 15px; color: #ff6b35; }
-.hero p { color: #999; font-size: 16px; max-width: 600px; margin: 0 auto; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
-.welcome-box { max-width: 600px; margin: 20px auto 30px; padding: 25px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; text-align: center; }
-.welcome-box h3 { color: #ff6b35; font-size: 22px; margin-bottom: 20px; }
-.welcome-box p { color: #ddd; font-size: 15px; line-height: 1.7; margin-bottom: 12px; }
-.welcome-box p strong { color: #ff6b35; }
-.welcome-box p:last-child { margin-bottom: 0; }
+.login-box { max-width: 400px; margin: 100px auto; padding: 40px 30px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; text-align: center; }
+.login-box h1 { color: #ff6b35; margin-bottom: 20px; font-size: 24px; }
+.login-box input { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 15px; margin-bottom: 12px; font-family: inherit; }
+.login-box input:focus { outline: none; border-color: #ff6b35; }
+.login-box button { width: 100%; padding: 14px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.login-box .msg { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; display: none; }
+.login-box .msg.error { background: #3a1a1a; color: #ff6b6b; display: block; }
 
-.city-filter { max-width: 600px; margin: 25px auto 20px; text-align: center; padding: 0 20px; }
-.city-filter select { width: 100%; max-width: 280px; padding: 10px 18px; background: #1a1a1a; border: 1px solid #333; border-radius: 25px; color: #fff; font-size: 14px; font-family: inherit; cursor: pointer; text-align: center; }
-.city-filter select:focus { outline: none; border-color: #ff6b35; }
+.admin-panel { display: none; }
+.admin-panel.active { display: block; }
 
-.categories-wrapper { padding: 20px 0; overflow: hidden; }
-.categories { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-.categories::-webkit-scrollbar { display: none; }
-.cat-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 10px 18px; border-radius: 25px; cursor: pointer; font-size: 14px; font-family: inherit; white-space: nowrap; flex-shrink: 0; scroll-snap-align: start; }
-.cat-btn.active { background: #ff6b35; border-color: #ff6b35; }
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab { padding: 12px 18px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px; color: #999; font-weight: 600; }
+.tab.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
 
-@media (min-width: 769px) {
-  .categories { flex-wrap: wrap; justify-content: center; }
-}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
-.main-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 0 20px 40px; max-width: 1400px; margin: 0 auto; }
-.section-title { padding: 0 20px; margin-bottom: 20px; font-size: 22px; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+.section-header h2 { color: #ff6b35; font-size: 22px; }
+.btn-add { background: #ff6b35; border: none; color: #fff; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 14px; }
+.btn-add:hover { background: #e55a2b; }
 
-.majstori-list { background: #1a1a1a; border-radius: 12px; padding: 15px; max-height: 700px; overflow-y: auto; }
-.majstori-list h3 { color: #ff6b35; margin-bottom: 15px; font-size: 18px; }
-.majstor-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: #252525; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
-.majstor-card:hover { background: #2f2f2f; }
-.majstor-avatar { width: 45px; height: 45px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; overflow: hidden; }
-.majstor-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.majstor-info { flex: 1; min-width: 0; }
-.majstor-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.majstor-meta { font-size: 12px; color: #999; display: flex; gap: 8px; align-items: center; }
-.majstor-rating { color: #ffb84d; font-weight: 600; }
-.no-majstori { text-align: center; color: #666; padding: 20px; font-size: 13px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+.stat-card { background: #1a1a1a; border: 1px solid #2a2a2a; padding: 20px; border-radius: 12px; }
+.stat-card .number { font-size: 32px; font-weight: 700; color: #ff6b35; }
+.stat-card .label { color: #999; font-size: 13px; margin-top: 5px; }
 
-.loading { text-align: center; color: #999; padding: 40px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-.card { background: #1a1a1a; border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
-.card:hover { transform: translateY(-3px); }
-.thumb { width: 100%; aspect-ratio: 16/9; background: #2a2a2a; position: relative; overflow: hidden; }
-.thumb img { width: 100%; height: 100%; object-fit: cover; }
-.thumb::after { content: '▶'; position: absolute; width: 50px; height: 50px; background: rgba(255,107,53,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.card-body { padding: 15px; }
-.card-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
-.card-author { font-size: 12px; color: #ff6b35; margin-bottom: 10px; cursor: pointer; }
-.card-author:hover { text-decoration: underline; }
-.card-meta { display: flex; justify-content: space-between; font-size: 13px; color: #999; }
-.cat-tag { background: #2a2a2a; padding: 3px 10px; border-radius: 12px; font-size: 12px; }
-.cat-tag.elektrika { background: #4a3a1a; color: #ffb84d; }
-.cat-tag.vodovod { background: #1a3a4a; color: #4db8ff; }
-.cat-tag.gradeznistvo { background: #3a2a1a; color: #d4a373; }
-.cat-tag.popravki { background: #2a3a1a; color: #8bc34a; }
-.cat-tag.finalni { background: #3a1a3a; color: #e91e63; }
-.cat-tag.plockari { background: #3a2515; color: #ff9966; }
-.cat-tag.gipsari { background: #3a3a3a; color: #cccccc; }
-.cat-tag.stolari { background: #3a2a1a; color: #deb887; }
-.cat-tag.klima { background: #1a3a4a; color: #6bd8ff; }
-.cat-tag.greenje { background: #4a1a1a; color: #ff8866; }
-.cat-tag.krov { background: #2a1a3a; color: #b388ff; }
-.cat-tag.sanitarii { background: #1a3a3a; color: #6bd8d8; }
-.cat-tag.pvc { background: #3a3a1a; color: #d8d86b; }
-.cat-tag.dvorovi { background: #1a4a1a; color: #6bd86b; }
-.cat-tag.cistenje { background: #3a1a2a; color: #ff88bb; }
-.cat-tag.opti { background: #2a2a3a; color: #aab8ff; }
+.category-list { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; }
+.category-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2a2a2a; }
+.category-row:last-child { border-bottom: none; }
+.category-row .name { color: #fff; }
+.category-row .count { color: #ff6b35; font-weight: 600; }
 
-footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
+.search-bar { width: 100%; max-width: 400px; padding: 12px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; color: #fff; font-size: 14px; font-family: inherit; margin-bottom: 15px; }
+.search-bar:focus { outline: none; border-color: #ff6b35; }
+
+.items-list { display: flex; flex-direction: column; gap: 10px; }
+.item { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+.item-thumb { width: 80px; height: 45px; border-radius: 6px; background: #2a2a2a; overflow: hidden; flex-shrink: 0; }
+.item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.item-avatar { width: 45px; height: 45px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; overflow: hidden; }
+.item-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.item-info { flex: 1; min-width: 200px; }
+.item-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.item-meta { font-size: 12px; color: #999; }
+.item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-edit { background: transparent; border: 1px solid #4db8ff; color: #4db8ff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.btn-edit:hover { background: #4db8ff; color: #fff; }
+.btn-delete { background: transparent; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.btn-delete:hover { background: #ff6b6b; color: #fff; }
+.btn-verify { background: transparent; border: 1px solid #4db8ff; color: #4db8ff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.btn-verify.active { background: #4db8ff; color: #fff; }
+.btn-feature { background: transparent; border: 1px solid #ffb84d; color: #ffb84d; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.btn-feature.active { background: #ffb84d; color: #fff; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; margin-left: 5px; font-weight: 600; }
+.badge.verified { background: #4db8ff; color: #fff; }
+.badge.featured { background: #ffb84d; color: #fff; }
 
 .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .modal.open { display: flex; }
@@ -106,423 +83,159 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .modal-content h2 { color: #ff6b35; text-align: center; margin-bottom: 20px; }
 .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 10px; font-family: inherit; }
 .modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { outline: none; border-color: #ff6b35; }
+.modal-content textarea { min-height: 120px; resize: vertical; }
 .modal-content button { width: 100%; padding: 12px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
-.modal-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-.modal-tab { flex: 1; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #999; cursor: pointer; font-size: 14px; font-family: inherit; }
-.modal-tab.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
 .modal-msg { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; display: none; }
 .modal-msg.error { background: #3a1a1a; color: #ff6b6b; display: block; }
 .modal-msg.success { background: #1a3a1a; color: #6bff6b; display: block; }
 .modal-msg.info { background: #1a2a3a; color: #6bb8ff; display: block; }
 .hidden { display: none; }
 
-.type-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-.type-btn { padding: 20px 10px; background: #2a2a2a; border: 2px solid #333; border-radius: 12px; color: #fff; cursor: pointer; font-family: inherit; text-align: center; transition: all 0.2s; }
-.type-btn:hover { border-color: #ff6b35; }
-.type-btn.active { background: #3a2515; border-color: #ff6b35; }
-.type-btn .icon { font-size: 30px; display: block; margin-bottom: 8px; }
-.type-btn .label { font-size: 14px; font-weight: 600; }
+.no-access { max-width: 400px; margin: 100px auto; padding: 40px 30px; background: #1a1a1a; border: 1px solid #3a1a1a; border-radius: 16px; text-align: center; }
+.no-access h1 { color: #ff6b6b; margin-bottom: 15px; }
 
-/* CONFIRM REGISTRATION MODAL */
-.confirm-box { text-align: center; }
-.confirm-box h2 { color: #ff6b35; font-size: 24px; margin-bottom: 20px; }
-.confirm-box .text { color: #ddd; font-size: 14px; line-height: 1.7; margin-bottom: 25px; text-align: left; }
-.confirm-box .text strong { color: #ff6b35; }
-.confirm-box .text a { color: #ff6b35; }
-.confirm-box .btn-register { background: #ff6b35; }
-.confirm-box .btn-cancel { background: transparent; border: 1px solid #333; color: #999; }
-
-.video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
-.video-modal.open { display: flex; }
-.video-modal-content { max-width: 900px; width: 100%; }
-.video-modal iframe { width: 100%; aspect-ratio: 16/9; border-radius: 12px; border: none; }
-.video-close { position: absolute; top: 20px; right: 20px; background: #ff6b35; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
-
-.majstor-profile { text-align: center; }
-.majstor-profile .big-avatar { width: 90px; height: 90px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; margin: 0 auto 15px; overflow: hidden; }
-.majstor-profile .big-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.majstor-profile .big-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-.majstor-profile .big-rating { color: #ffb84d; font-size: 18px; margin-bottom: 15px; }
-.majstor-profile .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2a2a2a; font-size: 14px; text-align: left; }
-.majstor-profile .info-row span:first-child { color: #999; }
-.majstor-profile .info-row span:last-child { font-weight: 600; text-align: right; }
-
-.locked-phone { color: #ff6b35; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
-.locked-phone:hover { text-decoration: underline; }
-
-.rating-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a2a2a; text-align: left; }
-.rating-section h4 { color: #ff6b35; margin-bottom: 12px; font-size: 16px; }
-.stars-input { display: flex; gap: 5px; font-size: 32px; margin-bottom: 12px; cursor: pointer; justify-content: center; }
-.star { color: #444; transition: color 0.15s; }
-.star:hover, .star.active { color: #ffb84d; }
-.rating-section textarea { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; margin-bottom: 10px; font-family: inherit; resize: vertical; min-height: 60px; }
-.rating-section button { width: 100%; padding: 12px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
-.rating-msg { padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 13px; display: none; }
-.rating-msg.success { background: #1a3a1a; color: #6bff6b; display: block; }
-.rating-msg.error { background: #3a1a1a; color: #ff6b6b; display: block; }
-
-.rating-list { margin-top: 20px; text-align: left; }
-.rating-list h4 { color: #ff6b35; margin-bottom: 10px; font-size: 15px; }
-.rating-item { padding: 10px; background: #252525; border-radius: 8px; margin-bottom: 8px; }
-.rating-item .stars { color: #ffb84d; margin-bottom: 5px; font-size: 14px; }
-.rating-item .comment { color: #ccc; font-size: 13px; }
-.rating-item .date { color: #666; font-size: 11px; margin-top: 5px; }
-.no-ratings { color: #666; font-size: 13px; text-align: center; padding: 15px; }
-.login-hint { text-align: center; color: #999; font-size: 13px; padding: 15px; background: #252525; border-radius: 8px; cursor: pointer; }
-.login-hint:hover { background: #2f2f2f; color: #ff6b35; }
-
-.media-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a2a2a; text-align: left; }
-.media-section h4 { color: #ff6b35; margin-bottom: 12px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
-.btn-add-media { background: #ff6b35; border: none; color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 600; }
-.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 10px; }
-.media-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #252525; }
-.media-item img { width: 100%; height: 100%; object-fit: cover; }
-.media-item .delete-btn { position: absolute; top: 4px; right: 4px; background: rgba(220, 53, 53, 0.9); border: none; color: #fff; width: 24px; height: 24px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.video-list { margin-top: 10px; }
-.video-item { padding: 10px; background: #252525; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.video-item .title { font-size: 13px; flex: 1; cursor: pointer; }
-.video-item .title:hover { color: #ff6b35; }
-.video-item .delete-btn { background: transparent; border: 1px solid #dc3545; color: #dc3545; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; }
-.settings-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a2a2a; text-align: left; }
-.settings-section h4 { color: #ff6b35; margin-bottom: 12px; font-size: 15px; }
-.settings-section button { background: #2a2a2a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-family: inherit; width: 100%; margin-bottom: 8px; text-align: left; }
-.settings-section button:hover { border-color: #ff6b35; }
-
-@media (max-width: 768px) {
-  .main-layout { grid-template-columns: 1fr; }
-  .majstori-list { max-height: none; padding: 15px 0; }
-  .majstori-list h3 { padding: 0 15px; }
-  #majstori-grid { display: flex; flex-direction: row; overflow-x: auto; gap: 12px; padding: 0 15px 10px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-  #majstori-grid::-webkit-scrollbar { display: none; }
-  .majstor-card { min-width: 130px; max-width: 130px; flex-direction: column; text-align: center; margin-bottom: 0; scroll-snap-align: start; padding: 15px 10px; }
-  .majstor-avatar { width: 60px; height: 60px; font-size: 24px; }
-  .majstor-info { width: 100%; }
-  .majstor-name { font-size: 13px; }
-  .majstor-meta { justify-content: center; flex-wrap: wrap; }
-}
+.help-text { font-size: 12px; color: #666; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">🔨 <span id="logo-text">Мајстор.мк</span></div>
-  <div class="header-right">
-    <div class="lang-switch">
-      <button class="lang-btn active" data-lang="mk" onclick="switchLang('mk')">🇲🇰 МК</button>
-      <button class="lang-btn" data-lang="en" onclick="switchLang('en')">🇬🇧 EN</button>
-    </div>
-    <div id="auth-area">
-      <button class="btn-auth" onclick="openModal()" id="btn-login-header">Најава</button>
-    </div>
-    <div id="user-area" class="user-box hidden">
-      <button class="btn-profile hidden" id="btn-my-profile" onclick="openMyProfile()">
-        <div class="profile-avatar-mini" id="profile-avatar-mini">?</div>
-        <span id="btn-my-profile-text">Мој Профил</span>
-      </button>
-      <span class="user-email hidden" id="user-email-header"></span>
-      <button class="btn-auth logout" onclick="handleLogout()" id="btn-logout-header">Одјави се</button>
-    </div>
-  </div>
-</header>
-
-<section class="hero" id="hero-section">
-  <h1 id="hero-title">Научи сам. Поправи сам.<br>Или одбери си мајстор.</h1>
-  <p id="hero-text">Најдобрите видеа и мајстори се тука.</p>
-</section>
-
-<div class="welcome-box" id="welcome-box">
-  <h3 id="welcome-title">🔨 Добредојдовте!</h3>
-  <p id="welcome-p1"><strong>👷 Мајстори</strong> → Регистрирајте се. Покажете ја вашата работа. Најдете нови клиенти.</p>
-  <p id="welcome-p2"><strong>🔍 Барате мајстор?</strong> → Регистрирајте се и контактирајте ги сите.</p>
+<div class="login-box" id="loginBox">
+  <h1>🔐 Админ Панел</h1>
+  <div class="msg" id="loginMsg"></div>
+  <input type="email" id="adminEmail" placeholder="Е-пошта">
+  <input type="password" id="adminPassword" placeholder="Лозинка">
+  <button onclick="handleAdminLogin()">Најави се</button>
 </div>
 
-<div class="city-filter" id="city-filter">
-  <select id="city-select" onchange="filterByCity(this.value)">
-    <option value="">📍 Сите градови</option>
-  </select>
+<div class="no-access hidden" id="noAccess">
+  <h1>❌ Нема пристап</h1>
+  <p style="color: #999;">Само администраторот може да влезе.</p>
+  <button onclick="window.location.href='/'" style="margin-top: 20px; padding: 12px 20px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; cursor: pointer; font-family: inherit;">← Кон сајтот</button>
 </div>
 
-<div class="categories-wrapper">
-  <div class="categories" id="categories-bar">
-    <button class="cat-btn active" data-cat="all" id="cat-all">Сите</button>
-    <button class="cat-btn" data-cat="elektrika" id="cat-elektrika">⚡ Електрика</button>
-    <button class="cat-btn" data-cat="vodovod" id="cat-vodovod">💧 Водовод</button>
-    <button class="cat-btn" data-cat="gradeznistvo" id="cat-gradeznistvo">🏗️ Градежништво</button>
-    <button class="cat-btn" data-cat="popravki" id="cat-popravki">🔧 Поправки</button>
-    <button class="cat-btn" data-cat="finalni" id="cat-finalni">🎨 Финални работи</button>
-    <button class="cat-btn" data-cat="plockari" id="cat-plockari">🔲 Плочкари</button>
-    <button class="cat-btn" data-cat="gipsari" id="cat-gipsari">🧱 Гипсари и Молери</button>
-    <button class="cat-btn" data-cat="stolari" id="cat-stolari">🚪 Столари</button>
-    <button class="cat-btn" data-cat="klima" id="cat-klima">❄️ Клима</button>
-    <button class="cat-btn" data-cat="greenje" id="cat-greenje">🔥 Греење</button>
-    <button class="cat-btn" data-cat="krov" id="cat-krov">🏠 Кров</button>
-    <button class="cat-btn" data-cat="sanitarii" id="cat-sanitarii">🚿 Санитарии</button>
-    <button class="cat-btn" data-cat="pvc" id="cat-pvc">🪟 ПВЦ прозори и врати</button>
-    <button class="cat-btn" data-cat="dvorovi" id="cat-dvorovi">🌳 Уредување дворови</button>
-    <button class="cat-btn" data-cat="cistenje" id="cat-cistenje">🧹 Чистење</button>
-    <button class="cat-btn" data-cat="opti" id="cat-opti">🔨 Општи работници</button>
-  </div>
-</div>
-
-<div class="main-layout">
-  <div class="majstori-list">
-    <h3 id="majstori-title">👷 Мајстори</h3>
-    <div id="majstori-grid"></div>
-  </div>
-  <div>
-    <h2 class="section-title" id="section-title">🔥 Најнови видеа</h2>
-    <div class="loading" id="loading">Вчитувам видеа...</div>
-    <div class="grid" id="grid"></div>
-  </div>
-</div>
-
-<footer>
-  <p id="footer-text">© 2026 Мајстор.мк</p>
-  <p style="margin-top: 15px; font-size: 13px;">
-    <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">📋 Услови</a> ·
-    <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🔒 Приватност</a> ·
-    <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🍪 Колачиња</a>
-  </p>
-</footer>
-
-<!-- LOGIN/REGISTER MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h2 id="modal-title">🔨 Мајстор.мк</h2>
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="modal-tab-login" onclick="showModalTab('login')">Најава</button>
-      <button class="modal-tab" id="modal-tab-register" onclick="showModalTab('register')">Регистрација</button>
+<div class="admin-panel" id="adminPanel">
+  <header>
+    <div class="logo">🔨 Админ — Мајстор.мк</div>
+    <div class="header-right">
+      <span class="user-email" id="adminUserEmail"></span>
+      <button class="btn-logout" onclick="handleAdminLogout()">Одјави се</button>
+      <button class="btn-logout" onclick="window.location.href='/'">← Кон сајтот</button>
     </div>
-    <div id="modal-msg" class="modal-msg"></div>
-    <div id="modal-form-login">
-      <input type="email" id="login-email" placeholder="Е-пошта">
-      <input type="password" id="login-password" placeholder="Лозинка">
-      <button onclick="handleLogin()" id="btn-modal-login">Најави се</button>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab(event, 'stats')">📊 Dashboard</button>
+      <button class="tab" onclick="showTab(event, 'videos')">🎬 Видеа</button>
+      <button class="tab" onclick="showTab(event, 'majstori')">👷 Мајстори</button>
+      <button class="tab" onclick="showTab(event, 'users')">👥 Корисници</button>
+      <button class="tab" onclick="showTab(event, 'clicks')">📞 Кликови</button>
+      <button class="tab" onclick="showTab(event, 'categories')">📁 Категории</button>
+      <button class="tab" onclick="showTab(event, 'backup')">💾 Backup</button>
     </div>
-    <div id="modal-form-register" class="hidden">
-      <div class="type-choice">
-        <button class="type-btn" id="type-majstor" onclick="selectType('majstor')">
-          <span class="icon">👷</span>
-          <span class="label" id="label-majstor">Мајстор</span>
-        </button>
-        <button class="type-btn" id="type-baram" onclick="selectType('baram')">
-          <span class="icon">🔍</span>
-          <span class="label" id="label-baram">Барам мајстор</span>
-        </button>
-      </div>
-      <div id="form-majstor" class="hidden">
-        <input type="text" id="m-name" placeholder="Име">
-        <input type="text" id="m-surname" placeholder="Презиме">
-        <input type="tel" id="m-phone" placeholder="Телефон">
-        <select id="m-city">
-          <option value="" id="opt-choose-city">Избери град...</option>
-        </select>
-        <select id="m-category">
-          <option value="" id="opt-choose">Избери категорија...</option>
-          <option value="elektrika" id="opt-el">⚡ Електрика</option>
-          <option value="vodovod" id="opt-vod">💧 Водовод</option>
-          <option value="gradeznistvo" id="opt-grad">🏗️ Градежништво</option>
-          <option value="popravki" id="opt-pop">🔧 Поправки</option>
-          <option value="finalni" id="opt-fin">🎨 Финални работи</option>
-          <option value="plockari" id="opt-ploc">🔲 Плочкари</option>
-          <option value="gipsari" id="opt-gips">🧱 Гипсари и Молери</option>
-          <option value="stolari" id="opt-stol">🚪 Столари</option>
-          <option value="klima" id="opt-klim">❄️ Клима</option>
-          <option value="greenje" id="opt-gre">🔥 Греење</option>
-          <option value="krov" id="opt-kro">🏠 Кров</option>
-          <option value="sanitarii" id="opt-san">🚿 Санитарии</option>
-          <option value="pvc" id="opt-pvc">🪟 ПВЦ прозори и врати</option>
-          <option value="dvorovi" id="opt-dvo">🌳 Уредување дворови</option>
-          <option value="cistenje" id="opt-cis">🧹 Чистење</option>
-          <option value="opti" id="opt-opti">🔨 Општи работници</option>
-        </select>
-        <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
-        <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)">
-        <input type="email" id="m-email" placeholder="Е-пошта">
-        <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
-        <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
-          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
-            <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-            <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
-          </label>
+
+    <div class="tab-content active" id="tab-stats">
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">📊 Dashboard</h2>
+      <div class="stats-grid" id="statsGrid"></div>
+      <h3 style="color: #ff6b35; margin-bottom: 15px;">По категорија</h3>
+      <div class="category-list" id="categoryList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-videos">
+      <div class="section-header">
+        <h2>🎬 Видеа (<span id="videosCount">0</span>)</h2>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-add" onclick="openBulkUpload()">📦 Bulk Upload</button>
+          <button class="btn-add" onclick="openAddVideo()">+ Додај видео</button>
         </div>
-        <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
-      <div id="form-baram" class="hidden">
-        <input type="text" id="b-name" placeholder="Име">
-        <input type="email" id="b-email" placeholder="Е-пошта">
-        <input type="password" id="b-password" placeholder="Лозинка (мин. 6 знаци)">
-        <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
-          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
-            <input type="checkbox" id="b-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-            <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
-          </label>
-        </div>
-        <button onclick="handleRegisterBaram()" id="btn-reg-baram">Регистрирај се</button>
+      <input type="text" class="search-bar" id="videoSearch" placeholder="🔍 Пребарај по наслов..." oninput="renderVideosList()">
+      <div class="items-list" id="videosList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-majstori">
+      <div class="section-header">
+        <h2>👷 Мајстори (<span id="majstoriCount">0</span>)</h2>
+      </div>
+      <input type="text" class="search-bar" id="majstorSearch" placeholder="🔍 Пребарај по име или град..." oninput="renderMajstoriList()">
+      <div class="items-list" id="majstoriList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-users">
+      <div class="section-header">
+        <h2>👥 Корисници (<span id="usersCount">0</span>)</h2>
+      </div>
+      <input type="text" class="search-bar" id="userSearch" placeholder="🔍 Пребарај по име..." oninput="renderUsersList()">
+      <div class="items-list" id="usersList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-clicks">
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">📞 Кликови на телефон</h2>
+      <div class="stats-grid" id="clicksStats"></div>
+      <h3 style="color: #ff6b35; margin-bottom: 15px;">По мајстор</h3>
+      <div class="category-list" id="clicksList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-categories">
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">📁 Категории</h2>
+      <p style="color: #999; font-size: 13px; margin-bottom: 20px;">Категориите се фиксни. За промена, контактирај програмер.</p>
+      <div class="category-list" id="categoriesFullList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-backup">
+      <h2 style="color: #ff6b35; margin-bottom: 20px;">💾 Backup & Export</h2>
+      <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 25px; margin-bottom: 15px;">
+        <h3 style="color: #fff; margin-bottom: 10px;">📥 Експорт на податоци</h3>
+        <p style="color: #999; font-size: 13px; margin-bottom: 15px;">Симни ги сите податоци како JSON фајл.</p>
+        <button class="btn-add" onclick="exportData('videos')">🎬 Експорт видеа</button>
+        <button class="btn-add" onclick="exportData('majstori')">👷 Експорт мајстори</button>
+        <button class="btn-add" onclick="exportAll()">📦 Експорт сè</button>
       </div>
     </div>
-    <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;" id="btn-close-modal">Затвори</button>
   </div>
 </div>
 
-<!-- CONFIRM REGISTRATION MODAL -->
-<div class="modal" id="confirmModal">
+<div class="modal" id="videoModal">
   <div class="modal-content">
-    <div class="confirm-box">
-      <h2 id="confirm-title">📢 Добредојдовте!</h2>
-      <div class="text" id="confirm-text" style="max-height: 50vh; overflow-y: auto;"></div>
-      <button class="btn-register" onclick="confirmMajstorRegistration()" id="btn-confirm-register">✅ Се согласувам и се регистрирам</button>
-      <button class="btn-cancel" onclick="cancelMajstorRegistration()" id="btn-cancel-register">Откажи</button>
-    </div>
+    <h2 id="videoModalTitle">Додај видео</h2>
+    <div class="modal-msg" id="videoMsg"></div>
+    <input type="text" id="vTitle" placeholder="Наслов (македонски)">
+    <input type="text" id="vTitleEn" placeholder="Title (English)">
+    <input type="text" id="vYoutube" placeholder="YouTube линк или ID">
+    <select id="vCategory"></select>
+    <input type="number" id="vLikes" placeholder="Лајкови" value="0">
+    <button onclick="handleSaveVideo()">Зачувај</button>
+    <button onclick="closeVideoModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
 </div>
 
-<!-- MAJSTOR PROFILE MODAL -->
+<div class="modal" id="bulkModal">
+  <div class="modal-content">
+    <h2>📦 Bulk Upload видеа</h2>
+    <div class="modal-msg" id="bulkMsg"></div>
+    <p class="help-text">Внеси по 1 видео на линија: Наслов | YouTube линк</p>
+    <textarea id="bulkData" placeholder="Како да сменам штекер | https://youtu.be/ABC123&#10;Како да поставам плочка | https://youtu.be/DEF456"></textarea>
+    <select id="bulkCategory"></select>
+    <button onclick="handleBulkUpload()">Качи ги сите</button>
+    <button onclick="closeBulkModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+  </div>
+</div>
+
 <div class="modal" id="majstorModal">
   <div class="modal-content">
-    <div id="majstor-profile-content"></div>
-    <button onclick="closeMajstorModal()" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;" id="btn-close-majstor">Затвори</button>
-  </div>
-</div>
-
-<!-- MY PROFILE MODAL -->
-<div class="modal" id="myProfileModal">
-  <div class="modal-content">
-    <div id="my-profile-content"></div>
-    <button onclick="closeMyProfile()" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;" id="btn-close-my-profile">Затвори</button>
-  </div>
-</div>
-
-<!-- ADD VIDEO MODAL -->
-<div class="modal" id="addVideoModal">
-  <div class="modal-content">
-    <h2 id="add-video-title">📹 Додај видео</h2>
-    <div id="add-video-msg" class="modal-msg"></div>
-    <input type="text" id="new-video-title" placeholder="Наслов на видеото">
-    <input type="text" id="new-video-url" placeholder="YouTube линк (https://youtu.be/...)">
-    <button onclick="handleAddVideo()" id="btn-add-video-confirm">Додај видео</button>
-    <button onclick="closeAddVideo()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
-  </div>
-</div>
-
-<!-- CHANGE PASSWORD MODAL -->
-<div class="modal" id="changePasswordModal">
-  <div class="modal-content">
-    <h2 id="change-pwd-title">🔐 Промена на лозинка</h2>
-    <div id="change-pwd-msg" class="modal-msg"></div>
-    <input type="password" id="new-password" placeholder="Нова лозинка (мин. 6 знаци)">
-    <button onclick="handleChangePassword()" id="btn-change-pwd">Промени лозинка</button>
-    <button onclick="closeChangePassword()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
-  </div>
-</div>
-
-<!-- EDIT INFO MODAL -->
-<div class="modal" id="editInfoModal">
-  <div class="modal-content">
-    <h2 id="edit-info-title">✏️ Промена на информации</h2>
-    <div id="edit-info-msg" class="modal-msg"></div>
-    <input type="text" id="edit-name" placeholder="Име и презиме">
-    <input type="tel" id="edit-phone" placeholder="Телефон">
-    <select id="edit-city"></select>
-    <select id="edit-category"></select>
-    <textarea id="edit-description" placeholder="Опис" rows="3"></textarea>
-    <input type="url" id="edit-facebook" placeholder="📘 Facebook профил (опционо)">
-    <button onclick="handleEditInfo()" id="btn-edit-info">Зачувај</button>
-    <button onclick="closeEditInfo()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
-  </div>
-</div>
-
-<!-- CHANGE AVATAR MODAL -->
-<div class="modal" id="changeAvatarModal">
-  <div class="modal-content">
-    <h2 id="change-avatar-title">📸 Промена на слика</h2>
-    <div id="change-avatar-msg" class="modal-msg"></div>
-    <input type="file" id="avatar-file" accept="image/*">
-    <button onclick="handleChangeAvatar()" id="btn-change-avatar">Зачувај слика</button>
-    <button onclick="closeChangeAvatar()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
-  </div>
-</div>
-
-<!-- ADD IMAGE MODAL -->
-<div class="modal" id="addImageModal">
-  <div class="modal-content">
-    <h2 id="add-image-title">📸 Додај слика</h2>
-    <div id="add-image-msg" class="modal-msg"></div>
-    <input type="file" id="image-file" accept="image/*" multiple>
-    <button onclick="handleAddImage()" id="btn-add-image">Качи слика</button>
-    <button onclick="closeAddImage()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
-  </div>
-</div>
-
-<!-- VIDEO PLAYER MODAL -->
-<div class="video-modal" id="videoModal">
-  <button class="video-close" onclick="closeVideo()">✕</button>
-  <div class="video-modal-content">
-    <iframe id="videoFrame" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-  </div>
-</div>
-
-<!-- TERMS MODAL -->
-<div class="modal" id="termsModal">
-  <div class="modal-content">
-    <h2 id="terms-title">📋 Услови за користење</h2>
-    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
-      <p><strong>1. Општи одредби</strong></p>
-      <p>Овие Услови го регулираат користењето на веб-страницата majstor.mk (во натамошниот текст: „Платформа"). Со влегување и користење на Платформата, се согласуваш со овие Услови.</p>
-      <p><strong>2. Природа на Платформата</strong></p>
-      <p>majstor.mk е само посредник — не е изведувач на работи. Платформата не одговара за квалитетот, безбедноста или навременоста на извршените работи.</p>
-      <p><strong>3. Регистрација и сметки</strong></p>
-      <p>Податоците што ги внесуваш мора да бидат вистинити и точни. Секој корисник е одговорен за заштита на својата лозинка. Едно лице/фирма има право на една сметка.</p>
-      <p><strong>4. Профили на мајстори</strong></p>
-      <p>Првите 6 месеци од регистрацијата се бесплатни. По истекот, ќе биде понудена претплата. Мајсторите се должни да ги наведат вистинити податоци за своите квалификации.</p>
-      <p><strong>5. Забрането однесување</strong></p>
-      <p>Забрането е: внесување лажни податоци, клеветење, објавување несоодветна содржина, автоматизиран пристап (ботови) и копирање на содржина без дозвола.</p>
-      <p><strong>6. Интелектуална сопственост</strong></p>
-      <p>Сите видеа, текстови и слики се заштитени. Не смееш да ги копираш без писмена согласност.</p>
-      <p><strong>7. Ограничување на одговорност</strong></p>
-      <p>Платформата не гарантира дека ќе најдеш мајстор или дека работата ќе биде без проблеми. Користењето е на сопствена одговорност.</p>
-      <p><strong>8. Меродавно право</strong></p>
-      <p>За сите спорови надлежен е Основниот суд во Скопје, согласно законите на Северна Македонија.</p>
-    </div>
-    <button onclick="closeDoc('termsModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
-  </div>
-</div>
-
-<!-- PRIVACY MODAL -->
-<div class="modal" id="privacyModal">
-  <div class="modal-content">
-    <h2 id="privacy-title">🔒 Политика за приватност</h2>
-    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
-      <p><strong>1. Вовед</strong></p>
-      <p>Заштитата на твоите лични податоци е важна за нас. Оваа Политика објаснува кои податоци ги собираме и како ги користиме.</p>
-      <p><strong>2. Податоци што ги собираме</strong></p>
-      <p>Име, е-пошта, телефон, град. Автоматски податоци: IP адреса, уред, прегледани страници, време на посета. Колачиња за подобро искуство.</p>
-      <p><strong>3. Како ги користиме</strong></p>
-      <p>За одржување на Платформата, комуникација помеѓу корисници и мајстори, испраќање известувања и законски обврски. Нема да продадеме твои податоци на трети лица без согласност.</p>
-      <p><strong>4. Чување и безбедност</strong></p>
-      <p>Податоците се чуваат на безбедни сервери со ограничен пристап. Ги преземаме разумни мерки за заштита.</p>
-      <p><strong>5. Твои права</strong></p>
-      <p>Пристап до твоите податоци, исправка, бришење („право да се биде заборавен") и повлекување на согласност. Барања: kontakt@majstor.mk</p>
-      <p><strong>6. Колачиња</strong></p>
-      <p>Користиме неопходни и аналитички колачиња. Може да ги исклучиш во поставувањата на пребарувачот.</p>
-      <p><strong>7. Промени</strong></p>
-      <p>Оваа Политика може да се ажурира. Промените стапуваат во сила со објавувањето.</p>
-    </div>
-    <button onclick="closeDoc('privacyModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
-  </div>
-</div>
-
-<!-- COOKIES MODAL -->
-<div class="modal" id="cookiesDocModal">
-  <div class="modal-content">
-    <h2 id="cookies-doc-title">🍪 Извештај за колачиња</h2>
-    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
-      <p>Оваа веб-страница користи колачиња за да го подобри твоето искуство.</p>
-      <p><strong>Неопходни колачиња:</strong> Потребни за функционирање на страницата (најава, сесија). Не може да се исклучат.</p>
-      <p><strong>Аналитички колачиња:</strong> Ни помагаат да разбереме како се користи страницата — анонимни податоци (Vercel Analytics).</p>
-      <p>Со продолжување на користењето на страницата, се согласуваш со употреба на колачиња.</p>
-    </div>
-    <button onclick="closeDoc('cookiesDocModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+    <h2>Уреди мајстор</h2>
+    <div class="modal-msg" id="majstorMsg"></div>
+    <input type="text" id="mName" placeholder="Име и презиме">
+    <input type="tel" id="mPhone" placeholder="Телефон">
+    <select id="mCity">
+      <option value="">Избери град...</option>
+    </select>
+    <select id="mCategory"></select>
+    <textarea id="mDescription" placeholder="Опис" rows="3"></textarea>
+    <input type="url" id="mFacebook" placeholder="📘 Facebook профил (опционо)">
+    <input type="number" id="mRating" placeholder="Оценка (0-5)" step="0.1" min="0" max="5">
+    <button onclick="handleSaveMajstor()">Зачувај</button>
+    <button onclick="closeMajstorModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
 </div>
 
@@ -533,929 +246,122 @@ const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const ADMIN_EMAIL = 'marjanmladenovski1406986@gmail.com';
+
 const CITIES = ['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
 
-let videos = [];
-let majstori = [];
-let currentLang = 'mk';
-let currentFilter = 'all';
-let currentCityFilter = '';
-let selectedType = null;
-let currentUser = null;
-let currentUserType = null;
-let currentMajstorProfile = null;
-let selectedRating = 0;
-let pendingMajstorData = null;
-
-const catNames = {
-  mk: { elektrika:"Електрика", vodovod:"Водовод", gradeznistvo:"Градежништво", popravki:"Поправки", finalni:"Финални работи", plockari:"Плочкари", gipsari:"Гипсари и Молери", stolari:"Столари", klima:"Клима", greenje:"Греење", krov:"Кров", sanitarii:"Санитарии", pvc:"ПВЦ прозори и врати", dvorovi:"Уредување дворови", cistenje:"Чистење", opti:"Општи работници" },
-  en: { elektrika:"Electric", vodovod:"Plumbing", gradeznistvo:"Construction", popravki:"Repairs", finalni:"Finishing", plockari:"Tilers", gipsari:"Drywall & Painting", stolari:"Carpentry", klima:"HVAC", greenje:"Heating", krov:"Roofing", sanitarii:"Sanitary", pvc:"PVC Windows & Doors", dvorovi:"Yard Design", cistenje:"Cleaning", opti:"General Workers" }
+const CAT_NAMES = {
+  elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
+  popravki: "🔧 Поправки", finalni: "🎨 Финални работи", plockari: "🔲 Плочкари",
+  gipsari: "🧱 Гипсари и Молери", stolari: "🚪 Столари", klima: "❄️ Клима",
+  greenje: "🔥 Греење", krov: "🏠 Кров", sanitarii: "🚿 Санитарии",
+  pvc: "🪟 ПВЦ прозори и врати", dvorovi: "🌳 Уредување дворови", cistenje: "🧹 Чистење",
+  opti: "🔨 Општи работници"
 };
 
-const t = {
-  mk: {
-    logo:"Мајстор.мк", login:"Најава", logout:"Одјави се", myProfile:"Мој Профил",
-    heroTitle:"Научи сам. Поправи сам.<br>Или одбери си мајстор.",
-    heroText:"Најдобрите видеа и мајстори се тука.",
-    welcomeTitle:"🔨 Добредојдовте!",
-    welcomeP1:"👷 Мајстори → Регистрирајте се. Покажете ја вашата работа. Најдете нови клиенти.",
-    welcomeP2:"🔍 Барате мајстор? → Регистрирајте се и контактирајте ги сите.",
-    all:"Сите", elektrika:"⚡ Електрика", vodovod:"💧 Водовод", gradeznistvo:"🏗️ Градежништво", popravki:"🔧 Поправки", finalni:"🎨 Финални работи", plockari:"🔲 Плочкари", gipsari:"🧱 Гипсари и Молери", stolari:"🚪 Столари", klima:"❄️ Клима", greenje:"🔥 Греење", krov:"🏠 Кров", sanitarii:"🚿 Санитарии", pvc:"🪟 ПВЦ прозори и врати", dvorovi:"🌳 Уредување дворови", cistenje:"🧹 Чистење", opti:"🔨 Општи работници",
-    latest:"🔥 Најнови видеа", majstori:"👷 Мајстори", loadingText:"Вчитувам видеа...", footer:"© 2026 Мајстор.мк",
-    allCities:"📍 Сите градови",
-    modalTitle:"🔨 Мајстор.мк", tabLogin:"Најава", tabRegister:"Регистрација",
-    labelMajstor:"Мајстор", labelBaram:"Барам мајстор",
-    phEmail:"Е-пошта", phPassword:"Лозинка", phPasswordMin:"Лозинка (мин. 6 знаци)",
-    phName:"Име", phSurname:"Презиме", phPhone:"Телефон", phDescription:"Опис на услугите...",
-    optChoose:"Избери категорија...", optChooseCity:"Избери град...",
-    btnLogin:"Најави се", btnRegMajstor:"Регистрирај се како мајстор", btnRegBaram:"Регистрирај се",
-    btnClose:"Затвори", noMajstori:"Нема мајстори во оваа категорија",
-    rateTitle:"Оцени го мајсторот", rateComment:"Коментар (опционо)...", rateBtn:"Испрати оценка",
-    loginToRate:"🔒 Најави се за да оцениш", reviews:"оценки", noReviews:"Нема оценки сè уште",
-    loginToSeePhone:"🔒 Најави се за да го видиш телефонот",
-    loginToSeeReviews:"🔒 Најави се за да ги видиш коментарите",
-    infoCat:"Категорија", infoPhone:"Телефон", infoCity:"Град", infoDesc:"Опис",
-    enterBoth:"Внеси е-пошта и лозинка", loggingIn:"Се најавувам...", loginSuccess:"Успешно најавување!",
-    registering:"Се регистрирам...", registerSuccess:"Успешна регистрација!",
-    fillAll:"Пополни име, е-пошта, лозинка и категорија", fillAllSimple:"Пополни сите полиња",
-    passwordShort:"Лозинката мора да има најмалку 6 знаци", pickStars:"Избери ѕвезди",
-    thanksRating:"✅ Благодариме за оценката!",
-    error:"Грешка: ", noVideos:"Нема видеа",
-    myMedia:"📸 Мои слики", myVideos:"📹 Мои видеа", mySettings:"⚙️ Поставки",
-    addImage:"+ Додај слика", addVideo:"+ Додај видео",
-    changePassword:"🔐 Промена на лозинка", editInfo:"✏️ Промена на информации", changeAvatar:"📸 Промена на слика",
-    newPassword:"Нова лозинка (мин. 6 знаци)", btnChangePwd:"Промени лозинка",
-    btnSave:"Зачувај", btnCancel:"Откажи", btnUpload:"Качи", btnAddVideoConfirm:"Додај видео",
-    videoTitle:"Наслов на видеото", videoUrl:"YouTube линк (https://youtu.be/...)",
-    addImageTitle:"📸 Додај слика", addVideoTitle:"📹 Додај видео",
-    changePwdTitle:"🔐 Промена на лозинка", editInfoTitle:"✏️ Промена на информации", changeAvatarTitle:"📸 Промена на слика",
-    noImages:"Нема слики сè уште", noVideosOwn:"Нема видеа сè уште",
-    imageAdded:"✅ Сликата е додадена!", videoAdded:"✅ Видеото е додадено!",
-    pwdChanged:"✅ Лозинката е променета!", infoChanged:"✅ Информациите се зачувани!",
-    avatarChanged:"✅ Сликата е променета!", deleteConfirm:"Дали си сигурен?",
-    maxImages:"Максимум 10 слики. Избриши некоја прво.",
-    errorAdd:"Грешка: ", images:"слики",
-    confirmTitle:"📢 Пред да продолжиш",
-    confirmText:"<p><strong>Пред да се регистрираш, прочитај ги Условите:</strong></p><p><strong>1. Природа на платформата:</strong> majstor.mk е само посредник. Не одговараме за квалитетот на извршените работи.</p><p><strong>2. Твои обврски:</strong> Податоците мора да се вистинити. Ти си одговорен за својата лозинка.</p><p><strong>3. Забрането:</strong> Лажни податоци, клеветење, несоодветна содржина, автоматизиран пристап.</p><p><strong>4. Период:</strong> Првите 6 месеци се бесплатни. Потоа ќе те известиме за претплата.</p><p>Со кликнување на копчето подолу, потврдуваш дека ги прифаќаш <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Условите за користење</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Политиката за приватност</a> и <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Колачињата</a>.</p>",
-    btnConfirmRegister:"✅ Се согласувам и се регистрирам"
-  },
-  en: {
-    logo:"MasterHow", login:"Login", logout:"Sign out", myProfile:"My Profile",
-    heroTitle:"Learn it. Fix it.<br>Or choose a master.",
-    heroText:"The best videos and masters are here.",
-    welcomeTitle:"🔨 Welcome!",
-    welcomeP1:"👷 Masters → Register. Show your work. Find new clients.",
-    welcomeP2:"🔍 Looking for a master? → Register and contact them all.",
-    all:"All", elektrika:"⚡ Electric", vodovod:"💧 Plumbing", gradeznistvo:"🏗️ Construction", popravki:"🔧 Repairs", finalni:"🎨 Finishing", plockari:"🔲 Tilers", gipsari:"🧱 Drywall & Painting", stolari:"🚪 Carpentry", klima:"❄️ HVAC", greenje:"🔥 Heating", krov:"🏠 Roofing", sanitarii:"🚿 Sanitary", pvc:"🪟 PVC Windows & Doors", dvorovi:"🌳 Yard Design", cistenje:"🧹 Cleaning", opti:"🔨 General Workers",
-    latest:"🔥 Latest Videos", majstori:"👷 Masters", loadingText:"Loading videos...", footer:"© 2026 MasterHow",
-    allCities:"📍 All cities",
-    modalTitle:"🔨 MasterHow", tabLogin:"Login", tabRegister:"Register",
-    labelMajstor:"Master", labelBaram:"Looking for a master",
-    phEmail:"Email", phPassword:"Password", phPasswordMin:"Password (min. 6 chars)",
-    phName:"Name", phSurname:"Surname", phPhone:"Phone", phDescription:"Services description...",
-    optChoose:"Choose category...", optChooseCity:"Choose city...",
-    btnLogin:"Sign in", btnRegMajstor:"Register as master", btnRegBaram:"Register",
-    btnClose:"Close", noMajstori:"No masters in this category",
-    rateTitle:"Rate this master", rateComment:"Comment (optional)...", rateBtn:"Submit rating",
-    loginToRate:"🔒 Log in to rate", reviews:"reviews", noReviews:"No reviews yet",
-    loginToSeePhone:"🔒 Log in to see the phone",
-    loginToSeeReviews:"🔒 Log in to see the comments",
-    infoCat:"Category", infoPhone:"Phone", infoCity:"City", infoDesc:"Description",
-    enterBoth:"Enter email and password", loggingIn:"Signing in...", loginSuccess:"Login successful!",
-    registering:"Registering...", registerSuccess:"Registration successful!",
-    fillAll:"Fill name, email, password and category", fillAllSimple:"Fill all fields",
-    passwordShort:"Password must be at least 6 characters", pickStars:"Pick stars",
-    thanksRating:"✅ Thanks for the rating!",
-    error:"Error: ", noVideos:"No videos",
-    myMedia:"📸 My images", myVideos:"📹 My videos", mySettings:"⚙️ Settings",
-    addImage:"+ Add image", addVideo:"+ Add video",
-    changePassword:"🔐 Change password", editInfo:"✏️ Edit information", changeAvatar:"📸 Change picture",
-    newPassword:"New password (min. 6 chars)", btnChangePwd:"Change password",
-    btnSave:"Save", btnCancel:"Cancel", btnUpload:"Upload", btnAddVideoConfirm:"Add video",
-    videoTitle:"Video title", videoUrl:"YouTube link (https://youtu.be/...)",
-    addImageTitle:"📸 Add image", addVideoTitle:"📹 Add video",
-    changePwdTitle:"🔐 Change password", editInfoTitle:"✏️ Edit information", changeAvatarTitle:"📸 Change picture",
-    noImages:"No images yet", noVideosOwn:"No videos yet",
-    imageAdded:"✅ Image added!", videoAdded:"✅ Video added!",
-    pwdChanged:"✅ Password changed!", infoChanged:"✅ Information saved!",
-    avatarChanged:"✅ Picture changed!", deleteConfirm:"Are you sure?",
-    maxImages:"Maximum 10 images. Delete one first.",
-    errorAdd:"Error: ", images:"images",
-    confirmTitle:"📢 Before you continue",
-    confirmText:"<p><strong>Before you register, read the Terms:</strong></p><p><strong>1. Nature of platform:</strong> majstor.mk is only an intermediary. We are not responsible for the quality of work performed.</p><p><strong>2. Your obligations:</strong> Data must be truthful. You are responsible for your password.</p><p><strong>3. Forbidden:</strong> False data, defamation, inappropriate content, automated access.</p><p><strong>4. Period:</strong> First 6 months are free. Then we will notify you about subscription.</p><p>By clicking below, you confirm that you accept the <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Terms</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Privacy Policy</a> and <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Cookies</a>.</p>",
-    btnConfirmRegister:"✅ I agree and register"
+let allVideos = [];
+let allMajstori = [];
+let allUsers = [];
+let allClicks = [];
+let editingVideoId = null;
+let editingMajstorId = null;
+
+async function checkAdminAuth() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (user && user.email === ADMIN_EMAIL) {
+    showAdminPanel(user.email);
+  } else if (user && user.email !== ADMIN_EMAIL) {
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('noAccess').classList.remove('hidden');
   }
-};
+}
+
+function showAdminPanel(email) {
+  document.getElementById('loginBox').classList.add('hidden');
+  document.getElementById('noAccess').classList.add('hidden');
+  document.getElementById('adminPanel').classList.add('active');
+  document.getElementById('adminUserEmail').textContent = email;
+  populateCategorySelects();
+  populateCities();
+  loadAllData();
+}
 
 function populateCities() {
-  const citySelect = document.getElementById('city-select');
-  const mCity = document.getElementById('m-city');
-  CITIES.forEach(c => {
-    citySelect.innerHTML += `<option value="${c}">📍 ${c}</option>`;
-    mCity.innerHTML += `<option value="${c}">${c}</option>`;
-  });
+  const sel = document.getElementById('mCity');
+  if (!sel) return;
+  CITIES.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
 }
 
-function populateEditCategories() {
-  const editCat = document.getElementById('edit-category');
-  if (!editCat) return;
-  const keys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
-  editCat.innerHTML = '';
-  keys.forEach(k => { editCat.innerHTML += `<option value="${k}">${t[currentLang][k]}</option>`; });
-}
-
-function populateEditCities() {
-  const editCity = document.getElementById('edit-city');
-  if (!editCity) return;
-  editCity.innerHTML = '<option value="">Избери град...</option>';
-  CITIES.forEach(c => { editCity.innerHTML += `<option value="${c}">${c}</option>`; });
-}
-
-async function loadVideos() {
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('loading').textContent = t[currentLang].loadingText;
-  const { data, error } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
-  if (error) { console.error(error); return; }
-  videos = data.map(v => ({ id: v.id, title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes, majstorId: v.majstor_id }));
-  document.getElementById('loading').style.display = 'none';
-  renderVideos();
-}
-
-async function loadMajstori() {
-  const { data, error } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
-  if (error) { console.error(error); return; }
-  const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating');
-  majstori = (data || []).map(m => {
-    const mRatings = (allRatings || []).filter(r => r.majstor_id === m.id);
-    const baseSum = (m.rating || 0) * (m.rating_count || 0);
-    const newSum = mRatings.reduce((s, r) => s + r.rating, 0);
-    const totalCount = (m.rating_count || 0) + mRatings.length;
-    const rating = totalCount > 0 ? parseFloat(((baseSum + newSum) / totalCount).toFixed(1)) : 0;
-    return { ...m, computed_rating: rating, computed_count: totalCount };
-  });
-  renderMajstori();
-}
-
-function renderVideos() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  let filtered = videos.filter(v => currentFilter === "all" || v.cat === currentFilter);
-  if (currentCityFilter) {
-    filtered = filtered.filter(v => {
-      if (!v.majstorId) return false;
-      const m = majstori.find(x => x.id === v.majstorId);
-      return m && m.city === currentCityFilter;
-    });
-  }
-  if (filtered.length === 0) { grid.innerHTML = '<div class="loading">' + t[currentLang].noVideos + '</div>'; return; }
-  filtered.forEach(v => {
-    const title = currentLang === 'mk' ? v.title : (v.titleEn || v.title);
-    const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
-    const majstor = v.majstorId ? majstori.find(x => x.id === v.majstorId) : null;
-    const authorHtml = majstor ? `<div class="card-author" onclick="event.stopPropagation(); showMajstor(${majstor.id})">👤 ${majstor.name}</div>` : '';
-    grid.innerHTML += `
-      <div class="card" onclick="openVideo('${v.youtube}')">
-        <div class="thumb"><img src="${thumbUrl}" alt="${title}"></div>
-        <div class="card-body">
-          <div class="card-title">${title}</div>
-          ${authorHtml}
-          <div class="card-meta">
-            <span class="cat-tag ${v.cat}">${catNames[currentLang][v.cat] || v.cat}</span>
-            <span>❤️ ${v.likes || 0}</span>
-          </div>
-        </div>
-      </div>`;
-  });
-}
-
-function renderMajstori() {
-  const grid = document.getElementById('majstori-grid');
-  grid.innerHTML = '';
-  let filtered = majstori.filter(m => currentFilter === "all" || m.category === currentFilter);
-  if (currentCityFilter) filtered = filtered.filter(m => m.city === currentCityFilter);
-  if (filtered.length === 0) { grid.innerHTML = `<div class="no-majstori">${t[currentLang].noMajstori}</div>`; return; }
-  filtered.forEach(m => {
-    const rating = m.computed_rating ? `⭐ ${m.computed_rating}` : '';
-    const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
-    grid.innerHTML += `
-      <div class="majstor-card" onclick="showMajstor(${m.id})">
-        <div class="majstor-avatar">${avatar}</div>
-        <div class="majstor-info">
-          <div class="majstor-name">${m.name || 'Мајстор'}</div>
-          <div class="majstor-meta">
-            <span>${catNames[currentLang][m.category] || m.category}</span>
-            <span class="majstor-rating">${rating}</span>
-          </div>
-        </div>
-      </div>`;
-  });
-}
-
-async function trackPhoneClick(majstorId) {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  await supabaseClient.from('phone_clicks').insert({
-    majstor_id: majstorId,
-    user_id: user ? user.id : null
-  });
-}
-
-async function showMajstor(id) {
-  const m = majstori.find(x => x.id === id);
-  if (!m) return;
-  const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
-  const tr = t[currentLang];
-  const phoneDisplay = currentUser ? (m.phone ? `<a href="tel:${m.phone}" onclick="trackPhoneClick(${m.id})" style="color: #ff6b35; text-decoration: none; font-weight: 700;">📞 ${m.phone}</a>` : '-') : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${tr.loginToSeePhone}</span>`;
-
-  document.getElementById('majstor-profile-content').innerHTML = `
-    <div class="majstor-profile">
-      <div class="big-avatar">${avatar}</div>
-      <div class="big-name">${m.name || 'Мајстор'}</div>
-      <div class="big-rating">⭐ ${m.computed_rating || 0} (${m.computed_count || 0} ${tr.reviews})</div>
-      <div class="info-row"><span>${tr.infoCat}</span><span>${catNames[currentLang][m.category] || m.category}</span></div>
-      <div class="info-row"><span>${tr.infoPhone}</span><span>${phoneDisplay}</span></div>
-      <div class="info-row"><span>${tr.infoCity}</span><span>${m.city || '-'}</span></div>
-      <div class="info-row"><span>${tr.infoDesc}</span><span>${m.description || '-'}</span></div>
-      ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 15px; padding: 12px 20px; background: #1877f2; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">📘 Facebook профил</a>` : ''}
-    </div>
-    <div id="majstor-images-section"></div>
-    <div id="majstor-videos-section"></div>
-    <div id="rating-content"></div>
-    <div id="ratings-list"></div>`;
-
-  document.getElementById('majstorModal').classList.add('open');
-  loadPublicMajstorMedia(id);
-  loadRatings(id);
-}
-
-async function loadPublicMajstorMedia(majstorId) {
-  const tr = t[currentLang];
-  const imgSection = document.getElementById('majstor-images-section');
-  const vidSection = document.getElementById('majstor-videos-section');
-
-  const { data: images } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'image');
-  const { data: vids } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'video');
-
-  if (images && images.length > 0) {
-    imgSection.innerHTML = `
-      <div class="media-section">
-        <h4>📸 ${tr.myMedia}</h4>
-        <div class="media-grid">
-          ${images.map(img => `<div class="media-item"><img src="${img.url}" alt="" onclick="openImageFull('${img.url}')"></div>`).join('')}
-        </div>
-      </div>`;
-  }
-  if (vids && vids.length > 0) {
-    vidSection.innerHTML = `
-      <div class="media-section">
-        <h4>📹 ${tr.myVideos}</h4>
-        <div class="video-list">
-          ${vids.map(v => `<div class="video-item"><span class="title" onclick="openVideo('${v.url}')">▶️ ${v.title}</span></div>`).join('')}
-        </div>
-      </div>`;
-  }
-}
-
-function openImageFull(url) { window.open(url, '_blank'); }
-
-  // 🆕 Провери преку majstor_profiles (ова е јавно читливо)
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  let isMajstor = false;
-  if (user) {
-    const { data: mp } = await supabaseClient.from('majstor_profiles').select('id').eq('user_id', user.id).maybeSingle();
-    isMajstor = !!mp;
-  }
-
-  if (user && !isMajstor) {
-
-    ratingContent.innerHTML = `
-      <div class="rating-section">
-        <h4>${tr.rateTitle}</h4>
-        <div class="stars-input" id="stars-input">
-          <span class="star" data-val="1">★</span>
-          <span class="star" data-val="2">★</span>
-          <span class="star" data-val="3">★</span>
-          <span class="star" data-val="4">★</span>
-          <span class="star" data-val="5">★</span>
-        </div>
-        <textarea id="rating-comment" placeholder="${tr.rateComment}"></textarea>
-        <button onclick="submitRating(${majstorId})">${tr.rateBtn}</button>
-        <div id="rating-msg" class="rating-msg"></div>
-      </div>`;
-    selectedRating = 0;
-    document.querySelectorAll('#stars-input .star').forEach(star => {
-      star.addEventListener('click', () => {
-        selectedRating = parseInt(star.dataset.val);
-        document.querySelectorAll('#stars-input .star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= selectedRating));
-      });
-    });
-  
-      } else if (user && isMajstor) {
-    ratingContent.innerHTML = `<div class="login-hint" style="cursor:default; background:#1a2a3a; color:#6bb8ff;">👷 Само клиенти кои бараат мајстор можат да остават оценка</div>`;
-  } else {
-    ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
-  }
-    if (!user) {
-    listDiv.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToSeeReviews}</div>`;
-    return;
-  }
-
-  const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).order('created_at', { ascending: false });
-  if (!data || data.length === 0) { listDiv.innerHTML = `<div class="no-ratings">${tr.noReviews}</div>`; return; }
-  listDiv.innerHTML = '<div class="rating-list"><h4>⭐ ' + data.length + ' ' + tr.reviews + '</h4>' +
-    data.map(r => {
-      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-      const date = new Date(r.created_at).toLocaleDateString();
-      return `<div class="rating-item"><div class="stars">${stars}</div>${r.comment ? '<div class="comment">' + r.comment + '</div>' : ''}<div class="date">${date}</div></div>`;
-    }).join('') + '</div>';
-}
-
-async function submitRating(majstorId) {
-  const tr = t[currentLang];
-  const msg = document.getElementById('rating-msg');
-  const comment = document.getElementById('rating-comment').value;
-  if (!selectedRating) { msg.textContent = tr.pickStars; msg.className = 'rating-msg error'; return; }
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) { msg.textContent = 'Not logged in'; msg.className = 'rating-msg error'; return; }
-  const { error } = await supabaseClient.from('ratings').insert({ majstor_id: majstorId, user_id: user.id, rating: selectedRating, comment: comment });
-  if (error) { msg.textContent = error.message; msg.className = 'rating-msg error'; return; }
-  const { data: allRatings } = await supabaseClient.from('ratings').select('rating').eq('majstor_id', majstorId);
-  if (allRatings && allRatings.length > 0) {
-    const avg = (allRatings.reduce((s, r) => s + r.rating, 0) / allRatings.length).toFixed(1);
-    await supabaseClient.from('majstor_profiles').update({ rating: parseFloat(avg), rating_count: allRatings.length }).eq('id', majstorId);
-  }
-  msg.textContent = tr.thanksRating;
-  msg.className = 'rating-msg success';
-  await loadMajstori();
-  setTimeout(() => { loadRatings(majstorId); }, 500);
-}
-
-async function openMyProfile() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) return;
-  const { data: profile } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).single();
-  if (!profile) return;
-  currentMajstorProfile = profile;
-  renderMyProfile(profile);
-  document.getElementById('myProfileModal').classList.add('open');
-}
-
-function renderMyProfile(m) {
-  const tr = t[currentLang];
-  const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
-
-  supabaseClient.from('majstor_media').select('*').eq('majstor_id', m.id).eq('type', 'image').then(({ data }) => {
-    const images = data || [];
-    let imgGrid = '';
-    if (images.length === 0) {
-      imgGrid = `<div class="no-ratings">${tr.noImages}</div>`;
-    } else {
-      imgGrid = '<div class="media-grid">' + images.map(img => `
-        <div class="media-item">
-          <img src="${img.url}" alt="${img.title || ''}">
-          <button class="delete-btn" onclick="deleteMedia(${img.id}, 'image')">🗑️</button>
-        </div>`).join('') + '</div>';
-    }
-    const el = document.getElementById('my-images-grid');
-    if (el) el.innerHTML = imgGrid;
-  });
-
-  document.getElementById('my-profile-content').innerHTML = `
-    <div class="majstor-profile">
-      <div class="big-avatar">${avatar}</div>
-      <div class="big-name">${m.name || 'Мајстор'}</div>
-      <div class="big-rating">⭐ ${m.rating || 0} (${m.rating_count || 0} ${tr.reviews})</div>
-      <div class="info-row"><span>${tr.infoCat}</span><span>${catNames[currentLang][m.category] || m.category}</span></div>
-      <div class="info-row"><span>${tr.infoPhone}</span><span>${m.phone || '-'}</span></div>
-      <div class="info-row"><span>${tr.infoCity}</span><span>${m.city || '-'}</span></div>
-      <div class="info-row"><span>${tr.infoDesc}</span><span>${m.description || '-'}</span></div>
-    </div>
-    <div class="media-section">
-      <h4>${tr.myMedia} <button class="btn-add-media" onclick="openAddImage()">${tr.addImage}</button></h4>
-      <div id="my-images-grid">${tr.loadingText}</div>
-    </div>
-    <div class="media-section">
-      <h4>${tr.myVideos} <button class="btn-add-media" onclick="openAddVideo()">${tr.addVideo}</button></h4>
-      <div class="video-list" id="my-videos-list"></div>
-    </div>
-    <div class="settings-section">
-      <h4>${tr.mySettings}</h4>
-      <button onclick="openChangeAvatar()">${tr.changeAvatar}</button>
-      <button onclick="openChangePassword()">${tr.changePassword}</button>
-      <button onclick="openEditInfo()">${tr.editInfo}</button>
-    </div>`;
-
-  loadMyVideos(m.id);
-}
-
-async function loadMyVideos(majstorId) {
-  const { data } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'video').order('created_at', { ascending: false });
-  const el = document.getElementById('my-videos-list');
-  if (!el) return;
-  const tr = t[currentLang];
-  if (!data || data.length === 0) { el.innerHTML = `<div class="no-ratings">${tr.noVideosOwn}</div>`; return; }
-  el.innerHTML = data.map(v => `
-    <div class="video-item">
-      <span class="title" onclick="openVideo('${v.url}')">▶️ ${v.title}</span>
-      <button class="delete-btn" onclick="deleteMedia(${v.id}, 'video')">🗑️</button>
-    </div>`).join('');
-}
-
-function closeMyProfile() { document.getElementById('myProfileModal').classList.remove('open'); }
-
-function openAddVideo() {
-  document.getElementById('new-video-title').value = '';
-  document.getElementById('new-video-url').value = '';
-  document.getElementById('add-video-msg').className = 'modal-msg';
-  document.getElementById('addVideoModal').classList.add('open');
-}
-function closeAddVideo() { document.getElementById('addVideoModal').classList.remove('open'); }
-
-async function handleAddVideo() {
-  const tr = t[currentLang];
-  const title = document.getElementById('new-video-title').value.trim();
-  const url = document.getElementById('new-video-url').value.trim();
-  const msg = document.getElementById('add-video-msg');
-  if (!title || !url) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-
-  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
-  if (!match) { msg.textContent = tr.error + 'Invalid YouTube URL'; msg.className = 'modal-msg error'; return; }
-  const videoId = match[1];
-
-  const { error } = await supabaseClient.from('majstor_media').insert({
-    majstor_id: currentMajstorProfile.id,
-    type: 'video',
-    url: videoId,
-    title: title
-  });
-  if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
-
-  await supabaseClient.from('videos').insert({
-    title: title,
-    title_en: title,
-    youtube_id: videoId,
-    category: currentMajstorProfile.category,
-    likes: 0,
-    majstor_id: currentMajstorProfile.id
-  });
-
-  msg.textContent = tr.videoAdded;
-  msg.className = 'modal-msg success';
-  setTimeout(() => { closeAddVideo(); loadMyVideos(currentMajstorProfile.id); loadVideos(); }, 800);
-}
-
-async function deleteMedia(mediaId, type) {
-  const tr = t[currentLang];
-  if (!confirm(tr.deleteConfirm)) return;
-  const { data: m } = await supabaseClient.from('majstor_media').select('*').eq('id', mediaId).single();
-  if (m && m.type === 'video') {
-    await supabaseClient.from('videos').delete().eq('youtube_id', m.url).eq('majstor_id', currentMajstorProfile.id);
-  }
-  await supabaseClient.from('majstor_media').delete().eq('id', mediaId);
-  renderMyProfile(currentMajstorProfile);
-  loadVideos();
-}
-
-function openChangePassword() {
-  document.getElementById('new-password').value = '';
-  document.getElementById('change-pwd-msg').className = 'modal-msg';
-  document.getElementById('changePasswordModal').classList.add('open');
-}
-function closeChangePassword() { document.getElementById('changePasswordModal').classList.remove('open'); }
-
-async function handleChangePassword() {
-  const tr = t[currentLang];
-  const newPwd = document.getElementById('new-password').value;
-  const msg = document.getElementById('change-pwd-msg');
-  if (newPwd.length < 6) { msg.textContent = tr.passwordShort; msg.className = 'modal-msg error'; return; }
-  const { error } = await supabaseClient.auth.updateUser({ password: newPwd });
-  if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
-  msg.textContent = tr.pwdChanged;
-  msg.className = 'modal-msg success';
-  setTimeout(() => closeChangePassword(), 1500);
-}
-
-function openEditInfo() {
-  if (!currentMajstorProfile) return;
-  populateEditCategories();
-  populateEditCities();
-  document.getElementById('edit-name').value = currentMajstorProfile.name || '';
-  document.getElementById('edit-phone').value = currentMajstorProfile.phone || '';
-  document.getElementById('edit-city').value = currentMajstorProfile.city || '';
-  document.getElementById('edit-category').value = currentMajstorProfile.category || 'elektrika';
-  document.getElementById('edit-description').value = currentMajstorProfile.description || '';
-  document.getElementById('edit-facebook').value = currentMajstorProfile.facebook_url || '';
-  document.getElementById('edit-info-msg').className = 'modal-msg';
-  document.getElementById('editInfoModal').classList.add('open');
-}
-function closeEditInfo() { document.getElementById('editInfoModal').classList.remove('open'); }
-
-async function handleEditInfo() {
-  const tr = t[currentLang];
-  const name = document.getElementById('edit-name').value.trim();
-  const phone = document.getElementById('edit-phone').value.trim();
-  const city = document.getElementById('edit-city').value;
-  const category = document.getElementById('edit-category').value;
-  const description = document.getElementById('edit-description').value.trim();
-  const facebook = document.getElementById('edit-facebook').value.trim();
-  const msg = document.getElementById('edit-info-msg');
-  if (!name || !category) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, facebook_url: facebook || null }).eq('id', currentMajstorProfile.id);
-  if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
-  msg.textContent = tr.infoChanged;
-  msg.className = 'modal-msg success';
-  currentMajstorProfile.name = name;
-  currentMajstorProfile.phone = phone;
-  currentMajstorProfile.city = city;
-  currentMajstorProfile.category = category;
-  currentMajstorProfile.description = description;
-  currentMajstorProfile.facebook_url = facebook || null;
-  await loadMajstori();
-  setTimeout(() => { closeEditInfo(); renderMyProfile(currentMajstorProfile); }, 1000);
-}
-
-function openChangeAvatar() {
-  document.getElementById('avatar-file').value = '';
-  document.getElementById('change-avatar-msg').className = 'modal-msg';
-  document.getElementById('changeAvatarModal').classList.add('open');
-}
-function closeChangeAvatar() { document.getElementById('changeAvatarModal').classList.remove('open'); }
-
-async function handleChangeAvatar() {
-  const tr = t[currentLang];
-  const file = document.getElementById('avatar-file').files[0];
-  const msg = document.getElementById('change-avatar-msg');
-  if (!file) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-  msg.textContent = tr.registering;
-  msg.className = 'modal-msg info';
-
-  const ext = file.name.split('.').pop();
-  const fileName = `avatar_${currentMajstorProfile.id}_${Date.now()}.${ext}`;
-  const { error: upErr } = await supabaseClient.storage.from('majstor-images').upload(fileName, file);
-  if (upErr) { msg.textContent = tr.error + upErr.message; msg.className = 'modal-msg error'; return; }
-
-  const { data: urlData } = supabaseClient.storage.from('majstor-images').getPublicUrl(fileName);
-  const { error: updErr } = await supabaseClient.from('majstor_profiles').update({ photo_url: urlData.publicUrl }).eq('id', currentMajstorProfile.id);
-  if (updErr) { msg.textContent = tr.error + updErr.message; msg.className = 'modal-msg error'; return; }
-
-  msg.textContent = tr.avatarChanged;
-  msg.className = 'modal-msg success';
-  currentMajstorProfile.photo_url = urlData.publicUrl;
-  await loadMajstori();
-  updateProfileMiniAvatar();
-  setTimeout(() => { closeChangeAvatar(); renderMyProfile(currentMajstorProfile); }, 1000);
-}
-
-function openAddImage() {
-  document.getElementById('image-file').value = '';
-  document.getElementById('add-image-msg').className = 'modal-msg';
-  document.getElementById('addImageModal').classList.add('open');
-}
-function closeAddImage() { document.getElementById('addImageModal').classList.remove('open'); }
-
-async function handleAddImage() {
-  const tr = t[currentLang];
-  const files = document.getElementById('image-file').files;
-  const msg = document.getElementById('add-image-msg');
-  if (!files || files.length === 0) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-
-  const { data: existing } = await supabaseClient.from('majstor_media').select('id').eq('majstor_id', currentMajstorProfile.id).eq('type', 'image');
-  if (existing && existing.length + files.length > 10) { msg.textContent = tr.maxImages; msg.className = 'modal-msg error'; return; }
-
-  msg.textContent = tr.registering;
-  msg.className = 'modal-msg info';
-
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const ext = file.name.split('.').pop();
-    const fileName = `img_${currentMajstorProfile.id}_${Date.now()}_${i}.${ext}`;
-    const { error: upErr } = await supabaseClient.storage.from('majstor-images').upload(fileName, file);
-    if (upErr) { msg.textContent = tr.error + upErr.message; msg.className = 'modal-msg error'; return; }
-    const { data: urlData } = supabaseClient.storage.from('majstor-images').getPublicUrl(fileName);
-    await supabaseClient.from('majstor_media').insert({
-      majstor_id: currentMajstorProfile.id,
-      type: 'image',
-      url: urlData.publicUrl,
-      title: file.name
-    });
-  }
-
-  msg.textContent = tr.imageAdded;
-  msg.className = 'modal-msg success';
-  setTimeout(() => { closeAddImage(); renderMyProfile(currentMajstorProfile); }, 800);
-}
-
-function openVideo(youtubeId) {
-  document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
-  document.getElementById('videoModal').classList.add('open');
-}
-function closeVideo() { document.getElementById('videoFrame').src = ''; document.getElementById('videoModal').classList.remove('open'); }
-function closeMajstorModal() { document.getElementById('majstorModal').classList.remove('open'); }
-
-function switchLang(lang) {
-  currentLang = lang;
-  const tr = t[lang];
-
-  document.getElementById('logo-text').textContent = tr.logo;
-  document.getElementById('hero-title').innerHTML = tr.heroTitle;
-  document.getElementById('hero-text').textContent = tr.heroText;
-  document.getElementById('welcome-title').textContent = tr.welcomeTitle;
-  document.getElementById('welcome-p1').innerHTML = tr.welcomeP1;
-  document.getElementById('welcome-p2').innerHTML = tr.welcomeP2;
-  document.getElementById('section-title').textContent = tr.latest;
-  document.getElementById('majstori-title').textContent = tr.majstori;
-  document.getElementById('loading').textContent = tr.loadingText;
-  document.getElementById('footer-text').textContent = tr.footer;
-  document.getElementById('city-select').options[0].textContent = tr.allCities;
-
-  const cats = ['all','elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
-  cats.forEach(c => { const el = document.getElementById('cat-' + c); if (el) el.textContent = tr[c]; });
-
-  document.getElementById('btn-login-header').textContent = tr.login;
-  document.getElementById('btn-logout-header').textContent = tr.logout;
-  document.getElementById('btn-my-profile-text').textContent = tr.myProfile;
-
-  document.getElementById('modal-title').textContent = tr.modalTitle;
-  document.getElementById('modal-tab-login').textContent = tr.tabLogin;
-  document.getElementById('modal-tab-register').textContent = tr.tabRegister;
-  document.getElementById('login-email').placeholder = tr.phEmail;
-  document.getElementById('login-password').placeholder = tr.phPassword;
-  document.getElementById('btn-modal-login').textContent = tr.btnLogin;
-  document.getElementById('label-majstor').textContent = tr.labelMajstor;
-  document.getElementById('label-baram').textContent = tr.labelBaram;
-
-  document.getElementById('m-name').placeholder = tr.phName;
-  document.getElementById('m-surname').placeholder = tr.phSurname;
-  document.getElementById('m-phone').placeholder = tr.phPhone;
-  document.getElementById('m-description').placeholder = tr.phDescription;
-  document.getElementById('m-email').placeholder = tr.phEmail;
-  document.getElementById('m-password').placeholder = tr.phPasswordMin;
-  document.getElementById('btn-reg-majstor').textContent = tr.btnRegMajstor;
-  document.getElementById('opt-choose').textContent = tr.optChoose;
-  document.getElementById('opt-choose-city').textContent = tr.optChooseCity;
-
-  const catKeys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
-  const optIds = { elektrika:'opt-el', vodovod:'opt-vod', gradeznistvo:'opt-grad', popravki:'opt-pop', finalni:'opt-fin', plockari:'opt-ploc', gipsari:'opt-gips', stolari:'opt-stol', klima:'opt-klim', greenje:'opt-gre', krov:'opt-kro', sanitarii:'opt-san', pvc:'opt-pvc', dvorovi:'opt-dvo', cistenje:'opt-cis', opti:'opt-opti' };
-  catKeys.forEach(k => { const el = document.getElementById(optIds[k]); if (el) el.textContent = tr[k]; });
-
-  document.getElementById('b-name').placeholder = tr.phName;
-  document.getElementById('b-email').placeholder = tr.phEmail;
-  document.getElementById('b-password').placeholder = tr.phPasswordMin;
-  document.getElementById('btn-reg-baram').textContent = tr.btnRegBaram;
-
-  document.getElementById('btn-close-modal').textContent = tr.btnClose;
-  document.getElementById('btn-close-majstor').textContent = tr.btnClose;
-  document.getElementById('btn-close-my-profile').textContent = tr.btnClose;
-
-  document.getElementById('add-video-title').textContent = tr.addVideoTitle;
-  document.getElementById('new-video-title').placeholder = tr.videoTitle;
-  document.getElementById('new-video-url').placeholder = tr.videoUrl;
-  document.getElementById('btn-add-video-confirm').textContent = tr.btnAddVideoConfirm;
-
-  document.getElementById('change-pwd-title').textContent = tr.changePwdTitle;
-  document.getElementById('new-password').placeholder = tr.newPassword;
-  document.getElementById('btn-change-pwd').textContent = tr.btnChangePwd;
-
-  document.getElementById('edit-info-title').textContent = tr.editInfoTitle;
-  document.getElementById('btn-edit-info').textContent = tr.btnSave;
-
-  document.getElementById('change-avatar-title').textContent = tr.changeAvatarTitle;
-  document.getElementById('btn-change-avatar').textContent = tr.btnSave;
-
-  document.getElementById('add-image-title').textContent = tr.addImageTitle;
-  document.getElementById('btn-add-image').textContent = tr.btnUpload;
-
-  document.getElementById('confirm-title').textContent = tr.confirmTitle;
-  document.getElementById('confirm-text').innerHTML = tr.confirmText;
-  document.getElementById('btn-confirm-register').textContent = tr.btnConfirmRegister;
-  document.getElementById('btn-cancel-register').textContent = tr.btnCancel;
-
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-  renderVideos();
-  renderMajstori();
-}
-
-document.querySelectorAll('.cat-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.cat;
-    renderVideos();
-    renderMajstori();
-  });
-});
-
-function filterByCity(city) {
-  currentCityFilter = city;
-  renderVideos();
-  renderMajstori();
-}
-
-function openModal() { document.getElementById('modal').classList.add('open'); }
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
-
-function showModalTab(tab) {
-  document.getElementById('modal-tab-login').classList.toggle('active', tab === 'login');
-  document.getElementById('modal-tab-register').classList.toggle('active', tab === 'register');
-  document.getElementById('modal-form-login').classList.toggle('hidden', tab !== 'login');
-  document.getElementById('modal-form-register').classList.toggle('hidden', tab !== 'register');
-  if (tab === 'register') resetRegisterForm();
-}
-
-function resetRegisterForm() {
-  selectedType = null;
-  document.getElementById('type-majstor').classList.remove('active');
-  document.getElementById('type-baram').classList.remove('active');
-  document.getElementById('form-majstor').classList.add('hidden');
-  document.getElementById('form-baram').classList.add('hidden');
-}
-
-function selectType(type) {
-  selectedType = type;
-  document.getElementById('type-majstor').classList.toggle('active', type === 'majstor');
-  document.getElementById('type-baram').classList.toggle('active', type === 'baram');
-  document.getElementById('form-majstor').classList.toggle('hidden', type !== 'majstor');
-  document.getElementById('form-baram').classList.toggle('hidden', type !== 'baram');
-}
-
-function showModalMsg(text, type) {
-  const msg = document.getElementById('modal-msg');
-  msg.textContent = text;
-  msg.className = 'modal-msg ' + type;
-}
-
-async function handleLogin() {
-  const tr = t[currentLang];
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
-  if (!email || !password) { showModalMsg(tr.enterBoth, 'error'); return; }
-  showModalMsg(tr.loggingIn, 'info');
+async function handleAdminLogin() {
+  const email = document.getElementById('adminEmail').value;
+  const password = document.getElementById('adminPassword').value;
+  const msg = document.getElementById('loginMsg');
+  if (!email || !password) { msg.textContent = 'Внеси мејл и лозинка'; msg.className = 'msg error'; return; }
+  msg.textContent = 'Се најавувам...'; msg.className = 'msg'; msg.style.display = 'block'; msg.style.background = '#1a2a3a'; msg.style.color = '#6bb8ff';
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
-  showModalMsg(tr.loginSuccess, 'success');
-  setTimeout(() => { closeModal(); checkUser(); }, 800);
-}
-
-function prepareRegisterMajstor() {
-  const tr = t[currentLang];
-  const name = document.getElementById('m-name').value.trim();
-  const surname = document.getElementById('m-surname').value.trim();
-  const phone = document.getElementById('m-phone').value.trim();
-  const city = document.getElementById('m-city').value;
-  const category = document.getElementById('m-category').value;
-  const description = document.getElementById('m-description').value.trim();
-  const email = document.getElementById('m-email').value.trim();
-  const password = document.getElementById('m-password').value;
-  const facebook = document.getElementById('m-facebook').value.trim();
-
-  if (!name || !email || !password || !category || !city) { showModalMsg(tr.fillAll, 'error'); return; }
-  if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
-  if (!document.getElementById('m-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
-
-  pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook };
-  closeModal();
-  document.getElementById('confirmModal').classList.add('open');
-}
-
-function cancelMajstorRegistration() {
-  pendingMajstorData = null;
-  document.getElementById('confirmModal').classList.remove('open');
-  document.getElementById('modal').classList.add('open');
-  showModalTab('register');
-  selectType('majstor');
-}
-
-async function confirmMajstorRegistration() {
-  if (!pendingMajstorData) return;
-  const tr = t[currentLang];
-  const { name, surname, phone, city, category, description, email, password, facebook } = pendingMajstorData;
-  let userIP = 'unknown';
-  try {
-    const ipRes = await fetch('https://api.ipify.org?format=json');
-    const ipData = await ipRes.json();
-    userIP = ipData.ip;
-  } catch(e) { console.log('IP error:', e); }
-  const userAgent = navigator.userAgent;
-
-  document.getElementById('confirmModal').classList.remove('open');
-
-  const { data, error } = await supabaseClient.auth.signUp({ email, password });
-  if (error) {
-    alert(tr.error + error.message);
-    pendingMajstorData = null;
+  if (error) { msg.textContent = 'Грешка: ' + error.message; msg.className = 'msg error'; return; }
+  if (data.user.email !== ADMIN_EMAIL) {
+    msg.textContent = 'Немаш админ пристап'; msg.className = 'msg error';
+    await supabaseClient.auth.signOut();
     return;
   }
-
-  const userId = data.user.id;
-  const fullName = (name + ' ' + surname).trim();
-
-  await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
-  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
-
-  pendingMajstorData = null;
-  await checkUser();
-  loadMajstori();
-  alert('✅ ' + tr.registerSuccess);
+  showAdminPanel(data.user.email);
 }
 
-async function handleRegisterBaram() {
-  const tr = t[currentLang];
-  const name = document.getElementById('b-name').value;
-  const email = document.getElementById('b-email').value;
-  const password = document.getElementById('b-password').value;
-
-  if (!name || !email || !password) { showModalMsg(tr.fillAllSimple, 'error'); return; }
-  if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
-  if (!document.getElementById('b-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
-
-  showModalMsg(tr.registering, 'info');
-  const { data, error } = await supabaseClient.auth.signUp({ email, password });
-  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
-
-  let userIP = 'unknown';
-  try {
-    const ipRes = await fetch('https://api.ipify.org?format=json');
-    const ipData = await ipRes.json();
-    userIP = ipData.ip;
-  } catch(e) { console.log('IP error:', e); }
-  const userAgent = navigator.userAgent;
-
-  await supabaseClient.from('profiles').insert({ id: data.user.id, user_type: 'baram', name: name, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
-
-  showModalMsg(tr.registerSuccess, 'success');
-  setTimeout(() => { closeModal(); checkUser(); }, 800);
-}
-
-async function handleLogout() {
+async function handleAdminLogout() {
   await supabaseClient.auth.signOut();
-  currentUser = null;
-  currentUserType = null;
-  currentMajstorProfile = null;
-  showLoggedOut();
+  document.getElementById('adminPanel').classList.remove('active');
+  document.getElementById('loginBox').classList.remove('hidden');
 }
 
-function showLoggedIn(email) {
-  currentUser = email;
-  document.getElementById('auth-area').classList.add('hidden');
-  document.getElementById('user-area').classList.remove('hidden');
-  document.getElementById('user-email-header').textContent = email;
-  document.getElementById('welcome-box').classList.add('hidden');
-  document.getElementById('hero-section').classList.add('hidden');
+function showTab(event, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
 }
 
-function showLoggedOut() {
-  document.getElementById('auth-area').classList.remove('hidden');
-  document.getElementById('user-area').classList.add('hidden');
-  document.getElementById('welcome-box').classList.remove('hidden');
-  document.getElementById('hero-section').classList.remove('hidden');
-  document.getElementById('btn-my-profile').classList.add('hidden');
+function populateCategorySelects() {
+  const opts = Object.entries(CAT_NAMES).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+  document.getElementById('vCategory').innerHTML = opts;
+  document.getElementById('mCategory').innerHTML = opts;
+  document.getElementById('bulkCategory').innerHTML = opts;
 }
 
-function updateProfileMiniAvatar() {
-  const el = document.getElementById('profile-avatar-mini');
-  if (!el || !currentMajstorProfile) return;
-  if (currentMajstorProfile.photo_url) {
-    el.innerHTML = `<img src="${currentMajstorProfile.photo_url}" alt="">`;
-  } else {
-    el.textContent = (currentMajstorProfile.name || '?').charAt(0).toUpperCase();
-  }
+async function loadAllData() {
+  const { data: vids } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
+  allVideos = vids || [];
+  const { data: maj } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
+  allMajstori = maj || [];
+    const { data: usrs } = await supabaseClient.from('profiles').select('*').neq('user_type', 'majstor').order('id', { ascending: false });
+  allUsers = usrs || [];
+  renderStats();
+  renderVideosList();
+  renderMajstoriList();
+  renderUsersList();
+  renderCategoriesFull();
+  loadClicks();
 }
 
-async function checkUser() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (user) {
-    currentUser = user.email;
-    const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).single();
-    currentUserType = profile?.user_type || null;
-    showLoggedIn(user.email);
-    if (currentUserType === 'majstor') {
-      const { data: m } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).single();
-      if (m) {
-        currentMajstorProfile = m;
-        document.getElementById('btn-my-profile').classList.remove('hidden');
-        updateProfileMiniAvatar();
-      }
-    }
-  } else {
-    currentUser = null;
-    currentUserType = null;
-    currentMajstorProfile = null;
-    showLoggedOut();
-  }
+async function loadClicks() {
+  const { data } = await supabaseClient.from('phone_clicks').select('*').order('clicked_at', { ascending: false });
+  allClicks = data || [];
+  renderClicks();
 }
 
-function openDoc(id) {
-  document.getElementById(id).classList.add('open');
-}
+function renderClicks() {
+  const total = allClicks.length;
+  const now = new Date();
+  const today = allClicks.filter(c => new Date(c.clicked_at).toDateString() === now.toDateString()).length;
+  const week = allClicks.filter(c => {
+    const diff = (now - new Date(c.clicked_at)) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }).length;
+  const month = allClicks.filter(c => {
+    const diff = (now - new Date(c.clicked_at)) / (1000 * 60 * 60 * 24);
+    return diff <= 30;
+  }).length;
 
-function closeDoc(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-populateCities();
-checkUser();
-loadVideos();
-loadMajstori();
-</script>
-
-</body>
-</html>
+  document.getElementById('clicksStats').innerHTML = `
+    <div class="stat-card"><div class="number">${total}</div><div class="label">📞 Вкупно</div></div>
+    <div
