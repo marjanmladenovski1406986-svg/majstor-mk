@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="mk">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,8 +39,8 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .welcome-box p strong { color: #ff6b35; }
 .welcome-box p:last-child { margin-bottom: 0; }
 
-.city-filter { max-width: 600px; margin: 0 auto 20px; text-align: center; padding: 0 20px; }
-.city-filter select { width: 100%; max-width: 400px; padding: 12px 18px; background: #1a1a1a; border: 1px solid #333; border-radius: 25px; color: #fff; font-size: 15px; font-family: inherit; cursor: pointer; text-align: center; }
+.city-filter { max-width: 600px; margin: 25px auto 20px; text-align: center; padding: 0 20px; }
+.city-filter select { width: 100%; max-width: 280px; padding: 10px 18px; background: #1a1a1a; border: 1px solid #333; border-radius: 25px; color: #fff; font-size: 14px; font-family: inherit; cursor: pointer; text-align: center; }
 .city-filter select:focus { outline: none; border-color: #ff6b35; }
 
 .categories-wrapper { padding: 20px 0; overflow: hidden; }
@@ -95,6 +96,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .cat-tag.pvc { background: #3a3a1a; color: #d8d86b; }
 .cat-tag.dvorovi { background: #1a4a1a; color: #6bd86b; }
 .cat-tag.cistenje { background: #3a1a2a; color: #ff88bb; }
+.cat-tag.opti { background: #2a2a3a; color: #aab8ff; }
 
 footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
@@ -120,6 +122,15 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .type-btn.active { background: #3a2515; border-color: #ff6b35; }
 .type-btn .icon { font-size: 30px; display: block; margin-bottom: 8px; }
 .type-btn .label { font-size: 14px; font-weight: 600; }
+
+/* CONFIRM REGISTRATION MODAL */
+.confirm-box { text-align: center; }
+.confirm-box h2 { color: #ff6b35; font-size: 24px; margin-bottom: 20px; }
+.confirm-box .text { color: #ddd; font-size: 14px; line-height: 1.7; margin-bottom: 25px; text-align: left; }
+.confirm-box .text strong { color: #ff6b35; }
+.confirm-box .text a { color: #ff6b35; }
+.confirm-box .btn-register { background: #ff6b35; }
+.confirm-box .btn-cancel { background: transparent; border: 1px solid #333; color: #999; }
 
 .video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
 .video-modal.open { display: flex; }
@@ -160,22 +171,18 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 .login-hint { text-align: center; color: #999; font-size: 13px; padding: 15px; background: #252525; border-radius: 8px; cursor: pointer; }
 .login-hint:hover { background: #2f2f2f; color: #ff6b35; }
 
-/* MEDIA SECTIONS IN PROFILE */
 .media-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a2a2a; text-align: left; }
 .media-section h4 { color: #ff6b35; margin-bottom: 12px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
 .btn-add-media { background: #ff6b35; border: none; color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 600; }
-.btn-add-media:hover { background: #e55a2b; }
 .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 10px; }
 .media-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #252525; }
 .media-item img { width: 100%; height: 100%; object-fit: cover; }
 .media-item .delete-btn { position: absolute; top: 4px; right: 4px; background: rgba(220, 53, 53, 0.9); border: none; color: #fff; width: 24px; height: 24px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.media-item .delete-btn:hover { background: #c82333; }
 .video-list { margin-top: 10px; }
 .video-item { padding: 10px; background: #252525; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .video-item .title { font-size: 13px; flex: 1; cursor: pointer; }
 .video-item .title:hover { color: #ff6b35; }
 .video-item .delete-btn { background: transparent; border: 1px solid #dc3545; color: #dc3545; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; }
-
 .settings-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a2a2a; text-align: left; }
 .settings-section h4 { color: #ff6b35; margin-bottom: 12px; font-size: 15px; }
 .settings-section button { background: #2a2a2a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-family: inherit; width: 100%; margin-bottom: 8px; text-align: left; }
@@ -212,7 +219,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
         <div class="profile-avatar-mini" id="profile-avatar-mini">?</div>
         <span id="btn-my-profile-text">Мој Профил</span>
       </button>
-      <span class="user-email" id="user-email-header"></span>
+      <span class="user-email hidden" id="user-email-header"></span>
       <button class="btn-auth logout" onclick="handleLogout()" id="btn-logout-header">Одјави се</button>
     </div>
   </div>
@@ -225,8 +232,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
 <div class="welcome-box" id="welcome-box">
   <h3 id="welcome-title">🔨 Добредојдовте!</h3>
-  <p id="welcome-p1"><strong>👷 Мајстори</strong> → Регистрирајте се бесплатно. Првите 6 месеци без плаќање.</p>
-  <p id="welcome-p2"><strong>🔍 Барате мајстор?</strong> → Бесплатно засекогаш. Регистрирајте се и контактирајте ги сите.</p>
+  <p id="welcome-p1"><strong>👷 Мајстори</strong> → Регистрирајте се. Покажете ја вашата работа. Најдете нови клиенти.</p>
+  <p id="welcome-p2"><strong>🔍 Барате мајстор?</strong> → Регистрирајте се и контактирајте ги сите.</p>
 </div>
 
 <div class="city-filter" id="city-filter">
@@ -253,6 +260,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <button class="cat-btn" data-cat="pvc" id="cat-pvc">🪟 ПВЦ прозори и врати</button>
     <button class="cat-btn" data-cat="dvorovi" id="cat-dvorovi">🌳 Уредување дворови</button>
     <button class="cat-btn" data-cat="cistenje" id="cat-cistenje">🧹 Чистење</button>
+    <button class="cat-btn" data-cat="opti" id="cat-opti">🔨 Општи работници</button>
   </div>
 </div>
 
@@ -270,6 +278,11 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
 <footer>
   <p id="footer-text">© 2026 Мајстор.мк</p>
+  <p style="margin-top: 15px; font-size: 13px;">
+    <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">📋 Услови</a> ·
+    <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🔒 Приватност</a> ·
+    <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🍪 Колачиња</a>
+  </p>
 </footer>
 
 <!-- LOGIN/REGISTER MODAL -->
@@ -321,20 +334,46 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
           <option value="pvc" id="opt-pvc">🪟 ПВЦ прозори и врати</option>
           <option value="dvorovi" id="opt-dvo">🌳 Уредување дворови</option>
           <option value="cistenje" id="opt-cis">🧹 Чистење</option>
+          <option value="opti" id="opt-opti">🔨 Општи работници</option>
         </select>
         <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
+        <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)">
         <input type="email" id="m-email" placeholder="Е-пошта">
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
-        <button onclick="handleRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
+        <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
+            <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+            <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
+          </label>
+        </div>
+        <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
       <div id="form-baram" class="hidden">
         <input type="text" id="b-name" placeholder="Име">
         <input type="email" id="b-email" placeholder="Е-пошта">
         <input type="password" id="b-password" placeholder="Лозинка (мин. 6 знаци)">
+        <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
+            <input type="checkbox" id="b-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+            <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
+          </label>
+        </div>
         <button onclick="handleRegisterBaram()" id="btn-reg-baram">Регистрирај се</button>
       </div>
     </div>
     <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;" id="btn-close-modal">Затвори</button>
+  </div>
+</div>
+
+<!-- CONFIRM REGISTRATION MODAL -->
+<div class="modal" id="confirmModal">
+  <div class="modal-content">
+    <div class="confirm-box">
+      <h2 id="confirm-title">📢 Добредојдовте!</h2>
+      <div class="text" id="confirm-text" style="max-height: 50vh; overflow-y: auto;"></div>
+      <button class="btn-register" onclick="confirmMajstorRegistration()" id="btn-confirm-register">✅ Се согласувам и се регистрирам</button>
+      <button class="btn-cancel" onclick="cancelMajstorRegistration()" id="btn-cancel-register">Откажи</button>
+    </div>
   </div>
 </div>
 
@@ -346,7 +385,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
-<!-- MY PROFILE MODAL (for masters) -->
+<!-- MY PROFILE MODAL -->
 <div class="modal" id="myProfileModal">
   <div class="modal-content">
     <div id="my-profile-content"></div>
@@ -387,6 +426,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <select id="edit-city"></select>
     <select id="edit-category"></select>
     <textarea id="edit-description" placeholder="Опис" rows="3"></textarea>
+    <input type="url" id="edit-facebook" placeholder="📘 Facebook профил (опционо)">
     <button onclick="handleEditInfo()" id="btn-edit-info">Зачувај</button>
     <button onclick="closeEditInfo()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
@@ -422,6 +462,70 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
+<!-- TERMS MODAL -->
+<div class="modal" id="termsModal">
+  <div class="modal-content">
+    <h2 id="terms-title">📋 Услови за користење</h2>
+    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
+      <p><strong>1. Општи одредби</strong></p>
+      <p>Овие Услови го регулираат користењето на веб-страницата majstor.mk (во натамошниот текст: „Платформа"). Со влегување и користење на Платформата, се согласуваш со овие Услови.</p>
+      <p><strong>2. Природа на Платформата</strong></p>
+      <p>majstor.mk е само посредник — не е изведувач на работи. Платформата не одговара за квалитетот, безбедноста или навременоста на извршените работи.</p>
+      <p><strong>3. Регистрација и сметки</strong></p>
+      <p>Податоците што ги внесуваш мора да бидат вистинити и точни. Секој корисник е одговорен за заштита на својата лозинка. Едно лице/фирма има право на една сметка.</p>
+      <p><strong>4. Профили на мајстори</strong></p>
+      <p>Првите 6 месеци од регистрацијата се бесплатни. По истекот, ќе биде понудена претплата. Мајсторите се должни да ги наведат вистинити податоци за своите квалификации.</p>
+      <p><strong>5. Забрането однесување</strong></p>
+      <p>Забрането е: внесување лажни податоци, клеветење, објавување несоодветна содржина, автоматизиран пристап (ботови) и копирање на содржина без дозвола.</p>
+      <p><strong>6. Интелектуална сопственост</strong></p>
+      <p>Сите видеа, текстови и слики се заштитени. Не смееш да ги копираш без писмена согласност.</p>
+      <p><strong>7. Ограничување на одговорност</strong></p>
+      <p>Платформата не гарантира дека ќе најдеш мајстор или дека работата ќе биде без проблеми. Користењето е на сопствена одговорност.</p>
+      <p><strong>8. Меродавно право</strong></p>
+      <p>За сите спорови надлежен е Основниот суд во Скопје, согласно законите на Северна Македонија.</p>
+    </div>
+    <button onclick="closeDoc('termsModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+  </div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="modal" id="privacyModal">
+  <div class="modal-content">
+    <h2 id="privacy-title">🔒 Политика за приватност</h2>
+    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
+      <p><strong>1. Вовед</strong></p>
+      <p>Заштитата на твоите лични податоци е важна за нас. Оваа Политика објаснува кои податоци ги собираме и како ги користиме.</p>
+      <p><strong>2. Податоци што ги собираме</strong></p>
+      <p>Име, е-пошта, телефон, град. Автоматски податоци: IP адреса, уред, прегледани страници, време на посета. Колачиња за подобро искуство.</p>
+      <p><strong>3. Како ги користиме</strong></p>
+      <p>За одржување на Платформата, комуникација помеѓу корисници и мајстори, испраќање известувања и законски обврски. Нема да продадеме твои податоци на трети лица без согласност.</p>
+      <p><strong>4. Чување и безбедност</strong></p>
+      <p>Податоците се чуваат на безбедни сервери со ограничен пристап. Ги преземаме разумни мерки за заштита.</p>
+      <p><strong>5. Твои права</strong></p>
+      <p>Пристап до твоите податоци, исправка, бришење („право да се биде заборавен") и повлекување на согласност. Барања: kontakt@majstor.mk</p>
+      <p><strong>6. Колачиња</strong></p>
+      <p>Користиме неопходни и аналитички колачиња. Може да ги исклучиш во поставувањата на пребарувачот.</p>
+      <p><strong>7. Промени</strong></p>
+      <p>Оваа Политика може да се ажурира. Промените стапуваат во сила со објавувањето.</p>
+    </div>
+    <button onclick="closeDoc('privacyModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+  </div>
+</div>
+
+<!-- COOKIES MODAL -->
+<div class="modal" id="cookiesDocModal">
+  <div class="modal-content">
+    <h2 id="cookies-doc-title">🍪 Извештај за колачиња</h2>
+    <div style="max-height: 60vh; overflow-y: auto; text-align: left; color: #ddd; font-size: 14px; line-height: 1.7;">
+      <p>Оваа веб-страница користи колачиња за да го подобри твоето искуство.</p>
+      <p><strong>Неопходни колачиња:</strong> Потребни за функционирање на страницата (најава, сесија). Не може да се исклучат.</p>
+      <p><strong>Аналитички колачиња:</strong> Ни помагаат да разбереме како се користи страницата — анонимни податоци (Vercel Analytics).</p>
+      <p>Со продолжување на користењето на страницата, се согласуваш со употреба на колачиња.</p>
+    </div>
+    <button onclick="closeDoc('cookiesDocModal')" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -441,10 +545,11 @@ let currentUser = null;
 let currentUserType = null;
 let currentMajstorProfile = null;
 let selectedRating = 0;
+let pendingMajstorData = null;
 
 const catNames = {
-  mk: { elektrika:"Електрика", vodovod:"Водовод", gradeznistvo:"Градежништво", popravki:"Поправки", finalni:"Финални работи", plockari:"Плочкари", gipsari:"Гипсари и Молери", stolari:"Столари", klima:"Клима", greenje:"Греење", krov:"Кров", sanitarii:"Санитарии", pvc:"ПВЦ прозори и врати", dvorovi:"Уредување дворови", cistenje:"Чистење" },
-  en: { elektrika:"Electric", vodovod:"Plumbing", gradeznistvo:"Construction", popravki:"Repairs", finalni:"Finishing", plockari:"Tilers", gipsari:"Drywall & Painting", stolari:"Carpentry", klima:"HVAC", greenje:"Heating", krov:"Roofing", sanitarii:"Sanitary", pvc:"PVC Windows & Doors", dvorovi:"Yard Design", cistenje:"Cleaning" }
+  mk: { elektrika:"Електрика", vodovod:"Водовод", gradeznistvo:"Градежништво", popravki:"Поправки", finalni:"Финални работи", plockari:"Плочкари", gipsari:"Гипсари и Молери", stolari:"Столари", klima:"Клима", greenje:"Греење", krov:"Кров", sanitarii:"Санитарии", pvc:"ПВЦ прозори и врати", dvorovi:"Уредување дворови", cistenje:"Чистење", opti:"Општи работници" },
+  en: { elektrika:"Electric", vodovod:"Plumbing", gradeznistvo:"Construction", popravki:"Repairs", finalni:"Finishing", plockari:"Tilers", gipsari:"Drywall & Painting", stolari:"Carpentry", klima:"HVAC", greenje:"Heating", krov:"Roofing", sanitarii:"Sanitary", pvc:"PVC Windows & Doors", dvorovi:"Yard Design", cistenje:"Cleaning", opti:"General Workers" }
 };
 
 const t = {
@@ -453,9 +558,9 @@ const t = {
     heroTitle:"Научи сам. Поправи сам.<br>Или одбери си мајстор.",
     heroText:"Најдобрите видеа и мајстори се тука.",
     welcomeTitle:"🔨 Добредојдовте!",
-    welcomeP1:"👷 Мајстори → Регистрирајте се бесплатно. Првите 6 месеци без плаќање.",
-    welcomeP2:"🔍 Барате мајстор? → Бесплатно засекогаш. Регистрирајте се и контактирајте ги сите.",
-    all:"Сите", elektrika:"⚡ Електрика", vodovod:"💧 Водовод", gradeznistvo:"🏗️ Градежништво", popravki:"🔧 Поправки", finalni:"🎨 Финални работи", plockari:"🔲 Плочкари", gipsari:"🧱 Гипсари и Молери", stolari:"🚪 Столари", klima:"❄️ Клима", greenje:"🔥 Греење", krov:"🏠 Кров", sanitarii:"🚿 Санитарии", pvc:"🪟 ПВЦ прозори и врати", dvorovi:"🌳 Уредување дворови", cistenje:"🧹 Чистење",
+    welcomeP1:"👷 Мајстори → Регистрирајте се. Покажете ја вашата работа. Најдете нови клиенти.",
+    welcomeP2:"🔍 Барате мајстор? → Регистрирајте се и контактирајте ги сите.",
+    all:"Сите", elektrika:"⚡ Електрика", vodovod:"💧 Водовод", gradeznistvo:"🏗️ Градежништво", popravki:"🔧 Поправки", finalni:"🎨 Финални работи", plockari:"🔲 Плочкари", gipsari:"🧱 Гипсари и Молери", stolari:"🚪 Столари", klima:"❄️ Клима", greenje:"🔥 Греење", krov:"🏠 Кров", sanitarii:"🚿 Санитарии", pvc:"🪟 ПВЦ прозори и врати", dvorovi:"🌳 Уредување дворови", cistenje:"🧹 Чистење", opti:"🔨 Општи работници",
     latest:"🔥 Најнови видеа", majstori:"👷 Мајстори", loadingText:"Вчитувам видеа...", footer:"© 2026 Мајстор.мк",
     allCities:"📍 Сите градови",
     modalTitle:"🔨 Мајстор.мк", tabLogin:"Најава", tabRegister:"Регистрација",
@@ -489,16 +594,19 @@ const t = {
     pwdChanged:"✅ Лозинката е променета!", infoChanged:"✅ Информациите се зачувани!",
     avatarChanged:"✅ Сликата е променета!", deleteConfirm:"Дали си сигурен?",
     maxImages:"Максимум 10 слики. Избриши некоја прво.",
-    errorAdd:"Грешка: ", images:"слики"
+    errorAdd:"Грешка: ", images:"слики",
+    confirmTitle:"📢 Пред да продолжиш",
+    confirmText:"<p><strong>Пред да се регистрираш, прочитај ги Условите:</strong></p><p><strong>1. Природа на платформата:</strong> majstor.mk е само посредник. Не одговараме за квалитетот на извршените работи.</p><p><strong>2. Твои обврски:</strong> Податоците мора да се вистинити. Ти си одговорен за својата лозинка.</p><p><strong>3. Забрането:</strong> Лажни податоци, клеветење, несоодветна содржина, автоматизиран пристап.</p><p><strong>4. Период:</strong> Првите 6 месеци се бесплатни. Потоа ќе те известиме за претплата.</p><p>Со кликнување на копчето подолу, потврдуваш дека ги прифаќаш <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Условите за користење</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Политиката за приватност</a> и <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Колачињата</a>.</p>",
+    btnConfirmRegister:"✅ Се согласувам и се регистрирам"
   },
   en: {
     logo:"MasterHow", login:"Login", logout:"Sign out", myProfile:"My Profile",
     heroTitle:"Learn it. Fix it.<br>Or choose a master.",
     heroText:"The best videos and masters are here.",
     welcomeTitle:"🔨 Welcome!",
-    welcomeP1:"👷 Masters → Register for free. First 6 months free of charge.",
-    welcomeP2:"🔍 Looking for a master? → Free forever. Register and contact them all.",
-    all:"All", elektrika:"⚡ Electric", vodovod:"💧 Plumbing", gradeznistvo:"🏗️ Construction", popravki:"🔧 Repairs", finalni:"🎨 Finishing", plockari:"🔲 Tilers", gipsari:"🧱 Drywall & Painting", stolari:"🚪 Carpentry", klima:"❄️ HVAC", greenje:"🔥 Heating", krov:"🏠 Roofing", sanitarii:"🚿 Sanitary", pvc:"🪟 PVC Windows & Doors", dvorovi:"🌳 Yard Design", cistenje:"🧹 Cleaning",
+    welcomeP1:"👷 Masters → Register. Show your work. Find new clients.",
+    welcomeP2:"🔍 Looking for a master? → Register and contact them all.",
+    all:"All", elektrika:"⚡ Electric", vodovod:"💧 Plumbing", gradeznistvo:"🏗️ Construction", popravki:"🔧 Repairs", finalni:"🎨 Finishing", plockari:"🔲 Tilers", gipsari:"🧱 Drywall & Painting", stolari:"🚪 Carpentry", klima:"❄️ HVAC", greenje:"🔥 Heating", krov:"🏠 Roofing", sanitarii:"🚿 Sanitary", pvc:"🪟 PVC Windows & Doors", dvorovi:"🌳 Yard Design", cistenje:"🧹 Cleaning", opti:"🔨 General Workers",
     latest:"🔥 Latest Videos", majstori:"👷 Masters", loadingText:"Loading videos...", footer:"© 2026 MasterHow",
     allCities:"📍 All cities",
     modalTitle:"🔨 MasterHow", tabLogin:"Login", tabRegister:"Register",
@@ -532,29 +640,35 @@ const t = {
     pwdChanged:"✅ Password changed!", infoChanged:"✅ Information saved!",
     avatarChanged:"✅ Picture changed!", deleteConfirm:"Are you sure?",
     maxImages:"Maximum 10 images. Delete one first.",
-    errorAdd:"Error: ", images:"images"
+    errorAdd:"Error: ", images:"images",
+    confirmTitle:"📢 Before you continue",
+    confirmText:"<p><strong>Before you register, read the Terms:</strong></p><p><strong>1. Nature of platform:</strong> majstor.mk is only an intermediary. We are not responsible for the quality of work performed.</p><p><strong>2. Your obligations:</strong> Data must be truthful. You are responsible for your password.</p><p><strong>3. Forbidden:</strong> False data, defamation, inappropriate content, automated access.</p><p><strong>4. Period:</strong> First 6 months are free. Then we will notify you about subscription.</p><p>By clicking below, you confirm that you accept the <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Terms</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Privacy Policy</a> and <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Cookies</a>.</p>",
+    btnConfirmRegister:"✅ I agree and register"
   }
 };
 
 function populateCities() {
   const citySelect = document.getElementById('city-select');
   const mCity = document.getElementById('m-city');
-  const editCity = document.getElementById('edit-city');
   CITIES.forEach(c => {
     citySelect.innerHTML += `<option value="${c}">📍 ${c}</option>`;
     mCity.innerHTML += `<option value="${c}">${c}</option>`;
-    if (editCity) editCity.innerHTML += `<option value="${c}">${c}</option>`;
   });
 }
 
 function populateEditCategories() {
   const editCat = document.getElementById('edit-category');
   if (!editCat) return;
-  const keys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje'];
+  const keys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
   editCat.innerHTML = '';
-  keys.forEach(k => {
-    editCat.innerHTML += `<option value="${k}">${t[currentLang][k]}</option>`;
-  });
+  keys.forEach(k => { editCat.innerHTML += `<option value="${k}">${t[currentLang][k]}</option>`; });
+}
+
+function populateEditCities() {
+  const editCity = document.getElementById('edit-city');
+  if (!editCity) return;
+  editCity.innerHTML = '<option value="">Избери град...</option>';
+  CITIES.forEach(c => { editCity.innerHTML += `<option value="${c}">${c}</option>`; });
 }
 
 async function loadVideos() {
@@ -562,7 +676,7 @@ async function loadVideos() {
   document.getElementById('loading').textContent = t[currentLang].loadingText;
   const { data, error } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
   if (error) { console.error(error); return; }
-  videos = data.map(v => ({ id: v.id, title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes, majstorId: v.majstor_id, city: v.city }));
+  videos = data.map(v => ({ id: v.id, title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes, majstorId: v.majstor_id }));
   document.getElementById('loading').style.display = 'none';
   renderVideos();
 }
@@ -637,12 +751,20 @@ function renderMajstori() {
   });
 }
 
+async function trackPhoneClick(majstorId) {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  await supabaseClient.from('phone_clicks').insert({
+    majstor_id: majstorId,
+    user_id: user ? user.id : null
+  });
+}
+
 async function showMajstor(id) {
   const m = majstori.find(x => x.id === id);
   if (!m) return;
   const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
   const tr = t[currentLang];
-  const phoneDisplay = currentUser ? (m.phone || '-') : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${tr.loginToSeePhone}</span>`;
+  const phoneDisplay = currentUser ? (m.phone ? `<a href="tel:${m.phone}" onclick="trackPhoneClick(${m.id})" style="color: #ff6b35; text-decoration: none; font-weight: 700;">📞 ${m.phone}</a>` : '-') : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${tr.loginToSeePhone}</span>`;
 
   document.getElementById('majstor-profile-content').innerHTML = `
     <div class="majstor-profile">
@@ -653,13 +775,47 @@ async function showMajstor(id) {
       <div class="info-row"><span>${tr.infoPhone}</span><span>${phoneDisplay}</span></div>
       <div class="info-row"><span>${tr.infoCity}</span><span>${m.city || '-'}</span></div>
       <div class="info-row"><span>${tr.infoDesc}</span><span>${m.description || '-'}</span></div>
+      ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 15px; padding: 12px 20px; background: #1877f2; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">📘 Facebook профил</a>` : ''}
     </div>
+    <div id="majstor-images-section"></div>
+    <div id="majstor-videos-section"></div>
     <div id="rating-content"></div>
     <div id="ratings-list"></div>`;
 
   document.getElementById('majstorModal').classList.add('open');
+  loadPublicMajstorMedia(id);
   loadRatings(id);
 }
+
+async function loadPublicMajstorMedia(majstorId) {
+  const tr = t[currentLang];
+  const imgSection = document.getElementById('majstor-images-section');
+  const vidSection = document.getElementById('majstor-videos-section');
+
+  const { data: images } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'image');
+  const { data: vids } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'video');
+
+  if (images && images.length > 0) {
+    imgSection.innerHTML = `
+      <div class="media-section">
+        <h4>📸 ${tr.myMedia}</h4>
+        <div class="media-grid">
+          ${images.map(img => `<div class="media-item"><img src="${img.url}" alt="" onclick="openImageFull('${img.url}')"></div>`).join('')}
+        </div>
+      </div>`;
+  }
+  if (vids && vids.length > 0) {
+    vidSection.innerHTML = `
+      <div class="media-section">
+        <h4>📹 ${tr.myVideos}</h4>
+        <div class="video-list">
+          ${vids.map(v => `<div class="video-item"><span class="title" onclick="openVideo('${v.url}')">▶️ ${v.title}</span></div>`).join('')}
+        </div>
+      </div>`;
+  }
+}
+
+function openImageFull(url) { window.open(url, '_blank'); }
 
 async function loadRatings(majstorId) {
   const tr = t[currentLang];
@@ -727,7 +883,6 @@ async function submitRating(majstorId) {
   setTimeout(() => { loadRatings(majstorId); }, 500);
 }
 
-// MY PROFILE
 async function openMyProfile() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return;
@@ -742,7 +897,6 @@ function renderMyProfile(m) {
   const tr = t[currentLang];
   const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
 
-  let mediaHtml = '';
   supabaseClient.from('majstor_media').select('*').eq('majstor_id', m.id).eq('type', 'image').then(({ data }) => {
     const images = data || [];
     let imgGrid = '';
@@ -802,7 +956,6 @@ async function loadMyVideos(majstorId) {
 
 function closeMyProfile() { document.getElementById('myProfileModal').classList.remove('open'); }
 
-// ADD VIDEO
 function openAddVideo() {
   document.getElementById('new-video-title').value = '';
   document.getElementById('new-video-url').value = '';
@@ -844,7 +997,6 @@ async function handleAddVideo() {
   setTimeout(() => { closeAddVideo(); loadMyVideos(currentMajstorProfile.id); loadVideos(); }, 800);
 }
 
-// DELETE MEDIA
 async function deleteMedia(mediaId, type) {
   const tr = t[currentLang];
   if (!confirm(tr.deleteConfirm)) return;
@@ -857,7 +1009,6 @@ async function deleteMedia(mediaId, type) {
   loadVideos();
 }
 
-// CHANGE PASSWORD
 function openChangePassword() {
   document.getElementById('new-password').value = '';
   document.getElementById('change-pwd-msg').className = 'modal-msg';
@@ -877,16 +1028,16 @@ async function handleChangePassword() {
   setTimeout(() => closeChangePassword(), 1500);
 }
 
-// EDIT INFO
 function openEditInfo() {
   if (!currentMajstorProfile) return;
-  const tr = t[currentLang];
+  populateEditCategories();
+  populateEditCities();
   document.getElementById('edit-name').value = currentMajstorProfile.name || '';
   document.getElementById('edit-phone').value = currentMajstorProfile.phone || '';
   document.getElementById('edit-city').value = currentMajstorProfile.city || '';
-  populateEditCategories();
   document.getElementById('edit-category').value = currentMajstorProfile.category || 'elektrika';
   document.getElementById('edit-description').value = currentMajstorProfile.description || '';
+  document.getElementById('edit-facebook').value = currentMajstorProfile.facebook_url || '';
   document.getElementById('edit-info-msg').className = 'modal-msg';
   document.getElementById('editInfoModal').classList.add('open');
 }
@@ -899,9 +1050,10 @@ async function handleEditInfo() {
   const city = document.getElementById('edit-city').value;
   const category = document.getElementById('edit-category').value;
   const description = document.getElementById('edit-description').value.trim();
+  const facebook = document.getElementById('edit-facebook').value.trim();
   const msg = document.getElementById('edit-info-msg');
   if (!name || !category) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description }).eq('id', currentMajstorProfile.id);
+  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, facebook_url: facebook || null }).eq('id', currentMajstorProfile.id);
   if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
   msg.textContent = tr.infoChanged;
   msg.className = 'modal-msg success';
@@ -910,11 +1062,11 @@ async function handleEditInfo() {
   currentMajstorProfile.city = city;
   currentMajstorProfile.category = category;
   currentMajstorProfile.description = description;
+  currentMajstorProfile.facebook_url = facebook || null;
   await loadMajstori();
   setTimeout(() => { closeEditInfo(); renderMyProfile(currentMajstorProfile); }, 1000);
 }
 
-// CHANGE AVATAR
 function openChangeAvatar() {
   document.getElementById('avatar-file').value = '';
   document.getElementById('change-avatar-msg').className = 'modal-msg';
@@ -927,7 +1079,6 @@ async function handleChangeAvatar() {
   const file = document.getElementById('avatar-file').files[0];
   const msg = document.getElementById('change-avatar-msg');
   if (!file) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-
   msg.textContent = tr.registering;
   msg.className = 'modal-msg info';
 
@@ -948,7 +1099,6 @@ async function handleChangeAvatar() {
   setTimeout(() => { closeChangeAvatar(); renderMyProfile(currentMajstorProfile); }, 1000);
 }
 
-// ADD IMAGE
 function openAddImage() {
   document.getElementById('image-file').value = '';
   document.getElementById('add-image-msg').className = 'modal-msg';
@@ -1011,7 +1161,7 @@ function switchLang(lang) {
   document.getElementById('footer-text').textContent = tr.footer;
   document.getElementById('city-select').options[0].textContent = tr.allCities;
 
-  const cats = ['all','elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje'];
+  const cats = ['all','elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
   cats.forEach(c => { const el = document.getElementById('cat-' + c); if (el) el.textContent = tr[c]; });
 
   document.getElementById('btn-login-header').textContent = tr.login;
@@ -1037,8 +1187,8 @@ function switchLang(lang) {
   document.getElementById('opt-choose').textContent = tr.optChoose;
   document.getElementById('opt-choose-city').textContent = tr.optChooseCity;
 
-  const catKeys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje'];
-  const optIds = { elektrika:'opt-el', vodovod:'opt-vod', gradeznistvo:'opt-grad', popravki:'opt-pop', finalni:'opt-fin', plockari:'opt-ploc', gipsari:'opt-gips', stolari:'opt-stol', klima:'opt-klim', greenje:'opt-gre', krov:'opt-kro', sanitarii:'opt-san', pvc:'opt-pvc', dvorovi:'opt-dvo', cistenje:'opt-cis' };
+  const catKeys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
+  const optIds = { elektrika:'opt-el', vodovod:'opt-vod', gradeznistvo:'opt-grad', popravki:'opt-pop', finalni:'opt-fin', plockari:'opt-ploc', gipsari:'opt-gips', stolari:'opt-stol', klima:'opt-klim', greenje:'opt-gre', krov:'opt-kro', sanitarii:'opt-san', pvc:'opt-pvc', dvorovi:'opt-dvo', cistenje:'opt-cis', opti:'opt-opti' };
   catKeys.forEach(k => { const el = document.getElementById(optIds[k]); if (el) el.textContent = tr[k]; });
 
   document.getElementById('b-name').placeholder = tr.phName;
@@ -1067,6 +1217,11 @@ function switchLang(lang) {
 
   document.getElementById('add-image-title').textContent = tr.addImageTitle;
   document.getElementById('btn-add-image').textContent = tr.btnUpload;
+
+  document.getElementById('confirm-title').textContent = tr.confirmTitle;
+  document.getElementById('confirm-text').innerHTML = tr.confirmText;
+  document.getElementById('btn-confirm-register').textContent = tr.btnConfirmRegister;
+  document.getElementById('btn-cancel-register').textContent = tr.btnCancel;
 
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   renderVideos();
@@ -1134,32 +1289,66 @@ async function handleLogin() {
   setTimeout(() => { closeModal(); checkUser(); }, 800);
 }
 
-async function handleRegisterMajstor() {
+function prepareRegisterMajstor() {
   const tr = t[currentLang];
-  const name = document.getElementById('m-name').value;
-  const surname = document.getElementById('m-surname').value;
-  const phone = document.getElementById('m-phone').value;
+  const name = document.getElementById('m-name').value.trim();
+  const surname = document.getElementById('m-surname').value.trim();
+  const phone = document.getElementById('m-phone').value.trim();
   const city = document.getElementById('m-city').value;
   const category = document.getElementById('m-category').value;
-  const description = document.getElementById('m-description').value;
-  const email = document.getElementById('m-email').value;
+  const description = document.getElementById('m-description').value.trim();
+  const email = document.getElementById('m-email').value.trim();
   const password = document.getElementById('m-password').value;
+  const facebook = document.getElementById('m-facebook').value.trim();
 
   if (!name || !email || !password || !category || !city) { showModalMsg(tr.fillAll, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
+  if (!document.getElementById('m-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
-  showModalMsg(tr.registering, 'info');
+  pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook };
+  closeModal();
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function cancelMajstorRegistration() {
+  pendingMajstorData = null;
+  document.getElementById('confirmModal').classList.remove('open');
+  document.getElementById('modal').classList.add('open');
+  showModalTab('register');
+  selectType('majstor');
+}
+
+async function confirmMajstorRegistration() {
+  if (!pendingMajstorData) return;
+  const tr = t[currentLang];
+  const { name, surname, phone, city, category, description, email, password, facebook } = pendingMajstorData;
+  let userIP = 'unknown';
+  try {
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipRes.json();
+    userIP = ipData.ip;
+  } catch(e) { console.log('IP error:', e); }
+  const userAgent = navigator.userAgent;
+
+  document.getElementById('confirmModal').classList.remove('open');
+
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
-  if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
+  if (error) {
+    alert(tr.error + error.message);
+    pendingMajstorData = null;
+    return;
+  }
 
   const userId = data.user.id;
   const fullName = (name + ' ' + surname).trim();
 
-  await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city });
-  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK' });
+  await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
+  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
 
-  showModalMsg(tr.registerSuccess, 'success');
-  setTimeout(() => { closeModal(); checkUser(); loadMajstori(); }, 800);
+  pendingMajstorData = null;
+  await checkUser();
+  loadMajstori();
+  alert('✅ ' + tr.registerSuccess);
 }
 
 async function handleRegisterBaram() {
@@ -1170,12 +1359,21 @@ async function handleRegisterBaram() {
 
   if (!name || !email || !password) { showModalMsg(tr.fillAllSimple, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
+  if (!document.getElementById('b-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
   showModalMsg(tr.registering, 'info');
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
   if (error) { showModalMsg(tr.error + error.message, 'error'); return; }
 
-  await supabaseClient.from('profiles').insert({ id: data.user.id, user_type: 'baram', name: name });
+  let userIP = 'unknown';
+  try {
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipRes.json();
+    userIP = ipData.ip;
+  } catch(e) { console.log('IP error:', e); }
+  const userAgent = navigator.userAgent;
+
+  await supabaseClient.from('profiles').insert({ id: data.user.id, user_type: 'baram', name: name, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
 
   showModalMsg(tr.registerSuccess, 'success');
   setTimeout(() => { closeModal(); checkUser(); }, 800);
@@ -1239,6 +1437,14 @@ async function checkUser() {
   }
 }
 
+function openDoc(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeDoc(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
 populateCities();
 checkUser();
 loadVideos();
@@ -1246,4 +1452,4 @@ loadMajstori();
 </script>
 
 </body>
-</html>
+  </html>
