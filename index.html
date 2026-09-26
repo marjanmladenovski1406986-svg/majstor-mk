@@ -682,7 +682,7 @@ async function loadVideos() {
 }
 
 async function loadMajstori() {
-  const { data, error } = await supabaseClient.from('majstor_profiles').select('*').order('id', { ascending: true });
+    const { data, error } = await supabaseClient.from('majstor_profiles').select('*').eq('is_paused', false).order('id', { ascending: true });
   if (error) { console.error(error); return; }
   const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating');
   majstori = (data || []).map(m => {
