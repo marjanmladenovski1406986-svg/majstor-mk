@@ -265,6 +265,7 @@ let allVideos = [];
 let allMajstori = [];
 let allUsers = [];
 let allClicks = [];
+  let allFbClicks = [];
 let editingVideoId = null;
 let editingMajstorId = null;
 
@@ -338,6 +339,8 @@ async function loadAllData() {
   allMajstori = maj || [];
   const { data: usrs } = await supabaseClient.from('profiles').select('*').neq('user_type', 'majstor').order('id', { ascending: false });
   allUsers = usrs || [];
+    const { data: fbClicks } = await supabaseClient.from('facebook_clicks').select('*');
+  allFbClicks = fbClicks || [];
   renderStats();
   renderVideosList();
   renderMajstoriList();
@@ -354,6 +357,7 @@ async function loadClicks() {
 
 function renderClicks() {
   const total = allClicks.length;
+    const totalFb = allFbClicks.length;
   const now = new Date();
   const today = allClicks.filter(c => new Date(c.clicked_at).toDateString() === now.toDateString()).length;
   const week = allClicks.filter(c => {
@@ -370,6 +374,7 @@ function renderClicks() {
     <div class="stat-card"><div class="number">${today}</div><div class="label">📅 Денес</div></div>
     <div class="stat-card"><div class="number">${week}</div><div class="label">📆 Оваа недела</div></div>
     <div class="stat-card"><div class="number">${month}</div><div class="label">🗓️ Овој месец</div></div>
+        <div class="stat-card"><div class="number">${totalFb}</div><div class="label">📘 Facebook кликови</div></div>
   `;
 
   const counts = {};
@@ -384,9 +389,10 @@ function renderClicks() {
     const name = m ? m.name : 'Непознат';
     const cat = m ? (CAT_NAMES[m.category] || m.category) : '';
     const city = m ? m.city : '';
+        const fbCount = allFbClicks.filter(c => c.majstor_id === parseInt(id)).length;
     return `<div class="category-row">
       <span class="name">👷 ${name} <span style="color:#666; font-size:12px;">(${cat} · ${city})</span></span>
-      <span class="count">📞 ${count} кликови</span>
+            <span class="count">📞 ${count} · 📘 ${fbCount}</span>
     </div>`;
   }).join('');
 }
