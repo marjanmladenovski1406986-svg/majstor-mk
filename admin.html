@@ -74,6 +74,9 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .btn-verify.active { background: #4db8ff; color: #fff; }
 .btn-feature { background: transparent; border: 1px solid #ffb84d; color: #ffb84d; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
 .btn-feature.active { background: #ffb84d; color: #fff; }
+  .btn-pause { background: transparent; border: 1px solid #999; color: #999; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.btn-pause:hover { background: #999; color: #fff; }
+.btn-pause.active { background: #dc3545; border-color: #dc3545; color: #fff; }
 
 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; margin-left: 5px; font-weight: 600; }
 .badge.verified { background: #4db8ff; color: #fff; }
@@ -478,6 +481,7 @@ function renderMajstoriList() {
       <div class="item-actions">
         <button class="btn-verify ${m.verified ? 'active' : ''}" onclick="toggleVerify(${m.id})">${m.verified ? '✅ Верификуван' : '✅ Верификувај'}</button>
         <button class="btn-feature ${m.featured ? 'active' : ''}" onclick="toggleFeatured(${m.id})">${m.featured ? '⭐ Featured' : '⭐ Истакни'}</button>
+                 <button class="btn-pause ${m.is_paused ? 'active' : ''}" onclick="togglePause(${m.id})">${m.is_paused ? '▶ Продолжи' : '⏸ Пауза'}</button>
         <button class="btn-edit" onclick="openEditMajstor(${m.id})">✏️ Уреди</button>
         <button class="btn-delete" onclick="deleteMajstor(${m.id})">🗑️ Избриши</button>
       </div>
@@ -669,7 +673,15 @@ async function toggleFeatured(id) {
   await supabaseClient.from('majstor_profiles').update({ featured: !m.featured }).eq('id', id);
   loadAllData();
 }
-
+async function togglePause(id) {
+  const m = allMajstori.find(x => x.id === id);
+  if (!m) return;
+  const newState = !m.is_paused;
+  const msg = newState ? 'Мајсторот е паузиран и нема да се гледа на сајтот.' : 'Мајсторот е активен и повторно се гледа на сајтот.';
+  if (!confirm(msg + ' Продолжи?')) return;
+  await supabaseClient.from('majstor_profiles').update({ is_paused: newState }).eq('id', id);
+  loadAllData();
+}
 function exportData(type) {
   let data, filename;
   if (type === 'videos') { data = allVideos; filename = 'majstor-videos-' + Date.now() + '.json'; }
