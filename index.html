@@ -238,9 +238,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   
 <!-- FEEDBACK BUTTON -->
 <div style="max-width: 600px; margin: 25px auto 10px; padding: 0 20px; text-align: center;">
-  <button onclick="openFeedback()" style="background: transparent; border: 1px solid #ff6b35; color: #ff6b35; padding: 12px 24px; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">
-    💬 Имаш предлог или забелешка? Пиши ни!
-  </button>
+         <button onclick="openFeedback()" style="background: transparent; border: 1px solid #ff6b35; color: #ff6b35; padding: 12px 24px; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;"><span id="feedback-btn-text">💬 Имаш предлог или забелешка? Пиши ни!</span></button> 
 </div>
 
 <div class="city-filter" id="city-filter">
@@ -655,6 +653,15 @@ const t = {
     resetPwdMismatch:"Лозинките не се совпаѓаат",
     resetPwdChanged:"✅ Лозинката е променета! Пренасочување...",
     cancelBtn:"Откажи"
+        feedbackBtn:"💬 Имаш предлог или забелешка? Пиши ни!",
+    feedbackTitle:"💬 Твој предлог или забелешка",
+    feedbackInfo:"Пиши ни што мислиш за majstor.mk. Секој коментар ни помага да го подобриме!",
+    feedbackPh:"Твојот коментар...",
+    feedbackSubmit:"📩 Испрати",
+    feedbackEmpty:"Напиши нешто пред да испратиш",
+    feedbackShort:"Пораката е премногу кратка",
+    feedbackSending:"Се испраќа...",
+    feedbackSent:"✅ Благодариме! Твојот коментар е примен."
   },
   en: {
     logo:"MasterHow", login:"Login", logout:"Sign out", myProfile:"My Profile",
@@ -716,6 +723,15 @@ const t = {
     resetPwdMismatch:"Passwords do not match",
     resetPwdChanged:"✅ Password changed! Redirecting...",
     cancelBtn:"Cancel"
+        feedbackBtn:"💬 Have a suggestion or comment? Write to us!",
+    feedbackTitle:"💬 Your suggestion or comment",
+    feedbackInfo:"Tell us what you think about majstor.mk. Every comment helps us improve!",
+    feedbackPh:"Your comment...",
+    feedbackSubmit:"📩 Send",
+    feedbackEmpty:"Write something before sending",
+    feedbackShort:"Message is too short",
+    feedbackSending:"Sending...",
+    feedbackSent:"✅ Thank you! Your comment has been received."
   }
 };
 
@@ -1329,6 +1345,12 @@ function switchLang(lang) {
   document.getElementById('btn-forgot-cancel').textContent = tr.cancelBtn;
   document.getElementById('reset-pwd-info').textContent = tr.resetPwdInfo;
   document.getElementById('btn-reset-cancel').textContent = tr.cancelBtn;
+    document.getElementById('feedback-btn-text').textContent = tr.feedbackBtn;
+  document.getElementById('feedbackModal').querySelector('h2').textContent = tr.feedbackTitle;
+  document.getElementById('feedbackModal').querySelector('p').textContent = tr.feedbackInfo;
+  document.getElementById('feedback-text').placeholder = tr.feedbackPh;
+  document.getElementById('btn-feedback-submit').textContent = tr.feedbackSubmit;
+  document.getElementById('feedbackModal').querySelectorAll('button')[1].textContent = tr.cancelBtn;
   document.getElementById('label-majstor').textContent = tr.labelMajstor;
   document.getElementById('label-baram').textContent = tr.labelBaram;
 
