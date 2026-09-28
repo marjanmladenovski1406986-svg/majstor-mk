@@ -276,7 +276,13 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
-<footer>
+<!-- FEEDBACK BUTTON -->
+<div style="max-width: 600px; margin: 40px auto 20px; padding: 0 20px; text-align: center;">
+  <button onclick="openFeedback()" style="background: transparent; border: 1px solid #ff6b35; color: #ff6b35; padding: 12px 24px; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">
+    💬 Имаш предлог или забелешка? Пиши ни!
+  </button>
+</div>
+  <footer>
   <p id="footer-text">© 2026 Мајстор.мк</p>
   <p style="margin-top: 15px; font-size: 13px;">
     <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">📋 Услови</a> ·
@@ -284,6 +290,17 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🍪 Колачиња</a>
   </p>
 </footer>
+  <!-- FEEDBACK MODAL -->
+<div class="modal" id="feedbackModal">
+  <div class="modal-content">
+    <h2>💬 Твој предлог или забелешка</h2>
+    <div id="feedback-msg" class="modal-msg"></div>
+    <p style="text-align:center; color:#999; font-size:14px; margin-bottom:15px;">Пиши ни што мислиш за majstor.mk. Секој коментар ни помага да го подобриме!</p>
+    <textarea id="feedback-text" placeholder="Твојот коментар..." rows="5" style="min-height:120px;"></textarea>
+    <button onclick="handleFeedback()" id="btn-feedback-submit">📩 Испрати</button>
+    <button onclick="closeFeedback()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+  </div>
+</div>
 
 <!-- LOGIN/REGISTER MODAL -->
 <div class="modal" id="modal">
@@ -1126,6 +1143,32 @@ async function handleResetPassword() {
     window.location.reload();
   }, 2000);
 }
+ function openFeedback() {
+  document.getElementById('feedback-text').value = '';
+  document.getElementById('feedback-msg').className = 'modal-msg';
+  document.getElementById('feedbackModal').classList.add('open');
+}
+function closeFeedback() { document.getElementById('feedbackModal').classList.remove('open'); }
+
+async function handleFeedback() {
+  const text = document.getElementById('feedback-text').value.trim();
+  const msg = document.getElementById('feedback-msg');
+  if (!text) { msg.textContent = 'Напиши нешто пред да испратиш'; msg.className = 'modal-msg error'; return; }
+  if (text.length < 3) { msg.textContent = 'Пораката е премногу кратка'; msg.className = 'modal-msg error'; return; }
+  msg.textContent = 'Се испраќа...'; msg.className = 'modal-msg info';
+  
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { error } = await supabaseClient.from('feedback').insert({
+    message: text,
+    page_url: window.location.href,
+    user_id: user ? user.id : null
+  });
+  
+  if (error) { msg.textContent = 'Грешка: ' + error.message; msg.className = 'modal-msg error'; return; }
+  msg.textContent = '✅ Благодариме! Твојот коментар е примен.';
+  msg.className = 'modal-msg success';
+  setTimeout(() => closeFeedback(), 2500);
+} 
 function openEditInfo() {
   if (!currentMajstorProfile) return;
   populateEditCategories();
