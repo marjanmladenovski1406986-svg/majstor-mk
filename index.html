@@ -621,6 +621,21 @@ const t = {
     confirmTitle:"📢 Пред да продолжиш",
     confirmText:"<p><strong>Пред да се регистрираш, прочитај ги Условите:</strong></p><p><strong>1. Природа на платформата:</strong> majstor.mk е само посредник. Не одговараме за квалитетот на извршените работи.</p><p><strong>2. Твои обврски:</strong> Податоците мора да се вистинити. Ти си одговорен за својата лозинка.</p><p><strong>3. Забрането:</strong> Лажни податоци, клеветење, несоодветна содржина, автоматизиран пристап.</p><p><strong>4. Период:</strong> Првите 6 месеци се бесплатни. Потоа ќе те известиме за претплата.</p><p>Со кликнување на копчето подолу, потврдуваш дека ги прифаќаш <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Условите за користење</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Политиката за приватност</a> и <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Колачињата</a>.</p>",
     btnConfirmRegister:"✅ Се согласувам и се регистрирам"
+        forgotPassword:"🔐 Заборавена лозинка?",
+    forgotPwdTitle:"🔐 Заборавена лозинка",
+    forgotPwdInfo:"Внеси ја твојата е-пошта. Ќе ти пратиме линк за ресетирање на лозинката.",
+    forgotPwdBtn:"📧 Испрати линк",
+    forgotPwdSent:"✅ Провери ја е-поштата! Ќе најдеш линк за нова лозинка.",
+    forgotPwdEnter:"Внеси е-пошта",
+    forgotPwdSending:"Се испраќа...",
+    resetPwdTitle:"🔐 Нова лозинка",
+    resetPwdInfo:"Внеси нова лозинка за твојот профил.",
+    resetPwdPh1:"Нова лозинка (мин. 6 знаци)",
+    resetPwdPh2:"Повтори нова лозинка",
+    resetPwdBtn:"✅ Зачувај нова лозинка",
+    resetPwdMismatch:"Лозинките не се совпаѓаат",
+    resetPwdChanged:"✅ Лозинката е променета! Пренасочување...",
+    cancelBtn:"Откажи"
   },
   en: {
     logo:"MasterHow", login:"Login", logout:"Sign out", myProfile:"My Profile",
@@ -667,6 +682,21 @@ const t = {
     confirmTitle:"📢 Before you continue",
     confirmText:"<p><strong>Before you register, read the Terms:</strong></p><p><strong>1. Nature of platform:</strong> majstor.mk is only an intermediary. We are not responsible for the quality of work performed.</p><p><strong>2. Your obligations:</strong> Data must be truthful. You are responsible for your password.</p><p><strong>3. Forbidden:</strong> False data, defamation, inappropriate content, automated access.</p><p><strong>4. Period:</strong> First 6 months are free. Then we will notify you about subscription.</p><p>By clicking below, you confirm that you accept the <a href=\"#\" onclick=\"event.preventDefault(); openDoc('termsModal');\">Terms</a>, <a href=\"#\" onclick=\"event.preventDefault(); openDoc('privacyModal');\">Privacy Policy</a> and <a href=\"#\" onclick=\"event.preventDefault(); openDoc('cookiesDocModal');\">Cookies</a>.</p>",
     btnConfirmRegister:"✅ I agree and register"
+        forgotPassword:"🔐 Forgot password?",
+    forgotPwdTitle:"🔐 Forgot password",
+    forgotPwdInfo:"Enter your email. We will send you a link to reset your password.",
+    forgotPwdBtn:"📧 Send link",
+    forgotPwdSent:"✅ Check your email! You will find a link for a new password.",
+    forgotPwdEnter:"Enter email",
+    forgotPwdSending:"Sending...",
+    resetPwdTitle:"🔐 New password",
+    resetPwdInfo:"Enter a new password for your account.",
+    resetPwdPh1:"New password (min. 6 chars)",
+    resetPwdPh2:"Repeat new password",
+    resetPwdBtn:"✅ Save new password",
+    resetPwdMismatch:"Passwords do not match",
+    resetPwdChanged:"✅ Password changed! Redirecting...",
+    cancelBtn:"Cancel"
   }
 };
 
@@ -1242,6 +1272,14 @@ function switchLang(lang) {
   document.getElementById('login-email').placeholder = tr.phEmail;
   document.getElementById('login-password').placeholder = tr.phPassword;
   document.getElementById('btn-modal-login').textContent = tr.btnLogin;
+    document.getElementById('btn-forgot-pwd').textContent = tr.forgotPassword;
+  document.getElementById('forgot-pwd-title').textContent = tr.forgotPwdTitle;
+  document.getElementById('forgot-pwd-msg').textContent = '';
+  document.getElementById('btn-forgot-submit').textContent = tr.forgotPwdBtn;
+  document.getElementById('forgot-email').placeholder = tr.forgotPwdEnter;
+    document.getElementById('reset-new-password').placeholder = tr.resetPwdPh1;
+  document.getElementById('reset-new-password2').placeholder = tr.resetPwdPh2;
+  document.getElementById('btn-reset-submit').textContent = tr.resetPwdBtn;
   document.getElementById('label-majstor').textContent = tr.labelMajstor;
   document.getElementById('label-baram').textContent = tr.labelBaram;
 
