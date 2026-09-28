@@ -421,10 +421,10 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <div class="modal-content">
     <h2 id="forgot-pwd-title">🔐 Заборавена лозинка</h2>
     <div id="forgot-pwd-msg" class="modal-msg"></div>
-    <p style="text-align:center; color:#999; font-size:14px; margin-bottom:15px;">Внеси ја твојата е-пошта. Ќе ти пратиме линк за ресетирање на лозинката.</p>
+        <p id="forgot-pwd-info" style="text-align:center; color:#999; font-size:14px; margin-bottom:15px;">Внеси ја твојата е-пошта. Ќе ти пратиме линк за ресетирање на лозинката.</p>
     <input type="email" id="forgot-email" placeholder="Е-пошта">
     <button onclick="handleForgotPassword()" id="btn-forgot-submit">📧 Испрати линк</button>
-    <button onclick="closeForgotPassword()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+        <button onclick="closeForgotPassword()" id="btn-forgot-cancel" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
 </div>
   <!-- RESET PASSWORD MODAL -->
@@ -432,11 +432,11 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <div class="modal-content">
     <h2>🔐 Нова лозинка</h2>
     <div id="reset-pwd-msg" class="modal-msg"></div>
-    <p style="text-align:center; color:#999; font-size:14px; margin-bottom:15px;">Внеси нова лозинка за твојот профил.</p>
+        <p id="reset-pwd-info" style="text-align:center; color:#999; font-size:14px; margin-bottom:15px;">Внеси нова лозинка за твојот профил.</p>
     <input type="password" id="reset-new-password" placeholder="Нова лозинка (мин. 6 знаци)">
     <input type="password" id="reset-new-password2" placeholder="Повтори нова лозинка">
     <button onclick="handleResetPassword()" id="btn-reset-submit">✅ Зачувај нова лозинка</button>
-    <button onclick="closeResetPassword()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+        <button onclick="closeResetPassword()" id="btn-reset-cancel" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
 </div>
 <!-- EDIT INFO MODAL -->
@@ -1280,6 +1280,10 @@ function switchLang(lang) {
     document.getElementById('reset-new-password').placeholder = tr.resetPwdPh1;
   document.getElementById('reset-new-password2').placeholder = tr.resetPwdPh2;
   document.getElementById('btn-reset-submit').textContent = tr.resetPwdBtn;
+    document.getElementById('forgot-pwd-info').textContent = tr.forgotPwdInfo;
+  document.getElementById('btn-forgot-cancel').textContent = tr.cancelBtn;
+  document.getElementById('reset-pwd-info').textContent = tr.resetPwdInfo;
+  document.getElementById('btn-reset-cancel').textContent = tr.cancelBtn;
   document.getElementById('label-majstor').textContent = tr.labelMajstor;
   document.getElementById('label-baram').textContent = tr.labelBaram;
 
