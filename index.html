@@ -298,6 +298,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
       <input type="email" id="login-email" placeholder="Е-пошта">
       <input type="password" id="login-password" placeholder="Лозинка">
       <button onclick="handleLogin()" id="btn-modal-login">Најави се</button>
+            <button onclick="openForgotPassword()" id="btn-forgot-pwd" style="background:transparent; border:none; color:#ff6b35; font-size:13px; cursor:pointer; width:100%; padding:8px; text-decoration:underline; font-family:inherit;">🔐 Заборавена лозинка?</button>
     </div>
     <div id="modal-form-register" class="hidden">
       <div class="type-choice">
@@ -415,7 +416,29 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <button onclick="closeChangePassword()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
 </div>
-
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal" id="forgotPasswordModal">
+  <div class="modal-content">
+    <h2 id="forgot-pwd-title">🔐 Заборавена лозинка</h2>
+    <div id="forgot-pwd-msg" class="modal-msg"></div>
+    <p style="text-align:center; color:#999; font-size:14px; margin-bottom:15px;">Внеси ја твојата е-пошта. Ќе ти пратиме линк за ресетирање на лозинката.</p>
+    <input type="email" id="forgot-email" placeholder="Е-пошта">
+    <button onclick="handleForgotPassword()" id="btn-forgot-submit">📧 Испрати линк</button>
+    <button onclick="closeForgotPassword()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+  </div>
+</div>
+  <!-- RESET PASSWORD MODAL -->
+<div class="modal" id="resetPasswordModal">
+  <div class="modal-content">
+    <h2>🔐 Нова лозинка</h2>
+    <div id="reset-pwd-msg" class="modal-msg"></div>
+    <p style="text-align:center; color:#999; font-size:14px; margin-bottom:15px;">Внеси нова лозинка за твојот профил.</p>
+    <input type="password" id="reset-new-password" placeholder="Нова лозинка (мин. 6 знаци)">
+    <input type="password" id="reset-new-password2" placeholder="Повтори нова лозинка">
+    <button onclick="handleResetPassword()" id="btn-reset-submit">✅ Зачувај нова лозинка</button>
+    <button onclick="closeResetPassword()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+  </div>
+</div>
 <!-- EDIT INFO MODAL -->
 <div class="modal" id="editInfoModal">
   <div class="modal-content">
@@ -1034,7 +1057,45 @@ async function handleChangePassword() {
   msg.className = 'modal-msg success';
   setTimeout(() => closeChangePassword(), 1500);
 }
+function openForgotPassword() {
+  document.getElementById('forgot-email').value = '';
+  document.getElementById('forgot-pwd-msg').className = 'modal-msg';
+  document.getElementById('forgotPasswordModal').classList.add('open');
+}
+function closeForgotPassword() { document.getElementById('forgotPasswordModal').classList.remove('open'); }
 
+async function handleForgotPassword() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const msg = document.getElementById('forgot-pwd-msg');
+  if (!email) { msg.textContent = 'Внеси е-пошта'; msg.className = 'modal-msg error'; return; }
+  msg.textContent = 'Се испраќа...'; msg.className = 'modal-msg info';
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname + '?reset=true'
+  });
+  if (error) { msg.textContent = 'Грешка: ' + error.message; msg.className = 'modal-msg error'; return; }
+  msg.textContent = '✅ Провери ја е-поштата! Ќе најдеш линк за нова лозинка.';
+  msg.className = 'modal-msg success';
+  setTimeout(() => closeForgotPassword(), 3000);
+}
+  function closeResetPassword() { document.getElementById('resetPasswordModal').classList.remove('open'); }
+
+async function handleResetPassword() {
+  const pwd = document.getElementById('reset-new-password').value;
+  const pwd2 = document.getElementById('reset-new-password2').value;
+  const msg = document.getElementById('reset-pwd-msg');
+  if (pwd.length < 6) { msg.textContent = 'Лозинката мора да има најмалку 6 знаци'; msg.className = 'modal-msg error'; return; }
+  if (pwd !== pwd2) { msg.textContent = 'Лозинките не се совпаѓаат'; msg.className = 'modal-msg error'; return; }
+  msg.textContent = 'Се зачувува...'; msg.className = 'modal-msg info';
+  const { error } = await supabaseClient.auth.updateUser({ password: pwd });
+  if (error) { msg.textContent = 'Грешка: ' + error.message; msg.className = 'modal-msg error'; return; }
+  msg.textContent = '✅ Лозинката е променета! Пренасочување...';
+  msg.className = 'modal-msg success';
+  setTimeout(() => {
+    closeResetPassword();
+    window.history.replaceState({}, document.title, window.location.pathname);
+    window.location.reload();
+  }, 2000);
+}
 function openEditInfo() {
   if (!currentMajstorProfile) return;
   populateEditCategories();
@@ -1456,6 +1517,21 @@ populateCities();
 checkUser();
 loadVideos();
 loadMajstori();
+  
+// Провери дали има ?reset=true (од мејл за ресетирање)
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('reset') === 'true') {
+  setTimeout(() => {
+    document.getElementById('resetPasswordModal').classList.add('open');
+  }, 500);
+}
+
+// Supabase автоматски фаќа PASSWORD_RECOVERY event
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    document.getElementById('resetPasswordModal').classList.add('open');
+  }
+});
 </script>
 
 </body>
