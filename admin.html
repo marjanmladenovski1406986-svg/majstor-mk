@@ -137,6 +137,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <button class="tab" onclick="showTab(event, 'clicks')">📞 Кликови</button>
       <button class="tab" onclick="showTab(event, 'categories')">📁 Категории</button>
       <button class="tab" onclick="showTab(event, 'backup')">💾 Backup</button>
+            <button class="tab" onclick="showTab(event, 'feedback')">💬 Feedback (<span id="feedbackCount">0</span>)</button>
     </div>
 
     <div class="tab-content active" id="tab-stats">
@@ -196,6 +197,13 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
         <button class="btn-add" onclick="exportData('majstori')">👷 Експорт мајстори</button>
         <button class="btn-add" onclick="exportAll()">📦 Експорт сè</button>
       </div>
+    </div>
+    
+    <div class="tab-content" id="tab-feedback">
+      <div class="section-header">
+        <h2>💬 Feedback (<span id="feedbackAllCount">0</span>)</h2>
+      </div>
+      <div class="items-list" id="feedbackList"></div>
     </div>
   </div>
 </div>
@@ -269,6 +277,7 @@ let allMajstori = [];
 let allUsers = [];
 let allClicks = [];
   let allFbClicks = [];
+  let allFeedback = [];
 let editingVideoId = null;
 let editingMajstorId = null;
 
@@ -350,6 +359,7 @@ async function loadAllData() {
   renderUsersList();
   renderCategoriesFull();
   loadClicks();
+    loadFeedback();
 }
 
 async function loadClicks() {
@@ -399,7 +409,49 @@ function renderClicks() {
     </div>`;
   }).join('');
 }
+async function loadFeedback() {
+  const { data } = await supabaseClient.from('feedback').select('*').order('created_at', { ascending: false });
+  allFeedback = data || [];
+  renderFeedbackList();
+}
 
+function renderFeedbackList() {
+  const list = document.getElementById('feedbackList');
+  if (!list) return;
+  document.getElementById('feedbackCount').textContent = allFeedback.length;
+  document.getElementById('feedbackAllCount').textContent = allFeedback.length;
+  if (allFeedback.length === 0) { 
+    list.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема фидбек сè уште</p>'; 
+    return; 
+  }
+  list.innerHTML = allFeedback.map(f => {
+    const date = new Date(f.created_at).toLocaleString('mk-MK', { timeZone: 'Europe/Skopje' });
+    const url = f.page_url ? f.page_url.replace(window.location.origin, '') : '-';
+    return `
+    <div class="item">
+      <div class="item-avatar">💬</div>
+      <div class="item-info">
+        <div class="item-title" style="white-space:pre-wrap;">${f.message}</div>
+        <div class="item-meta">📅 ${date} · 🔗 ${url}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn-delete" onclick="deleteFeedback(${f.id})">🗑️ Избриши</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function deleteFeedback(id) {
+  if (!confirm('Дали си сигурен? Ова ќе го избрише фидбекот.')) return;
+  await supabaseClient.from('feedback').delete().eq('id', id);
+  loadFeedback();
+}
+
+async function deleteAllFeedback() {
+  if (!confirm('Дали си сигурен? ОВА ЌЕ ГИ ИЗБРИШЕ СИТЕ ФИДБЕКОВИ.')) return;
+  await supabaseClient.from('feedback').delete().neq('id', 0);
+  loadFeedback();
+}
 function renderStats() {
   const totalVideos = allVideos.length;
   const totalMajstori = allMajstori.length;
