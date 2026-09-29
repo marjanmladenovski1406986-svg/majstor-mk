@@ -928,7 +928,7 @@ async function loadRatings(majstorId) {
     }
   }
 
-  if (currentUser && userType === 'baram') {
+    if (currentUser && userType !== 'majstor') {
     ratingContent.innerHTML = `
       <div class="rating-section">
         <h4>${tr.rateTitle}</h4>
