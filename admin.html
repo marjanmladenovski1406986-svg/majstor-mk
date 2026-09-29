@@ -138,6 +138,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <button class="tab" onclick="showTab(event, 'categories')">📁 Категории</button>
       <button class="tab" onclick="showTab(event, 'backup')">💾 Backup</button>
             <button class="tab" onclick="showTab(event, 'feedback')">💬 Feedback (<span id="feedbackCount">0</span>)</button>
+            <button class="tab" onclick="showTab(event, 'moderation')">⭐ Модерација (<span id="moderationCount">0</span>)</button>
     </div>
 
     <div class="tab-content active" id="tab-stats">
@@ -204,6 +205,14 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
         <h2>💬 Feedback (<span id="feedbackAllCount">0</span>)</h2>
       </div>
       <div class="items-list" id="feedbackList"></div>
+    </div>
+    
+    <div class="tab-content" id="tab-moderation">
+      <div class="section-header">
+        <h2>⭐ Модерација на оценки и коментари</h2>
+      </div>
+      <p style="color: #999; font-size: 13px; margin-bottom: 20px;">Овде ги гледаш сите оценки и коментари што чекаат одобрување. Откако ќе ги одобриш, ќе се појават на сајтот.</p>
+      <div class="items-list" id="moderationList"></div>
     </div>
   </div>
 </div>
@@ -278,6 +287,7 @@ let allUsers = [];
 let allClicks = [];
   let allFbClicks = [];
   let allFeedback = [];
+  let allPendingRatings = [];
 let editingVideoId = null;
 let editingMajstorId = null;
 
@@ -360,6 +370,7 @@ async function loadAllData() {
   renderCategoriesFull();
   loadClicks();
     loadFeedback();
+    loadModeration();
 }
 
 async function loadClicks() {
@@ -451,6 +462,54 @@ async function deleteAllFeedback() {
   if (!confirm('Дали си сигурен? ОВА ЌЕ ГИ ИЗБРИШЕ СИТЕ ФИДБЕКОВИ.')) return;
   await supabaseClient.from('feedback').delete().neq('id', 0);
   loadFeedback();
+}
+  async function loadModeration() {
+  const { data } = await supabaseClient.from('ratings').select('*').eq('status', 'pending').order('created_at', { ascending: false });
+  allPendingRatings = data || [];
+  renderModerationList();
+}
+
+function renderModerationList() {
+  const list = document.getElementById('moderationList');
+  if (!list) return;
+  const count = allPendingRatings.length;
+  document.getElementById('moderationCount').textContent = count;
+  if (count === 0) {
+    list.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">✅ Нема оценки што чекаат одобрување</p>';
+    return;
+  }
+  list.innerHTML = allPendingRatings.map(r => {
+    const m = allMajstori.find(x => x.id === r.majstor_id);
+    const majstorName = m ? m.name : 'Непознат мајстор';
+    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const date = new Date(r.created_at).toLocaleString('mk-MK', { timeZone: 'Europe/Skopje' });
+    return `
+    <div class="item">
+      <div class="item-avatar">⭐</div>
+      <div class="item-info">
+        <div class="item-title">${stars} → ${majstorName}</div>
+        ${r.comment ? `<div class="item-meta" style="color:#ccc; font-size:13px;">💬 ${r.comment}</div>` : ''}
+        <div class="item-meta">📅 ${date}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn-verify active" onclick="approveRating(${r.id})">✅ Одобри</button>
+        <button class="btn-delete" onclick="rejectRating(${r.id})">❌ Одбиј</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function approveRating(id) {
+  await supabaseClient.from('ratings').update({ status: 'approved' }).eq('id', id);
+  loadModeration();
+  loadAllData();
+}
+
+async function rejectRating(id) {
+  if (!confirm('Дали си сигурен? Ова ќе ја избрише оценката.')) return;
+  await supabaseClient.from('ratings').delete().eq('id', id);
+  loadModeration();
+  loadAllData();
 }
 function renderStats() {
   const totalVideos = allVideos.length;
