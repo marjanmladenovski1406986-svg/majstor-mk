@@ -917,7 +917,18 @@ async function loadRatings(majstorId) {
   const ratingContent = document.getElementById('rating-content');
   const listDiv = document.getElementById('ratings-list');
 
-    if (currentUser && currentUserType === 'baram') {
+  // 🆕 Директно провери во база (поправка за timing issue)
+  let userType = currentUserType;
+  if (currentUser && !userType) {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+      const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).single();
+      userType = profile?.user_type || null;
+      currentUserType = userType;
+    }
+  }
+
+  if (currentUser && userType === 'baram') {
     ratingContent.innerHTML = `
       <div class="rating-section">
         <h4>${tr.rateTitle}</h4>
