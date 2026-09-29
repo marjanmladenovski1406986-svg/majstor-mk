@@ -859,7 +859,7 @@ async function showMajstor(id) {
   if (!m) return;
   const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
   const tr = t[currentLang];
-  const phoneDisplay = currentUser ? (m.phone ? `<a href="tel:${m.phone}" onclick="trackPhoneClick(${m.id})" style="color: #ff6b35; text-decoration: none; font-weight: 700;">📞 ${m.phone}</a>` : '-') : `<span class="locked-phone" onclick="closeMajstorModal(); openModal();">${tr.loginToSeePhone}</span>`;
+    const phoneDisplay = m.phone ? `<a href="tel:${m.phone}" onclick="trackPhoneClick(${m.id})" style="color: #ff6b35; text-decoration: none; font-weight: 700;">📞 ${m.phone}</a>` : '-';
 
   document.getElementById('majstor-profile-content').innerHTML = `
     <div class="majstor-profile">
@@ -917,7 +917,7 @@ async function loadRatings(majstorId) {
   const ratingContent = document.getElementById('rating-content');
   const listDiv = document.getElementById('ratings-list');
 
-  if (currentUser) {
+    if (currentUser && currentUserType === 'baram') {
     ratingContent.innerHTML = `
       <div class="rating-section">
         <h4>${tr.rateTitle}</h4>
@@ -939,15 +939,11 @@ async function loadRatings(majstorId) {
         document.querySelectorAll('#stars-input .star').forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= selectedRating));
       });
     });
-  } else {
-    ratingContent.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToRate}</div>`;
+   } else {
+    ratingContent.innerHTML = `<div class="login-hint" style="cursor:default; background:#1a2a3a; color:#6bb8ff;">🔒 Само клиенти можат да остават оценка</div>`;
   }
 
-  if (!currentUser) {
-    listDiv.innerHTML = `<div class="login-hint" onclick="closeMajstorModal(); openModal();">${tr.loginToSeeReviews}</div>`;
-    return;
-  }
-
+ 
   const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).order('created_at', { ascending: false });
   if (!data || data.length === 0) { listDiv.innerHTML = `<div class="no-ratings">${tr.noReviews}</div>`; return; }
   listDiv.innerHTML = '<div class="rating-list"><h4>⭐ ' + data.length + ' ' + tr.reviews + '</h4>' +
