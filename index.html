@@ -957,7 +957,7 @@ async function loadRatings(majstorId) {
   }
 
  
-  const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).order('created_at', { ascending: false });
+    const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).eq('status', 'approved').order('created_at', { ascending: false });
   if (!data || data.length === 0) { listDiv.innerHTML = `<div class="no-ratings">${tr.noReviews}</div>`; return; }
   listDiv.innerHTML = '<div class="rating-list"><h4>⭐ ' + data.length + ' ' + tr.reviews + '</h4>' +
     data.map(r => {
@@ -974,9 +974,9 @@ async function submitRating(majstorId) {
   if (!selectedRating) { msg.textContent = tr.pickStars; msg.className = 'rating-msg error'; return; }
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) { msg.textContent = 'Not logged in'; msg.className = 'rating-msg error'; return; }
-  const { error } = await supabaseClient.from('ratings').insert({ majstor_id: majstorId, user_id: user.id, rating: selectedRating, comment: comment });
+    const { error } = await supabaseClient.from('ratings').insert({ majstor_id: majstorId, user_id: user.id, rating: selectedRating, comment: comment, status: 'pending' });
   if (error) { msg.textContent = error.message; msg.className = 'rating-msg error'; return; }
-  const { data: allRatings } = await supabaseClient.from('ratings').select('rating').eq('majstor_id', majstorId);
+    const { data: allRatings } = await supabaseClient.from('ratings').select('rating').eq('majstor_id', majstorId).eq('status', 'approved');
   if (allRatings && allRatings.length > 0) {
     const avg = (allRatings.reduce((s, r) => s + r.rating, 0) / allRatings.length).toFixed(1);
     await supabaseClient.from('majstor_profiles').update({ rating: parseFloat(avg), rating_count: allRatings.length }).eq('id', majstorId);
