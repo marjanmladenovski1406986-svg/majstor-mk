@@ -764,7 +764,7 @@ function populateEditCities() {
 async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('loading').textContent = t[currentLang].loadingText;
-  const { data, error } = await supabaseClient.from('videos').select('*').order('id', { ascending: false });
+    const { data, error } = await supabaseClient.from('videos').select('*').order('likes', { ascending: false });
   if (error) { console.error(error); return; }
   videos = data.map(v => ({ id: v.id, title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes, majstorId: v.majstor_id }));
   document.getElementById('loading').style.display = 'none';
@@ -811,7 +811,7 @@ function renderVideos() {
           ${authorHtml}
           <div class="card-meta">
             <span class="cat-tag ${v.cat}">${catNames[currentLang][v.cat] || v.cat}</span>
-            <span>❤️ ${v.likes || 0}</span>
+            <span id="like-${v.id}">❤️ ${v.likes || 0}</span>
           </div>
         </div>
       </div>`;
@@ -1308,9 +1308,20 @@ async function handleAddImage() {
   setTimeout(() => { closeAddImage(); renderMyProfile(currentMajstorProfile); }, 800);
 }
 
-function openVideo(youtubeId) {
+async function openVideo(youtubeId) {
   document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
   document.getElementById('videoModal').classList.add('open');
+  
+  // 🆕 +1 срце на секое отворање
+  const video = videos.find(v => v.youtube === youtubeId);
+  if (video) {
+    const newLikes = (video.likes || 0) + 1;
+    video.likes = newLikes;
+    await supabaseClient.from('videos').update({ likes: newLikes }).eq('id', video.id);
+    // Освежи ги срцата веднаш (без reload)
+    const heartEl = document.querySelector(`#like-${video.id}`);
+    if (heartEl) heartEl.textContent = `❤️ ${newLikes}`;
+  }
 }
 function closeVideo() { document.getElementById('videoFrame').src = ''; document.getElementById('videoModal').classList.remove('open'); }
 function closeMajstorModal() { document.getElementById('majstorModal').classList.remove('open'); }
