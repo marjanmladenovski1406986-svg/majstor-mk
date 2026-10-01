@@ -195,6 +195,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   #majstori-grid { display: flex; flex-direction: row; overflow-x: auto; gap: 12px; padding: 0 15px 10px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
   #majstori-grid::-webkit-scrollbar { display: none; }
   .majstor-card { min-width: 130px; max-width: 130px; flex-direction: column; text-align: center; margin-bottom: 0; scroll-snap-align: start; padding: 15px 10px; }
+      .majstor-card { box-shadow: 0 6px 12px rgba(0,0,0,0.4), 0 0 8px rgba(255,107,53,0.15); border: 1px solid #ff6b35; transition: all 0.2s ease; }
+    .majstor-card:active { transform: scale(0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 0 12px rgba(255,107,53,0.4); }
   .majstor-avatar { width: 60px; height: 60px; font-size: 24px; }
   .majstor-info { width: 100%; }
   .majstor-name { font-size: 13px; }
