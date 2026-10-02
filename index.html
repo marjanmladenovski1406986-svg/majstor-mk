@@ -824,6 +824,13 @@ function renderMajstori() {
   let filtered = majstori.filter(m => currentFilter === "all" || m.category === currentFilter);
   if (currentCityFilter) filtered = filtered.filter(m => m.city === currentCityFilter);
   if (filtered.length === 0) { grid.innerHTML = `<div class="no-majstori">${t[currentLang].noMajstori}</div>`; return; }
+    filtered.sort((a, b) => {
+    if (a.featured && !b.featured) return -1;
+    if (!a.featured && b.featured) return 1;
+    if (a.verified && !b.verified) return -1;
+    if (!a.verified && b.verified) return 1;
+    return (b.computed_rating || 0) - (a.computed_rating || 0);
+  });
   filtered.forEach(m => {
     const rating = m.computed_rating ? `⭐ ${m.computed_rating}` : '';
     const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
