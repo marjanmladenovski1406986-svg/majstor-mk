@@ -1397,7 +1397,7 @@ function switchLang(lang) {
   document.getElementById('opt-choose').textContent = tr.optChoose;
   document.getElementById('opt-choose-city').textContent = tr.optChooseCity;
 
-  const catKeys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti', 'bravari', 'belatehnika''];
+  const catKeys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti', 'bravari', 'belatehnika'];
   const optIds = { elektrika:'opt-el', vodovod:'opt-vod', gradeznistvo:'opt-grad', popravki:'opt-pop', finalni:'opt-fin', plockari:'opt-ploc', gipsari:'opt-gips', stolari:'opt-stol', klima:'opt-klim', greenje:'opt-gre', krov:'opt-kro', sanitarii:'opt-san', pvc:'opt-pvc', dvorovi:'opt-dvo', cistenje:'opt-cis', opti:'opt-opti' , bravari:'opt-bravari', belatehnika:'opt-belatehnika'};
   catKeys.forEach(k => { const el = document.getElementById(optIds[k]); if (el) el.textContent = tr[k]; });
 
