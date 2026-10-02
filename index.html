@@ -1353,7 +1353,7 @@ function switchLang(lang) {
   document.getElementById('footer-text').textContent = tr.footer;
   document.getElementById('city-select').options[0].textContent = tr.allCities;
 
-  const cats = ['all','elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
+  const cats = ['all','elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti','bravari','belatehnika'];
   cats.forEach(c => { const el = document.getElementById('cat-' + c); if (el) el.textContent = tr[c]; });
 
   document.getElementById('btn-login-header').textContent = tr.login;
