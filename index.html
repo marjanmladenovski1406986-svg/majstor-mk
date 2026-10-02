@@ -268,6 +268,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <button class="cat-btn" data-cat="dvorovi" id="cat-dvorovi">🌳 Уредување дворови</button>
     <button class="cat-btn" data-cat="cistenje" id="cat-cistenje">🧹 Чистење</button>
     <button class="cat-btn" data-cat="opti" id="cat-opti">🔨 Општи работници</button>
+        <button class="cat-btn" data-cat="bravari" id="cat-bravari">🔨 Браварски услуги</button>
+    <button class="cat-btn" data-cat="belatehnika" id="cat-belatehnika">🔌 Бела техника</button>
   </div>
 </div>
 
@@ -355,6 +357,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
           <option value="dvorovi" id="opt-dvo">🌳 Уредување дворови</option>
           <option value="cistenje" id="opt-cis">🧹 Чистење</option>
           <option value="opti" id="opt-opti">🔨 Општи работници</option>
+                    <option value="bravari" id="opt-bravari">🔨 Браварски услуги</option>
+          <option value="belatehnika" id="opt-belatehnika">🔌 Бела техника</option>
         </select>
         <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
         <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)">
@@ -590,8 +594,8 @@ let selectedRating = 0;
 let pendingMajstorData = null;
 
 const catNames = {
-  mk: { elektrika:"Електрика", vodovod:"Водовод", gradeznistvo:"Градежништво", popravki:"Поправки", finalni:"Финални работи", plockari:"Плочкари", gipsari:"Гипсари и Молери", stolari:"Столари", klima:"Клима", greenje:"Греење", krov:"Кров", sanitarii:"Санитарии", pvc:"ПВЦ прозори и врати", dvorovi:"Уредување дворови", cistenje:"Чистење", opti:"Општи работници" },
-  en: { elektrika:"Electric", vodovod:"Plumbing", gradeznistvo:"Construction", popravki:"Repairs", finalni:"Finishing", plockari:"Tilers", gipsari:"Drywall & Painting", stolari:"Carpentry", klima:"HVAC", greenje:"Heating", krov:"Roofing", sanitarii:"Sanitary", pvc:"PVC Windows & Doors", dvorovi:"Yard Design", cistenje:"Cleaning", opti:"General Workers" }
+  mk: { elektrika:"Електрика", vodovod:"Водовод", gradeznistvo:"Градежништво", popravki:"Поправки", finalni:"Финални работи", plockari:"Плочкари", gipsari:"Гипсари и Молери", stolari:"Столари", klima:"Клима", greenje:"Греење", krov:"Кров", sanitarii:"Санитарии", pvc:"ПВЦ прозори и врати", dvorovi:"Уредување дворови", cistenje:"Чистење", opti:"Општи работници" , bravari:"Браварски услуги", belatehnika:"Бела техника"},
+  en: { elektrika:"Electric", vodovod:"Plumbing", gradeznistvo:"Construction", popravki:"Repairs", finalni:"Finishing", plockari:"Tilers", gipsari:"Drywall & Painting", stolari:"Carpentry", klima:"HVAC", greenje:"Heating", krov:"Roofing", sanitarii:"Sanitary", pvc:"PVC Windows & Doors", dvorovi:"Yard Design", cistenje:"Cleaning", opti:"General Workers" , bravari:"Locksmith", belatehnika:"Appliance Repair"}
 };
 
 const t = {
@@ -602,7 +606,7 @@ const t = {
     welcomeTitle:"🔨 Добредојдовте!",
     welcomeP1:"👷 Мајстори → Регистрирајте се. Покажете ја вашата работа. Најдете нови клиенти.",
     welcomeP2:"🔍 Барате мајстор? → Регистрирајте се и контактирајте ги сите.",
-    all:"Сите", elektrika:"⚡ Електрика", vodovod:"💧 Водовод", gradeznistvo:"🏗️ Градежништво", popravki:"🔧 Поправки", finalni:"🎨 Финални работи", plockari:"🔲 Плочкари", gipsari:"🧱 Гипсари и Молери", stolari:"🚪 Столари", klima:"❄️ Клима", greenje:"🔥 Греење", krov:"🏠 Кров", sanitarii:"🚿 Санитарии", pvc:"🪟 ПВЦ прозори и врати", dvorovi:"🌳 Уредување дворови", cistenje:"🧹 Чистење", opti:"🔨 Општи работници",
+    all:"Сите", elektrika:"⚡ Електрика", vodovod:"💧 Водовод", gradeznistvo:"🏗️ Градежништво", popravki:"🔧 Поправки", finalni:"🎨 Финални работи", plockari:"🔲 Плочкари", gipsari:"🧱 Гипсари и Молери", stolari:"🚪 Столари", klima:"❄️ Клима", greenje:"🔥 Греење", krov:"🏠 Кров", sanitarii:"🚿 Санитарии", pvc:"🪟 ПВЦ прозори и врати", dvorovi:"🌳 Уредување дворови", cistenje:"🧹 Чистење", opti:"🔨 Општи работници", bravari:, "🔨 Браварски услуги", belatehnika:"🔌 Бела техника",
     latest:"🔥 Најнови видеа", majstori:"👷 Мајстори", loadingText:"Вчитувам видеа...", footer:"© 2026 Мајстор.мк",
     allCities:"📍 Сите градови",
     modalTitle:"🔨 Мајстор.мк", tabLogin:"Најава", tabRegister:"Регистрација",
@@ -672,7 +676,7 @@ const t = {
     welcomeTitle:"🔨 Welcome!",
     welcomeP1:"👷 Masters → Register. Show your work. Find new clients.",
     welcomeP2:"🔍 Looking for a master? → Register and contact them all.",
-    all:"All", elektrika:"⚡ Electric", vodovod:"💧 Plumbing", gradeznistvo:"🏗️ Construction", popravki:"🔧 Repairs", finalni:"🎨 Finishing", plockari:"🔲 Tilers", gipsari:"🧱 Drywall & Painting", stolari:"🚪 Carpentry", klima:"❄️ HVAC", greenje:"🔥 Heating", krov:"🏠 Roofing", sanitarii:"🚿 Sanitary", pvc:"🪟 PVC Windows & Doors", dvorovi:"🌳 Yard Design", cistenje:"🧹 Cleaning", opti:"🔨 General Workers",
+    all:"All", elektrika:"⚡ Electric", vodovod:"💧 Plumbing", gradeznistvo:"🏗️ Construction", popravki:"🔧 Repairs", finalni:"🎨 Finishing", plockari:"🔲 Tilers", gipsari:"🧱 Drywall & Painting", stolari:"🚪 Carpentry", klima:"❄️ HVAC", greenje:"🔥 Heating", krov:"🏠 Roofing", sanitarii:"🚿 Sanitary", pvc:"🪟 PVC Windows & Doors", dvorovi:"🌳 Yard Design", cistenje:"🧹 Cleaning", opti:"🔨 General Workers", bravari:"🔨 Locksmith Services", belatehnika:"🔌 Appliance Repair",
     latest:"🔥 Latest Videos", majstori:"👷 Masters", loadingText:"Loading videos...", footer:"© 2026 MasterHow",
     allCities:"📍 All cities",
     modalTitle:"🔨 MasterHow", tabLogin:"Login", tabRegister:"Register",
@@ -749,7 +753,7 @@ function populateCities() {
 function populateEditCategories() {
   const editCat = document.getElementById('edit-category');
   if (!editCat) return;
-  const keys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
+  const keys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti', 'bravari', 'belatehnika'];
   editCat.innerHTML = '';
   keys.forEach(k => { editCat.innerHTML += `<option value="${k}">${t[currentLang][k]}</option>`; });
 }
@@ -1393,8 +1397,8 @@ function switchLang(lang) {
   document.getElementById('opt-choose').textContent = tr.optChoose;
   document.getElementById('opt-choose-city').textContent = tr.optChooseCity;
 
-  const catKeys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti'];
-  const optIds = { elektrika:'opt-el', vodovod:'opt-vod', gradeznistvo:'opt-grad', popravki:'opt-pop', finalni:'opt-fin', plockari:'opt-ploc', gipsari:'opt-gips', stolari:'opt-stol', klima:'opt-klim', greenje:'opt-gre', krov:'opt-kro', sanitarii:'opt-san', pvc:'opt-pvc', dvorovi:'opt-dvo', cistenje:'opt-cis', opti:'opt-opti' };
+  const catKeys = ['elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti', 'bravari', 'belatehnika''];
+  const optIds = { elektrika:'opt-el', vodovod:'opt-vod', gradeznistvo:'opt-grad', popravki:'opt-pop', finalni:'opt-fin', plockari:'opt-ploc', gipsari:'opt-gips', stolari:'opt-stol', klima:'opt-klim', greenje:'opt-gre', krov:'opt-kro', sanitarii:'opt-san', pvc:'opt-pvc', dvorovi:'opt-dvo', cistenje:'opt-cis', opti:'opt-opti' , bravari:'opt-bravari', belatehnika:'opt-belatehnika'};
   catKeys.forEach(k => { const el = document.getElementById(optIds[k]); if (el) el.textContent = tr[k]; });
 
   document.getElementById('b-name').placeholder = tr.phName;
