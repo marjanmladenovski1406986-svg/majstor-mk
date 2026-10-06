@@ -139,6 +139,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <button class="tab" onclick="showTab(event, 'backup')">💾 Backup</button>
             <button class="tab" onclick="showTab(event, 'feedback')">💬 Feedback (<span id="feedbackCount">0</span>)</button>
             <button class="tab" onclick="showTab(event, 'moderation')">⭐ Модерација (<span id="moderationCount">0</span>)</button>
+            <button class="tab" onclick="showTab(event, 'partners')">🤝 Партнери (<span id="partnersCount">0</span>)</button>
     </div>
 
     <div class="tab-content active" id="tab-stats">
@@ -215,6 +216,14 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
       <div class="items-list" id="moderationList"></div>
     </div>
   </div>
+  
+    <div class="tab-content" id="tab-partners">
+      <div class="section-header">
+        <h2>🤝 Партнери (<span id="partnersAllCount">0</span>)</h2>
+        <button class="btn-add" onclick="openAddPartner()">+ Додај партнер</button>
+      </div>
+      <div class="items-list" id="partnersList"></div>
+    </div>
 </div>
 
 <div class="modal" id="videoModal">
@@ -258,6 +267,20 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <input type="number" id="mRating" placeholder="Оценка (0-5)" step="0.1" min="0" max="5">
     <button onclick="handleSaveMajstor()">Зачувај</button>
     <button onclick="closeMajstorModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+  </div>
+</div>
+  
+<div class="modal" id="partnerModal">
+  <div class="modal-content">
+    <h2 id="partnerModalTitle">Додај партнер</h2>
+    <div class="modal-msg" id="partnerMsg"></div>
+    <input type="text" id="pName" placeholder="Име на партнер">
+    <input type="text" id="pDescription" placeholder="Опис (кратко)">
+    <input type="url" id="pLogo" placeholder="URL на лого (https://...)">
+    <input type="url" id="pWebsite" placeholder="Веб-сајт (https://...)">
+    <input type="number" id="pOrder" placeholder="Редослед (0 = прв)" value="0">
+    <button onclick="handleSavePartner()">Зачувај</button>
+    <button onclick="closePartnerModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
 </div>
 
@@ -371,6 +394,7 @@ async function loadAllData() {
   loadClicks();
     loadFeedback();
     loadModeration();
+    loadPartnersAdmin();
 }
 
 async function loadClicks() {
@@ -463,6 +487,99 @@ async function deleteAllFeedback() {
   await supabaseClient.from('feedback').delete().neq('id', 0);
   loadFeedback();
 }
+ // ===== PARTNERS =====
+let allPartners = [];
+let editingPartnerId = null;
+
+async function loadPartnersAdmin() {
+  const { data } = await supabaseClient.from('partners').select('*').order('display_order', { ascending: true });
+  allPartners = data || [];
+  renderPartnersList();
+}
+
+function renderPartnersList() {
+  const list = document.getElementById('partnersList');
+  if (!list) return;
+  const count = allPartners.length;
+  document.getElementById('partnersCount').textContent = count;
+  document.getElementById('partnersAllCount').textContent = count;
+  if (count === 0) {
+    list.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема партнери сè уште</p>';
+    return;
+  }
+  list.innerHTML = allPartners.map(p => `
+    <div class="item">
+      ${p.logo_url ? `<div class="item-avatar"><img src="${p.logo_url}" alt="${p.name}"></div>` : '<div class="item-avatar">🤝</div>'}
+      <div class="item-info">
+        <div class="item-title">${p.name}</div>
+        <div class="item-meta">${p.description || '-'} · <a href="${p.website_url}" target="_blank" style="color:#4da6ff;">${p.website_url}</a></div>
+      </div>
+      <div class="item-actions">
+        <button class="btn-edit" onclick="openEditPartner(${p.id})">✏️ Уреди</button>
+        <button class="btn-delete" onclick="deletePartner(${p.id})">🗑️ Избриши</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddPartner() {
+  editingPartnerId = null;
+  document.getElementById('partnerModalTitle').textContent = 'Додај партнер';
+  document.getElementById('pName').value = '';
+  document.getElementById('pDescription').value = '';
+  document.getElementById('pLogo').value = '';
+  document.getElementById('pWebsite').value = '';
+  document.getElementById('pOrder').value = '0';
+  document.getElementById('partnerMsg').className = 'modal-msg';
+  document.getElementById('partnerModal').classList.add('open');
+}
+
+function openEditPartner(id) {
+  const p = allPartners.find(x => x.id === id);
+  if (!p) return;
+  editingPartnerId = id;
+  document.getElementById('partnerModalTitle').textContent = 'Уреди партнер';
+  document.getElementById('pName').value = p.name || '';
+  document.getElementById('pDescription').value = p.description || '';
+  document.getElementById('pLogo').value = p.logo_url || '';
+  document.getElementById('pWebsite').value = p.website_url || '';
+  document.getElementById('pOrder').value = p.display_order || 0;
+  document.getElementById('partnerMsg').className = 'modal-msg';
+  document.getElementById('partnerModal').classList.add('open');
+}
+
+function closePartnerModal() { document.getElementById('partnerModal').classList.remove('open'); }
+
+async function handleSavePartner() {
+  const msg = document.getElementById('partnerMsg');
+  const name = document.getElementById('pName').value.trim();
+  const description = document.getElementById('pDescription').value.trim();
+  const logo_url = document.getElementById('pLogo').value.trim();
+  const website_url = document.getElementById('pWebsite').value.trim();
+  const display_order = parseInt(document.getElementById('pOrder').value) || 0;
+
+  if (!name || !website_url) { msg.textContent = 'Пополни име и веб-сајт'; msg.className = 'modal-msg error'; return; }
+
+  msg.textContent = 'Се зачувува...'; msg.className = 'modal-msg info';
+
+  if (editingPartnerId) {
+    const { error } = await supabaseClient.from('partners').update({ name, description, logo_url, website_url, display_order }).eq('id', editingPartnerId);
+    if (error) { msg.textContent = error.message; msg.className = 'modal-msg error'; return; }
+    msg.textContent = '✅ Зачувано!'; msg.className = 'modal-msg success';
+  } else {
+    const { error } = await supabaseClient.from('partners').insert({ name, description, logo_url, website_url, display_order });
+    if (error) { msg.textContent = error.message; msg.className = 'modal-msg error'; return; }
+    msg.textContent = '✅ Додадено!'; msg.className = 'modal-msg success';
+  }
+  setTimeout(() => { closePartnerModal(); loadPartnersAdmin(); }, 800);
+}
+
+async function deletePartner(id) {
+  if (!confirm('Дали си сигурен? Ова ќе го избрише партнерот.')) return;
+  await supabaseClient.from('partners').delete().eq('id', id);
+  loadPartnersAdmin();
+}
+ 
   async function loadModeration() {
   const { data } = await supabaseClient.from('ratings').select('*').eq('status', 'pending').order('created_at', { ascending: false });
   allPendingRatings = data || [];
