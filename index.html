@@ -378,13 +378,13 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
           <option value="belatehnika" id="opt-belatehnika">🔌 Бела техника</option>
         </select>
         <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
-        <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)">
+              <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)" data-ph="phFacebook">
         <input type="email" id="m-email" placeholder="Е-пошта">
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
         <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
             <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
-            <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
+                        <span data-ph="phTerms">Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
           </label>
         </div>
         <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
@@ -685,6 +685,8 @@ const t = {
     feedbackShort:"Пораката е премногу кратка",
     feedbackSending:"Се испраќа...",
     feedbackSent:"✅ Благодариме! Твојот коментар е примен."
+        phFacebook:"📘 Facebook профил (опционо)",
+    phTerms:"Се согласувам со Условите за користење, Политиката за приватност и Колачињата.",
   },
   en: {
     logo:"MasterHow", login:"Login", logout:"Sign out", myProfile:"My Profile",
@@ -755,6 +757,8 @@ const t = {
     feedbackShort:"Message is too short",
     feedbackSending:"Sending...",
     feedbackSent:"✅ Thank you! Your comment has been received."
+      phFacebook:"📘 Facebook profile (optional)",
+    phTerms:"I agree to the Terms of Use, Privacy Policy and Cookies."
   }
 };
 
@@ -1375,6 +1379,8 @@ function switchLang(lang) {
 
   document.getElementById('btn-login-header').textContent = tr.login;
   document.getElementById('btn-logout-header').textContent = tr.logout;
+    document.querySelector('[data-ph="phFacebook"]').placeholder = tr.phFacebook;
+  document.querySelector('[data-ph="phTerms"]').textContent = tr.phTerms;
   document.getElementById('btn-my-profile-text').textContent = tr.myProfile;
 
   document.getElementById('modal-title').textContent = tr.modalTitle;
