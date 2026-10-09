@@ -141,6 +141,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
             <button class="tab" onclick="showTab(event, 'moderation')">⭐ Модерација (<span id="moderationCount">0</span>)</button>
             <button class="tab" onclick="showTab(event, 'partners')">🤝 Партнери (<span id="partnersCount">0</span>)</button>
             <button class="tab" onclick="showTab(event, 'stats2')">📊 Статистика</button>
+            <button class="tab" onclick="showTab(event, 'forum')">💬 Форумот (<span id="forumCount">0</span>)</button>
     </div>
 
     <div class="tab-content active" id="tab-stats">
@@ -241,6 +242,14 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 
       <h3 style="color: #ff6b35; margin: 30px 0 15px 0;">📊 Сите настани (последни 50)</h3>
       <div class="items-list" id="allStatsList"></div>
+    </div>
+  
+    <div class="tab-content" id="tab-forum">
+      <div class="section-header">
+        <h2>💬 Форумот — Модерација</h2>
+      </div>
+      <p style="color: #999; font-size: 13px; margin-bottom: 20px;">Овде ги гледаш сите пораки од форумот. Одобри ги за да бидат видливи, или избриши ги.</p>
+      <div class="items-list" id="forumList"></div>
     </div>
 
 <div class="modal" id="videoModal">
@@ -413,6 +422,7 @@ async function loadAllData() {
     loadModeration();
     loadPartnersAdmin();
     loadStats2();
+    loadForumAdmin();
 }
 
 async function loadClicks() {
@@ -694,6 +704,59 @@ function renderStats2() {
     }).join('');
   }
 }
+  
+// ===== FORUM =====
+let allForumMsgs = [];
+
+async function loadForumAdmin() {
+  const { data } = await supabaseClient.from('majstor_forum').select('*').order('created_at', { ascending: false });
+  allForumMsgs = data || [];
+  renderForumList();
+}
+
+function renderForumList() {
+  const list = document.getElementById('forumList');
+  if (!list) return;
+  const count = allForumMsgs.filter(m => m.status === 'pending').length;
+  document.getElementById('forumCount').textContent = count;
+  if (allForumMsgs.length === 0) {
+    list.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема пораки сè уште</p>';
+    return;
+  }
+  list.innerHTML = allForumMsgs.map(m => {
+    const majstor = allMajstori.find(x => x.id === m.majstor_id);
+    const majstorName = majstor ? majstor.name : 'Непознат';
+    const date = new Date(m.created_at).toLocaleString('mk-MK', { timeZone: 'Europe/Skopje' });
+    const statusBadge = m.status === 'approved' 
+      ? '<span style="background:#1a3a1a; color:#6bff6b; padding:3px 10px; border-radius:10px; font-size:11px;">✅ Одобрена</span>' 
+      : '<span style="background:#3a3a1a; color:#ffb84d; padding:3px 10px; border-radius:10px; font-size:11px;">⏳ Чека</span>';
+    return `
+    <div class="item">
+      <div class="item-avatar">💬</div>
+      <div class="item-info">
+        <div class="item-title">👤 ${m.user_name || 'Анонимен'} → 👷 ${majstorName}</div>
+        <div style="color:#ccc; font-size:13px; margin:8px 0; padding:10px; background:#252525; border-radius:8px; white-space:pre-wrap;">${m.message}</div>
+        <div class="item-meta">${statusBadge} · 📅 ${date}</div>
+      </div>
+      <div class="item-actions">
+        ${m.status === 'pending' ? `<button class="btn-verify active" onclick="approveForum(${m.id})">✅ Одобри</button>` : ''}
+        <button class="btn-delete" onclick="deleteForum(${m.id})">🗑️ Избриши</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function approveForum(id) {
+  await supabaseClient.from('majstor_forum').update({ status: 'approved' }).eq('id', id);
+  loadForumAdmin();
+}
+
+async function deleteForum(id) {
+  if (!confirm('Дали си сигурен? Ова ќе ја избрише пораката.')) return;
+  await supabaseClient.from('majstor_forum').delete().eq('id', id);
+  loadForumAdmin();
+}
+
 
  
   async function loadModeration() {
