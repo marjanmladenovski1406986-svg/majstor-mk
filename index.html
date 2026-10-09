@@ -860,7 +860,7 @@ function renderMajstori() {
     const rating = m.computed_rating ? `⭐ ${m.computed_rating}` : '';
     const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
     grid.innerHTML += `
-      <div class="majstor-card" onclick="showMajstor(${m.id})">
+      <div class="majstor-card" onclick="window.location.href='/majstor.html?id=${m.id}'">
         <div class="majstor-avatar">${avatar}</div>
         <div class="majstor-info">
           <div class="majstor-name">${m.name || 'Мајстор'}</div>
