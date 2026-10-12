@@ -490,29 +490,46 @@ function toggleShareMenu(e) {
   const menu = document.getElementById('shareMenu');
   if (!menu) return;
 
-  // На мобилен – користи нативно споделување (Instagram, TikTok, Viber, WhatsApp...)
-  if (navigator.share) {
+  // Додај уникатен параметар за да нема кеш
+  const baseUrl = window.location.origin + window.location.pathname + '?id=' + majstorId;
+  const shareUrl = baseUrl + '&s=' + Date.now();
+
+  // На мобилен – користи нативно споделување
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if (isMobile && navigator.share) {
     const name = (majstorData && majstorData.name) ? majstorData.name : 'Мајстор';
     navigator.share({
       title: name + ' - Majsto.mk',
       text: '👷 ' + name + ' на Majsto.mk',
-      url: window.location.href
+      url: shareUrl
     }).catch(() => {});
     return;
   }
 
-  // На компјутер – отвори dropdown
+  // На компјутер – отвори dropdown и ажурирај линкови
+  const fbLink = menu.querySelector('a[href*="facebook"]');
+  const waLink = menu.querySelector('a[href*="wa.me"]');
+  const viberLink = menu.querySelector('a[href*="viber"]');
+
+  if (fbLink) fbLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  if (waLink) waLink.href = `https://wa.me/?text=${encodeURIComponent((majstorData && majstorData.name ? majstorData.name : 'Мајстор') + ' - Majsto.mk ' + shareUrl)}`;
+  if (viberLink) viberLink.href = `viber://forward?text=${encodeURIComponent((majstorData && majstorData.name ? majstorData.name : 'Мајстор') + ' - Majsto.mk ' + shareUrl)}`;
+
+  menu.dataset.shareUrl = shareUrl;
+
   menu.classList.toggle('open');
 }
 
 async function copyShareLink() {
   const menu = document.getElementById('shareMenu');
+  const urlToCopy = (menu && menu.dataset.shareUrl) ? menu.dataset.shareUrl : window.location.href;
+
   try {
-    await navigator.clipboard.writeText(window.location.href);
+    await navigator.clipboard.writeText(urlToCopy);
     alert('✅ Линкот е копиран!');
   } catch (err) {
     const input = document.createElement('input');
-    input.value = window.location.href;
+    input.value = urlToCopy;
     document.body.appendChild(input);
     input.select();
     document.execCommand('copy');
