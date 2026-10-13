@@ -302,7 +302,10 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <div class="modal-msg" id="partnerMsg"></div>
     <input type="text" id="pName" placeholder="Име на партнер">
     <input type="text" id="pDescription" placeholder="Опис (кратко)">
-    <input type="url" id="pLogo" placeholder="URL на лого (https://...)">
+        <input type="url" id="pLogo" placeholder="URL на лого (https://...)">
+    <input type="file" id="pLogoFile" accept="image/*" style="display:none;" onchange="uploadPartnerLogo(this)">
+    <button type="button" onclick="document.getElementById('pLogoFile').click()" style="background:transparent; border:1px solid #4db8ff; color:#4db8ff; padding:10px; border-radius:8px; cursor:pointer; font-family:inherit; width:100%; margin-bottom:10px; font-size:13px;">📁 Избери слика од компјутер</button>
+    <div id="pLogoPreview" style="text-align:center; margin-bottom:10px;"></div>
     <input type="url" id="pWebsite" placeholder="Веб-сајт (https://...)">
     <input type="number" id="pOrder" placeholder="Редослед (0 = прв)" value="0">
     <button onclick="handleSavePartner()">Зачувај</button>
@@ -578,6 +581,56 @@ function openEditPartner(id) {
 
 function closePartnerModal() { document.getElementById('partnerModal').classList.remove('open'); }
 
+async function uploadPartnerLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const msg = document.getElementById('partnerMsg');
+  const preview = document.getElementById('pLogoPreview');
+  const logoInput = document.getElementById('pLogo');
+
+  // Проверка на големина (max 5 MB)
+  if (file.size > 5 * 1024 * 1024) {
+    msg.textContent = 'Сликата е преголема (макс. 5 MB)';
+    msg.className = 'modal-msg error';
+    return;
+  }
+
+  msg.textContent = 'Се качува...';
+  msg.className = 'modal-msg info';
+  preview.innerHTML = '';
+
+  // Уникатно име на файлот
+  const ext = file.name.split('.').pop();
+  const fileName = `partner_${Date.now()}.${ext}`;
+
+  // Качување во Supabase Storage
+  const { error: upErr } = await supabaseClient.storage
+    .from('majstor-images')
+    .upload(fileName, file);
+
+  if (upErr) {
+    msg.textContent = 'Грешка: ' + upErr.message;
+    msg.className = 'modal-msg error';
+    return;
+  }
+
+  // Земи public URL
+  const { data: urlData } = supabaseClient.storage
+    .from('majstor-images')
+    .getPublicUrl(fileName);
+
+  // Пополни го полето за URL
+  logoInput.value = urlData.publicUrl;
+
+  // Прикажи preview
+  preview.innerHTML = `<img src="${urlData.publicUrl}" style="max-width:120px; max-height:120px; border-radius:8px; border:1px solid #333;">`;
+
+  msg.textContent = '✅ Сликата е качена!';
+  msg.className = 'modal-msg success';
+  setTimeout(() => { msg.className = 'modal-msg'; }, 2000);
+}
+  
 async function handleSavePartner() {
   const msg = document.getElementById('partnerMsg');
   const name = document.getElementById('pName').value.trim();
