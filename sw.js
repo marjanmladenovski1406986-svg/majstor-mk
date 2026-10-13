@@ -44,7 +44,10 @@ self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('supabase.co')) {
     return;
   }
-
+  // Не кеширај POST, PUT, DELETE — само GET
+  if (event.request.method !== 'GET') {
+    return;
+  }
   event.respondWith(
     fetch(event.request)
       .then((response) => {
