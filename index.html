@@ -1806,6 +1806,7 @@ function showWelcomeModal() {
   const seen = localStorage.getItem('majsto_welcome_seen');
    const today = new Date().toDateString();
   if (seen === today) return;
+    setTimeout(() => {
     const modal = document.getElementById('welcomeModal');
     if (modal) {
       modal.classList.add('open');
