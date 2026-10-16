@@ -1804,8 +1804,8 @@ function renderPartners(partners) {
 /* ===== WELCOME MODAL ===== */
 function showWelcomeModal() {
   const seen = localStorage.getItem('majsto_welcome_seen');
-  if (seen) return;
-  setTimeout(() => {
+   const today = new Date().toDateString();
+  if (seen === today) return;
     const modal = document.getElementById('welcomeModal');
     if (modal) {
       modal.classList.add('open');
@@ -1819,7 +1819,7 @@ function showWelcomeModal() {
 function closeWelcomeModal() {
   const modal = document.getElementById('welcomeModal');
   if (modal) modal.classList.remove('open');
-  localStorage.setItem('majsto_welcome_seen', 'true');
+   localStorage.setItem('majsto_welcome_seen', new Date().toDateString());
 }
 
 function goToRegister() {
