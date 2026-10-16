@@ -220,9 +220,87 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   .majstor-name { font-size: 13px; }
   .majstor-meta { justify-content: center; flex-wrap: wrap; }
 }
+/* ===== WELCOME MODAL ===== */
+.welcome-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+.welcome-modal.open {
+  display: flex;
+}
+.welcome-modal-content {
+  background: #1a1a1a;
+  border: 2px solid #ff6b35;
+  border-radius: 16px;
+  padding: 25px;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3);
+  animation: welcomeSlideIn 0.4s ease;
+  margin: auto;
+}
+@keyframes welcomeSlideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.welcome-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 24px;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+.welcome-modal-close:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+@media (max-width: 480px) {
+  .welcome-modal-content { padding: 20px; }
+  .welcome-modal-content h2 { font-size: 20px !important; }
+}
+
 </style>
 </head>
 <body>
+  <!-- WELCOME MODAL -->
+<div class="welcome-modal" id="welcomeModal">
+  <div class="welcome-modal-content">
+    <button class="welcome-modal-close" onclick="closeWelcomeModal()">✕</button>
+    <img src="/og-image.png" alt="Majsto.mk" style="width:100%; border-radius:12px; margin-bottom:20px;">
+    <h2 style="color:#ff6b35; font-size:24px; margin-bottom:10px; text-align:center;">🎁 1 ГОДИНА БЕСПЛАТНО</h2>
+    <p style="color:#fff; font-size:16px; margin-bottom:15px; text-align:center;">за нови мајстори</p>
+    <ul style="color:#ddd; font-size:14px; line-height:1.8; margin-bottom:20px; list-style:none; padding:0;">
+      <li>✅ Профил (12 месеци)</li>
+      <li>✅ Директни клиенти</li>
+      <li>✅ Без провизија</li>
+    </ul>
+    <p style="color:#fff; font-size:15px; margin-bottom:5px; text-align:center;">Вредност: 1,200 ден</p>
+    <p style="color:#ff6b35; font-size:18px; font-weight:700; margin-bottom:20px; text-align:center;">Цена за тебе: 0 ден</p>
+    <button onclick="goToRegister()" style="width:100%; padding:15px; background:#ff6b35; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; font-family:inherit;">👉 Регистрирај се сега</button>
+  </div>
+</div>
+
 
 <header>
   <div class="logo">🔨 <span id="logo-text">Мајстор.мк</span></div>
@@ -1722,6 +1800,40 @@ function renderPartners(partners) {
     </a>
   `).join('');
 }
+
+/* ===== WELCOME MODAL ===== */
+function showWelcomeModal() {
+  const seen = localStorage.getItem('majsto_welcome_seen');
+  if (seen) return;
+  setTimeout(() => {
+    const modal = document.getElementById('welcomeModal');
+    if (modal) {
+      modal.classList.add('open');
+      setTimeout(() => {
+        closeWelcomeModal();
+      }, 10000);
+    }
+  }, 1000);
+}
+
+function closeWelcomeModal() {
+  const modal = document.getElementById('welcomeModal');
+  if (modal) modal.classList.remove('open');
+  localStorage.setItem('majsto_welcome_seen', 'true');
+}
+
+function goToRegister() {
+  closeWelcomeModal();
+  if (typeof openModal === 'function') {
+    openModal();
+    setTimeout(() => {
+      if (typeof showModalTab === 'function') showModalTab('register');
+      if (typeof selectType === 'function') selectType('majstor');
+    }, 100);
+  }
+}
+
+showWelcomeModal();
 
 checkUser();
 loadVideos();
