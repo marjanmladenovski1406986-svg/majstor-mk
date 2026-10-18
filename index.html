@@ -1192,7 +1192,21 @@ async function submitRating(majstorId) {
 async function openMyProfile() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return;
-  const { data: profile } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).single();
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  let editId = urlParams.get('edit_id');
+  
+  let profile = null;
+  if (user.email === 'marjanmladenovski1406986@gmail.com' && editId) {
+    // Админот уредува специфичен мајстор
+    const { data } = await supabaseClient.from('majstor_profiles').select('*').eq('id', editId).single();
+    profile = data;
+  } else {
+    // Мајсторот си го уредува сопствениот профил
+    const { data } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).single();
+    profile = data;
+  }
+
   if (!profile) return;
   currentMajstorProfile = profile;
   renderMyProfile(profile);
@@ -1824,7 +1838,14 @@ async function checkUser() {
     const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).single();
     currentUserType = profile?.user_type || null;
     showLoggedIn(user.email);
-    if (currentUserType === 'majstor') {
+
+    if (user.email === 'marjanmladenovski1406986@gmail.com') {
+      document.getElementById('btn-my-profile').classList.remove('hidden');
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('edit_id')) {
+        setTimeout(() => openMyProfile(), 500);
+      }
+    } else if (currentUserType === 'majstor') {
       const { data: m } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).single();
       if (m) {
         currentMajstorProfile = m;
