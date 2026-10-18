@@ -1895,8 +1895,9 @@ function goToRegister() {
 
 showWelcomeModal();
 checkUser();
-loadMajstori();
-loadVideos();
+loadMajstori().then(() => {
+  loadVideos();
+});
 loadPartners();
   
 // Провери дали има ?reset=true (од мејл за ресетирање)
