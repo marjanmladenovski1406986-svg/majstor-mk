@@ -290,6 +290,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <select id="mCategory"></select>
     <textarea id="mDescription" placeholder="Опис" rows="3"></textarea>
     <input type="url" id="mFacebook" placeholder="📘 Facebook профил (опционо)">
+    <input type="url" id="mWebsite" placeholder="🌐 Веб-сајт (опционо)">
     <input type="number" id="mRating" placeholder="Оценка (0-5)" step="0.1" min="0" max="5">
     <button onclick="handleSaveMajstor()">Зачувај</button>
     <button onclick="closeMajstorModal()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
@@ -1088,6 +1089,7 @@ function openEditMajstor(id) {
   document.getElementById('mCategory').value = m.category || 'elektrika';
   document.getElementById('mDescription').value = m.description || '';
   document.getElementById('mFacebook').value = m.facebook_url || '';
+  document.getElementById('mWebsite').value = m.website_url || '';
   document.getElementById('mRating').value = m.rating || 0;
   document.getElementById('majstorMsg').className = 'modal-msg';
   document.getElementById('majstorModal').classList.add('open');
@@ -1103,12 +1105,13 @@ async function handleSaveMajstor() {
   const category = document.getElementById('mCategory').value;
   const description = document.getElementById('mDescription').value.trim();
   const facebook = document.getElementById('mFacebook').value.trim();
+  const website = document.getElementById('mWebsite').value.trim();
   const rating = parseFloat(document.getElementById('mRating').value) || 0;
 
   if (!name) { msg.textContent = 'Пополни име'; msg.className = 'modal-msg error'; return; }
   msg.textContent = 'Се зачувува...'; msg.className = 'modal-msg info';
 
-    const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, rating, rating_count: 1, facebook_url: facebook || null }).eq('id', editingMajstorId);
+    const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, rating, rating_count: 1, facebook_url: facebook || null, website_url: website || null }).eq('id', editingMajstorId);
   if (error) { msg.textContent = error.message; msg.className = 'modal-msg error'; return; }
   msg.textContent = '✅ Зачувано!'; msg.className = 'modal-msg success';
   setTimeout(() => { closeMajstorModal(); loadAllData(); }, 800);
