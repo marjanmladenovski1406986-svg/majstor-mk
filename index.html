@@ -280,6 +280,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   .welcome-modal-content h2 { font-size: 20px !important; }
 }
 
+  .thumb.no-play::after { display: none !important; }
 </style>
 </head>
 <body>
@@ -945,7 +946,16 @@ async function loadMajstori() {
 function renderVideos() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  let filtered = videos.filter(v => currentFilter === "all" || v.category === currentFilter);
+  
+  // Подобрен филтер (точно проверува дали мајсторот е во таа категорија)
+  let filtered = videos.filter(v => {
+    if (currentFilter === "all") return true;
+    if (v.type === 'image' && v.majstorId) {
+      const m = majstori.find(x => x.id === v.majstorId);
+      return m && m.category === currentFilter;
+    }
+    return v.category === currentFilter;
+  });
   
   if (currentCityFilter) {
     filtered = filtered.filter(v => {
@@ -981,13 +991,14 @@ function renderVideos() {
           </div>
         </div>`;
     } else if (v.type === 'image') {
+      // Овде додадовме класа no-play за да нема икона за плеј
       grid.innerHTML += `
         <div class="card" onclick="window.location.href='/majstor.html?id=${v.majstorId}'" style="cursor:pointer;">
-          <div class="thumb" style="aspect-ratio: 1;">
-            <img src="${v.url}" alt="${v.title}" style="object-fit: cover;">
+          <div class="thumb no-play" style="aspect-ratio: 1;">
+            <img src="${v.url}" alt="Слика" style="object-fit: cover;">
           </div>
           <div class="card-body">
-            <div class="card-title">📸 ${v.title}</div>
+            <div class="card-title">📸 Слика од работа</div>
             ${authorHtml}
             <div class="card-meta">
               <span class="cat-tag ${v.category}">${catName}</span>
@@ -998,7 +1009,6 @@ function renderVideos() {
     }
   });
 }
-
 function renderMajstori() {
   const grid = document.getElementById('majstori-grid');
   grid.innerHTML = '';
