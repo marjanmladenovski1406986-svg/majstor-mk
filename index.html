@@ -281,6 +281,69 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 }
 
   .thumb.no-play::after { display: none !important; }
+  /* ===== NEW 3-COLUMN FOOTER ===== */
+.footer {
+  background: #1a1a1a;
+  padding: 40px 20px 20px;
+  border-top: 1px solid #2a2a2a;
+  color: #999;
+  font-family: inherit;
+}
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+.footer-column h4 {
+  color: #ff6b35;
+  font-size: 16px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.footer-column a, .footer-column p {
+  display: block;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+.footer-column a:hover {
+  color: #ff6b35;
+}
+.footer-social {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #2a2a2a;
+  border-radius: 50%;
+  font-size: 18px;
+  margin-bottom: 0;
+  transition: all 0.2s;
+}
+.footer-social a:hover {
+  background: #ff6b35;
+  color: #fff;
+  transform: translateY(-3px);
+}
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a2a;
+  font-size: 13px;
+  color: #666;
+}
 </style>
 </head>
 <body>
@@ -401,13 +464,51 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <div id="partners-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;"></div>
 </div>
  
-  <footer>
-  <p id="footer-text">© 2026 Мајстор.мк</p>
-  <p style="margin-top: 15px; font-size: 13px;">
-    <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">📋 Услови</a> ·
-    <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🔒 Приватност</a> ·
-    <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35; text-decoration: none; margin: 0 8px;">🍪 Колачиња</a>
-  </p>
+ <footer class="footer">
+  <div class="footer-container">
+    
+    <!-- Колона 1: Платформа -->
+    <div class="footer-column">
+      <h4>ПЛАТФОРМА</h4>
+      <a href="#">За Нас</a>
+      <a href="#" onclick="event.preventDefault(); openFeedback();">Контакт</a>
+      <a href="#">Блог</a>
+    </div>
+
+    <!-- Колона 2: За Професионалци -->
+    <div class="footer-column">
+      <h4>ЗА ПРОФЕСИОНАЛЦИ</h4>
+      <a href="#" onclick="event.preventDefault(); openModal(); showModalTab('register');">Регистрација</a>
+      <a href="#" onclick="event.preventDefault(); openModal();">Најава</a>
+      <a href="#" onclick="event.preventDefault(); openMyProfile();">Мој Профил</a>
+    </div>
+
+    <!-- Колона 3: Правно -->
+    <div class="footer-column">
+      <h4>ПРАВНО</h4>
+      <a href="#" onclick="event.preventDefault(); openDoc('termsModal');">Услови за користење</a>
+      <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');">Политика за приватност</a>
+      <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');">Политика за колачиња</a>
+    </div>
+
+    <!-- Колона 4: Социјални мрежи и Контакт -->
+    <div class="footer-column">
+      <h4>КОНТАКТ</h4>
+            <a href="tel:076638703">📞 076 638 703</a>
+      <a href="mailto:info@majsto.mk">📧 info@majsto.mk</a>
+      <p>📍 Скопје, Македонија</p>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/share/19TQpzU9qL/" target="_blank" title="Facebook">📘</a>
+        <a href="#" target="_blank" title="Instagram">📸</a>
+        <a href="#" target="_blank" title="TikTok">🎵</a>
+      </div>
+    </div>
+
+  </div>
+  
+  <div class="footer-bottom">
+    <p>© 2026 Мајстор.мк · Сите права задржани 🇲🇰</p>
+  </div>
 </footer>
   <!-- FEEDBACK MODAL -->
 <div class="modal" id="feedbackModal">
