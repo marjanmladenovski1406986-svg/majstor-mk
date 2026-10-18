@@ -922,8 +922,8 @@ async function loadVideos() {
     };
   });
 
-  // 5. Измешај ги
-  videos = [...videoList, ...imageList];
+  // 5. Измешај ги (shuffle) за да биде поинтересно
+  videos = [...videoList, ...imageList].sort(() => Math.random() - 0.5);
 
   document.getElementById('loading').style.display = 'none';
   renderVideos();
