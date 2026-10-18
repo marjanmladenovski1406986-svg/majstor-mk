@@ -366,7 +366,13 @@ async function trackFb() {
     event_type: 'fb_click'
   });
 }
-
+  
+async function trackWeb() {
+  await supabaseClient.from('majstor_stats').insert({
+    majstor_id: parseInt(majstorId),
+    event_type: 'web_click'
+  });
+}
 async function loadMedia() {
   const { data: images } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'image');
   const { data: vids } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'video');
