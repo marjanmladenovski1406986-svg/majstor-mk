@@ -886,13 +886,47 @@ function populateEditCities() {
 async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('loading').textContent = t[currentLang].loadingText;
-    const { data, error } = await supabaseClient.from('videos').select('*').order('likes', { ascending: false });
-  if (error) { console.error(error); return; }
-  videos = data.map(v => ({ id: v.id, title: v.title, titleEn: v.title_en, youtube: v.youtube_id, cat: v.category, likes: v.likes, majstorId: v.majstor_id }));
+
+  // 1. Вчитај видеа
+  const { data: vids, error: errVids } = await supabaseClient.from('videos').select('*').order('likes', { ascending: false });
+  if (errVids) { console.error(errVids); }
+
+  // 2. Вчитај слики (последни 20)
+  const { data: imgs, error: errImgs } = await supabaseClient.from('majstor_media').select('*').eq('type', 'image').order('created_at', { ascending: false }).limit(20);
+  if (errImgs) { console.error(errImgs); }
+
+  // 3. Форматирај видеа
+  const videoList = (vids || []).map(v => ({
+    type: 'video',
+    id: v.id,
+    title: v.title,
+    titleEn: v.title_en,
+    youtube: v.youtube_id,
+    category: v.category,
+    likes: v.likes,
+    majstorId: v.majstor_id
+  }));
+
+  // 4. Форматирај слики (земaме категорија од мајсторот)
+  const imageList = (imgs || []).map(img => {
+    const m = majstori.find(x => x.id === img.majstor_id);
+    return {
+      type: 'image',
+      id: img.id,
+      title: img.title || 'Слика од работа',
+      url: img.url,
+      category: m ? m.category : 'opti',
+      likes: 0,
+      majstorId: img.majstor_id
+    };
+  });
+
+  // 5. Измешај ги
+  videos = [...videoList, ...imageList];
+
   document.getElementById('loading').style.display = 'none';
   renderVideos();
 }
-
 async function loadMajstori() {
     const { data, error } = await supabaseClient.from('majstor_profiles').select('*').eq('is_paused', false).order('id', { ascending: true });
   if (error) { console.error(error); return; }
@@ -911,7 +945,8 @@ async function loadMajstori() {
 function renderVideos() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  let filtered = videos.filter(v => currentFilter === "all" || v.cat === currentFilter);
+  let filtered = videos.filter(v => currentFilter === "all" || v.category === currentFilter);
+  
   if (currentCityFilter) {
     filtered = filtered.filter(v => {
       if (!v.majstorId) return false;
@@ -919,24 +954,48 @@ function renderVideos() {
       return m && m.city === currentCityFilter;
     });
   }
-  if (filtered.length === 0) { grid.innerHTML = '<div class="loading">' + t[currentLang].noVideos + '</div>'; return; }
+
+  if (filtered.length === 0) { 
+    grid.innerHTML = '<div class="loading">' + t[currentLang].noVideos + '</div>'; 
+    return; 
+  }
+
   filtered.forEach(v => {
-    const title = currentLang === 'mk' ? v.title : (v.titleEn || v.title);
-    const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
     const majstor = v.majstorId ? majstori.find(x => x.id === v.majstorId) : null;
     const authorHtml = majstor ? `<div class="card-author" onclick="event.stopPropagation(); showMajstor(${majstor.id})">👤 ${majstor.name}</div>` : '';
-    grid.innerHTML += `
-      <div class="card" onclick="openVideo('${v.youtube}')">
-        <div class="thumb"><img src="${thumbUrl}" alt="${title}"></div>
-        <div class="card-body">
-          <div class="card-title">${title}</div>
-          ${authorHtml}
-          <div class="card-meta">
-            <span class="cat-tag ${v.cat}">${catNames[currentLang][v.cat] || v.cat}</span>
-            <span id="like-${v.id}">❤️ ${v.likes || 0}</span>
+    const catName = catNames[currentLang][v.category] || v.category;
+
+    if (v.type === 'video') {
+      const title = currentLang === 'mk' ? v.title : (v.titleEn || v.title);
+      const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
+      grid.innerHTML += `
+        <div class="card" onclick="openVideo('${v.youtube}')">
+          <div class="thumb"><img src="${thumbUrl}" alt="${title}"></div>
+          <div class="card-body">
+            <div class="card-title">${title}</div>
+            ${authorHtml}
+            <div class="card-meta">
+              <span class="cat-tag ${v.category}">${catName}</span>
+              <span id="like-${v.id}">❤️ ${v.likes || 0}</span>
+            </div>
           </div>
-        </div>
-      </div>`;
+        </div>`;
+    } else if (v.type === 'image') {
+      grid.innerHTML += `
+        <div class="card" onclick="window.location.href='/majstor.html?id=${v.majstorId}'" style="cursor:pointer;">
+          <div class="thumb" style="aspect-ratio: 1;">
+            <img src="${v.url}" alt="${v.title}" style="object-fit: cover;">
+          </div>
+          <div class="card-body">
+            <div class="card-title">📸 ${v.title}</div>
+            ${authorHtml}
+            <div class="card-meta">
+              <span class="cat-tag ${v.category}">${catName}</span>
+              <span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span>
+            </div>
+          </div>
+        </div>`;
+    }
   });
 }
 
@@ -1835,11 +1894,10 @@ function goToRegister() {
 }
 
 showWelcomeModal();
-
 checkUser();
-loadVideos();
-loadMajstori();
-loadPartners();  
+loadMajstori();    ← ПРВО
+loadVideos();      ← ВТОРО
+loadPartners();
   
 // Провери дали има ?reset=true (од мејл за ресетирање)
 const urlParams = new URLSearchParams(window.location.search);
