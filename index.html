@@ -893,7 +893,7 @@ async function loadVideos() {
   if (errVids) { console.error(errVids); }
 
   // 2. Вчитај слики (последни 20)
-  const { data: imgs, error: errImgs } = await supabaseClient.from('majstor_media').select('*').eq('type', 'image').order('id', { ascending: false }).limit(20);
+  const { data: imgs, error: errImgs } = await supabaseClient.from('majstor_media').select('*').eq('type', 'image').order('id', { ascending: false });
   if (errImgs) { console.error(errImgs); }
 
   // 3. Форматирај видеа
@@ -910,7 +910,7 @@ async function loadVideos() {
 
   // 4. Форматирај слики (земaме категорија од мајсторот)
   const imageList = (imgs || []).map(img => {
-    const m = majstori.find(x => x.id === img.majstor_id);
+    const m = majstori.find(x => x.id == img.majstor_id);
     return {
       type: 'image',
       id: img.id,
@@ -951,7 +951,7 @@ function renderVideos() {
   let filtered = videos.filter(v => {
     if (currentFilter === "all") return true;
     if (v.type === 'image' && v.majstorId) {
-      const m = majstori.find(x => x.id === v.majstorId);
+      const m = majstori.find(x => x.id == v.majstorId);
       return m && m.category === currentFilter;
     }
     return v.category === currentFilter;
