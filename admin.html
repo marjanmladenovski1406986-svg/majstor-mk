@@ -943,7 +943,7 @@ function renderMajstoriList() {
         <button class="btn-verify ${m.verified ? 'active' : ''}" onclick="toggleVerify(${m.id})">${m.verified ? '✅ Верификуван' : '✅ Верификувај'}</button>
         <button class="btn-feature ${m.featured ? 'active' : ''}" onclick="toggleFeatured(${m.id})">${m.featured ? '⭐ Featured' : '⭐ Истакни'}</button>
                  <button class="btn-pause ${m.is_paused ? 'active' : ''}" onclick="togglePause(${m.id})">${m.is_paused ? '▶ Продолжи' : '⏸ Пауза'}</button>
-        <button class="btn-edit" onclick="window.open('/majstor.html?id=${m.id}', '_blank')">✏️ Отвори профил</button>
+        <button class="btn-edit" onclick="window.open('/?edit_id=${m.id}', '_blank')">✏️ Отвори профил</button>
         <button class="btn-delete" onclick="deleteMajstor(${m.id})">🗑️ Избриши</button>
       </div>
     </div>`;
