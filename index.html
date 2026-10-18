@@ -892,7 +892,7 @@ async function loadVideos() {
   if (errVids) { console.error(errVids); }
 
   // 2. Вчитај слики (последни 20)
-  const { data: imgs, error: errImgs } = await supabaseClient.from('majstor_media').select('*').eq('type', 'image').order('created_at', { ascending: false }).limit(20);
+  const { data: imgs, error: errImgs } = await supabaseClient.from('majstor_media').select('*').eq('type', 'image').order('id', { ascending: false }).limit(20);
   if (errImgs) { console.error(errImgs); }
 
   // 3. Форматирај видеа
