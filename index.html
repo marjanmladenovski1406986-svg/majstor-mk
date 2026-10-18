@@ -477,6 +477,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
         </select>
         <textarea id="m-description" placeholder="Опис на услугите..." rows="3"></textarea>
               <input type="url" id="m-facebook" placeholder="📘 Facebook профил (опционо)" data-ph="phFacebook">
+       <input type="url" id="m-website" placeholder="🌐 Веб-сајт (опционо)"> 
         <input type="email" id="m-email" placeholder="Е-пошта">
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
         <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
@@ -588,6 +589,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <select id="edit-category"></select>
     <textarea id="edit-description" placeholder="Опис" rows="3"></textarea>
     <input type="url" id="edit-facebook" placeholder="📘 Facebook профил (опционо)">
+    <input type="url" id="edit-website" placeholder="🌐 Веб-сајт (опционо)">
     <button onclick="handleEditInfo()" id="btn-edit-info">Зачувај</button>
     <button onclick="closeEditInfo()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
   </div>
@@ -1419,9 +1421,10 @@ async function handleEditInfo() {
   const category = document.getElementById('edit-category').value;
   const description = document.getElementById('edit-description').value.trim();
   const facebook = document.getElementById('edit-facebook').value.trim();
+    const website = document.getElementById('edit-website').value.trim();
   const msg = document.getElementById('edit-info-msg');
   if (!name || !category) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, facebook_url: facebook || null }).eq('id', currentMajstorProfile.id);
+  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, facebook_url: facebook || null, website_url: website || null, website_url: website || null, website_url: website || null, website_url: website || null, website_url: website || null }).eq('id', currentMajstorProfile.id);
   if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
   msg.textContent = tr.infoChanged;
   msg.className = 'modal-msg success';
@@ -1742,7 +1745,7 @@ async function confirmMajstorRegistration() {
   const fullName = (name + ' ' + surname).trim();
 
   await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
-  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
+  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, website_url: website || null, website_url: website || null, website_url: website || null, website_url: website || null, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
 
   pendingMajstorData = null;
   await checkUser();
