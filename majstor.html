@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Мајстор — Majsto.mk</title>
+<title id="page-title">Мајстор — Majsto.mk</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <meta name="theme-color" content="#ff6b35">
-  <meta name="description" content="Проверен мајстор на Majsto.mk. Контактирај директно.">
+  <meta name="description" id="page-description" content="Проверен мајстор на Majsto.mk. Контактирај директно.">
 
 <!-- Open Graph (за Viber, Facebook, WhatsApp, Instagram) -->
 <meta property="og:type" content="profile">
@@ -271,6 +271,21 @@ async function loadMajstor() {
   const phoneClicks = allStats.filter(s => s.event_type === 'phone_click').length;
   const fbClicks = allStats.filter(s => s.event_type === 'fb_click').length;
   const webClicks = allStats.filter(s => s.event_type === 'web_click').length;
+  
+  // --- SEO: Автоматски наслов и опис за секој мајстор ---
+  const catText = CAT_NAMES[data.category] || data.category;
+  const cityText = data.city || 'Македонија';
+  const nameText = data.name || 'Мајстор';
+  
+  const seoTitle = `${catText} во ${cityText} – ${nameText} | Majsto.mk`;
+  const seoDesc = `Потребен ви е ${catText.toLowerCase()} во ${cityText}? Погледнете го профилот на ${nameText}, описот на услугите и достапните контакт-информации на Majsto.mk.`;
+  
+  document.getElementById('page-title').textContent = seoTitle;
+  document.getElementById('page-description').setAttribute('content', seoDesc);
+
+  // --- Open Graph (за Facebook/Viber) ---
+  document.querySelector('meta[property="og:title"]').setAttribute('content', seoTitle);
+  document.querySelector('meta[property="og:description"]').setAttribute('content', seoDesc);
 
   const avatar = data.photo_url ? `<img src="${data.photo_url}" alt="${data.name}">` : (data.name || '?').charAt(0).toUpperCase();
 
