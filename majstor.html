@@ -309,6 +309,7 @@ async function loadMajstor() {
       <div class="contact-buttons">
         ${data.phone ? `<a href="tel:${data.phone}" onclick="trackPhone()" class="btn-contact btn-phone">📞 ${data.phone}</a>` : ''}
         ${data.facebook_url ? `<a href="${data.facebook_url}" target="_blank" onclick="trackFb()" class="btn-contact btn-fb">📘 Facebook профил</a>` : ''}
+       ${data.website_url ? `<a href="${data.website_url}" target="_blank" onclick="trackWeb()" class="btn-contact btn-web">🌐 Веб-сајт</a>` : ''} 
       </div>
     </div>
 
