@@ -345,9 +345,106 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   font-size: 13px;
   color: #666;
 }
+/* ===== CATEGORY BUTTON & MODAL ===== */
+.mobile-cat-btn {
+  display: none; /* Скриено на PC */
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 20px;
+  padding: 14px;
+  background: #ff6b35;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255,107,53,0.3);
+  transition: all 0.2s;
+  justify-content: center;
+  align-items: center;
+}
+.mobile-cat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255,107,53,0.4);
+}
+.cat-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.cat-modal.open { display: flex; }
+.cat-modal-content {
+  background: #1a1a1a;
+  border: 2px solid #ff6b35;
+  border-radius: 16px;
+  padding: 25px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+.cat-modal-close {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 24px;
+  cursor: pointer;
+}
+.cat-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 600px) {
+  .cat-modal-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.cat-modal-grid .cat-btn {
+  width: 100%;
+  text-align: left;
+  padding: 12px 15px;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.cat-modal-grid .cat-btn:hover {
+  background: #333;
+  border-color: #ff6b35;
+}
+.cat-modal-grid .cat-btn.active {
+  background: #ff6b35;
+  border-color: #ff6b35;
+}
+
+/* Прикажи го копчето само на мобилен */
+@media (max-width: 768px) {
+  .mobile-cat-btn { display: flex; }
+}
 </style>
 </head>
 <body>
+  <!-- CATEGORY MODAL -->
+<div class="cat-modal" id="catModal">
+  <div class="cat-modal-content">
+    <button class="cat-modal-close" onclick="closeCatModal()">✕</button>
+    <h3 style="color:#ff6b35; text-align:center; margin-bottom:20px;">Избери категорија</h3>
+    <div class="cat-modal-grid" id="catModalGrid"></div>
+  </div>
+</div>
   <!-- WELCOME MODAL -->
 <div class="welcome-modal" id="welcomeModal">
   <div class="welcome-modal-content">
@@ -409,6 +506,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <option value="">📍 Сите градови</option>
   </select>
 </div>
+  <!-- CATEGORY BUTTON (Mobile Only) -->
+<button class="mobile-cat-btn" onclick="openCatModal()">📂 Избери категорија</button>
 
 <div class="categories-wrapper">
   <div class="categories" id="categories-bar">
@@ -1775,6 +1874,33 @@ function filterByCity(city) {
   renderMajstori();
 }
 
+function openCatModal() {
+  const grid = document.getElementById('catModalGrid');
+  grid.innerHTML = '';
+  const cats = ['all','elektrika','vodovod','gradeznistvo','popravki','finalni','plockari','gipsari','stolari','klima','greenje','krov','sanitarii','pvc','dvorovi','cistenje','opti','bravari','belatehnika','videonadzor','bazeni','fasadi','iskop','hidroizolacija','otpad'];
+  
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (currentFilter === c ? ' active' : '');
+    btn.textContent = t[currentLang][c] || c;
+    btn.onclick = () => {
+      currentFilter = c;
+      renderVideos();
+      renderMajstori();
+      document.querySelectorAll('.categories .cat-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.cat === c);
+      });
+      closeCatModal();
+    };
+    grid.appendChild(btn);
+  });
+  document.getElementById('catModal').classList.add('open');
+}
+
+function closeCatModal() {
+  document.getElementById('catModal').classList.remove('open');
+}
+  
 function openModal() { document.getElementById('modal').classList.add('open'); }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
