@@ -1760,10 +1760,6 @@ async function handleAddImage() {
   setTimeout(() => { closeAddImage(); renderMyProfile(currentMajstorProfile); }, 800);
 }
 
-  msg.textContent = tr.imageAdded;
-  msg.className = 'modal-msg success';
-  setTimeout(() => { closeAddImage(); renderMyProfile(currentMajstorProfile); }, 800);
-}
 
 async function openVideo(youtubeId) {
   document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
