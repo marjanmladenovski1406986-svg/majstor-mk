@@ -1199,7 +1199,7 @@ function renderVideos() {
       const thumbUrl = `https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg`;
       grid.innerHTML += `
         <div class="card" onclick="openVideo('${v.youtube}')">
-          <div class="thumb"><img src="${thumbUrl}" alt="${title}"></div>
+          <div class="thumb"><img loading="lazy" src="${thumbUrl}" alt="${title}"></div>
           <div class="card-body">
             <div class="card-title">${title}</div>
             ${authorHtml}
@@ -1214,7 +1214,7 @@ function renderVideos() {
       grid.innerHTML += `
         <div class="card" onclick="window.location.href='/majstor.html?id=${v.majstorId}'" style="cursor:pointer;">
           <div class="thumb no-play" style="aspect-ratio: 1;">
-            <img src="${v.url}" alt="Слика" style="object-fit: cover;">
+            <img loading="lazy" src="${v.url}" alt="Слика" style="object-fit: cover;">
           </div>
           <div class="card-body">
             <div class="card-title">📸 Слика од работа</div>
