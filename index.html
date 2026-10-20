@@ -1537,11 +1537,27 @@ async function handleAddVideo() {
 async function deleteMedia(mediaId, type) {
   const tr = t[currentLang];
   if (!confirm(tr.deleteConfirm)) return;
+  
+  // 1. Прво ги земаме податоците за сликата/видеото
   const { data: m } = await supabaseClient.from('majstor_media').select('*').eq('id', mediaId).single();
-  if (m && m.type === 'video') {
-    await supabaseClient.from('videos').delete().eq('youtube_id', m.url).eq('majstor_id', currentMajstorProfile.id);
+  
+  if (m) {
+    // 2. Ако е СЛИКА, избриши го физичкиот фајл од Supabase Storage
+    if (m.type === 'image' && m.url) {
+      // Го земаме само името на фајлот од линкот
+      const fileName = m.url.split('/').pop(); 
+      await supabaseClient.storage.from('majstor-images').remove([fileName]);
+    }
+    
+    // 3. Ако е ВИДЕО, избриши го од табелата со видеа
+    if (m.type === 'video') {
+      await supabaseClient.from('videos').delete().eq('youtube_id', m.url).eq('majstor_id', currentMajstorProfile.id);
+    }
   }
+
+  // 4. На крај, избриши го записот од базата
   await supabaseClient.from('majstor_media').delete().eq('id', mediaId);
+  
   renderMyProfile(currentMajstorProfile);
   loadVideos();
 }
