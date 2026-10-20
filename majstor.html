@@ -403,7 +403,7 @@ async function loadMedia() {
   if (images && images.length > 0) {
     imgGrid.innerHTML = images.map(img => `
       <div class="media-item" onclick="window.open('${img.url}', '_blank')">
-        <img src="${img.url}" alt="">
+        <img loading="lazy" src="${img.url}" alt="">
       </div>`).join('');
   } else {
     imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема слики сè уште</p>';
