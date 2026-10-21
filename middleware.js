@@ -3,7 +3,12 @@ export const config = {
 };
 
 export default async function middleware(request) {
+  // 1. Проверка дали ова е внатрешно симнување (за да не се врти во круг)
   const url = new URL(request.url);
+  if (url.searchParams.has('internal_fetch')) {
+    return new Response(null, { headers: { 'x-middleware-next': '1' } });
+  }
+
   const id = url.searchParams.get('id');
 
   if (!id) {
@@ -14,7 +19,7 @@ export default async function middleware(request) {
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
 
   try {
-    // 1. Бараме податоци за мајсторот од Supabase
+    // 2. Бараме податоци за мајсторот од Supabase
     const res = await fetch(`${supabaseUrl}/rest/v1/majstor_profiles?id=eq.${id}&select=name,photo_url,description,city`, {
       headers: {
         'apikey': supabaseKey,
@@ -33,14 +38,18 @@ export default async function middleware(request) {
     const title = `${masterName} - Majsto.mk`;
     const desc = `Погледнете го профилот на ${masterName} во ${master.city || 'Македонија'}.`;
 
-    // 2. Го земаме оригиналниот HTML
-    const response = await fetch(request);
+    // 3. Ја симнуваме страницата со специјалниот параметар (за да не се заглави)
+    const fetchUrl = new URL(request.url);
+    fetchUrl.searchParams.set('internal_fetch', 'true');
+    
+    const response = await fetch(fetchUrl.toString());
     let html = await response.text();
 
-    // 3. Ги менуваме Open Graph таговите (ВНИМАВАЈ НА > НА КРАЈ)
+    // 4. Ги менуваме Open Graph таговите
     html = html.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${title}">`);
     html = html.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${desc}">`);
     html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${masterImage}">`);
+    
     html = html.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${title}">`);
     html = html.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${desc}">`);
     html = html.replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${masterImage}">`);
@@ -49,6 +58,7 @@ export default async function middleware(request) {
       headers: response.headers,
     });
   } catch (e) {
+    // Ако нешто тргне наопаку, само пушти ја нормалната страница
     return new Response(null, { headers: { 'x-middleware-next': '1' } });
   }
 }
