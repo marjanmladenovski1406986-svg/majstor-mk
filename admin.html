@@ -100,6 +100,18 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .no-access h1 { color: #ff6b6b; margin-bottom: 15px; }
 
 .help-text { font-size: 12px; color: #666; margin-bottom: 10px; }
+.btn-premium {
+  background: transparent;
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+}
+.btn-premium:hover { background: #ffd700; color: #000; }
+.btn-premium.active { background: #ffd700; color: #000; font-weight: bold; }  
 </style>
 </head>
 <body>
@@ -942,6 +954,7 @@ function renderMajstoriList() {
       <div class="item-actions">
         <button class="btn-verify ${m.verified ? 'active' : ''}" onclick="toggleVerify(${m.id})">${m.verified ? '✅ Верификуван' : '✅ Верификувај'}</button>
         <button class="btn-feature ${m.featured ? 'active' : ''}" onclick="toggleFeatured(${m.id})">${m.featured ? '⭐ Featured' : '⭐ Истакни'}</button>
+        <button class="btn-premium ${m.is_premium ? 'active' : ''}" onclick="togglePremium(${m.id})">${m.is_premium ? '👑 Премиум' : '👑 Направи Премиум'}</button>
                  <button class="btn-pause ${m.is_paused ? 'active' : ''}" onclick="togglePause(${m.id})">${m.is_paused ? '▶ Продолжи' : '⏸ Пауза'}</button>
         <button class="btn-edit" onclick="window.open('/?edit_id=${m.id}', '_blank')">✏️ Отвори профил</button>
         <button class="btn-delete" onclick="deleteMajstor(${m.id})">🗑️ Избриши</button>
@@ -1136,6 +1149,13 @@ async function toggleFeatured(id) {
   await supabaseClient.from('majstor_profiles').update({ featured: !m.featured }).eq('id', id);
   loadAllData();
 }
+ async function togglePremium(id) {
+  const m = allMajstori.find(x => x.id === id);
+  if (!m) return;
+  const newState = !m.is_premium;
+  await supabaseClient.from('majstor_profiles').update({ is_premium: newState }).eq('id', id);
+  loadAllData();
+} 
 async function togglePause(id) {
   const m = allMajstori.find(x => x.id === id);
   if (!m) return;
