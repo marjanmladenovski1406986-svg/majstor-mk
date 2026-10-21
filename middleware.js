@@ -3,23 +3,19 @@ export const config = {
 };
 
 export default async function middleware(request) {
-  // 1. Проверка дали ова е внатрешно симнување (за да не се врти во круг)
   const url = new URL(request.url);
-  if (url.searchParams.has('internal_fetch')) {
-    return new Response(null, { headers: { 'x-middleware-next': '1' } });
+  
+  // 1. Ако е внатрешно симнување или нема ID, пуши ја нормалната страница
+  if (url.searchParams.has('internal_fetch') || !url.searchParams.has('id')) {
+    return; 
   }
 
   const id = url.searchParams.get('id');
-
-  if (!id) {
-    return new Response(null, { headers: { 'x-middleware-next': '1' } });
-  }
-
   const supabaseUrl = 'https://brxdimqgujhemgpfujcq.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJicnhkaW1xZ3VqaGVtZ3BmdWpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
 
   try {
-    // 2. Бараме податоци за мајсторот од Supabase
+    // 2. Бараме податоци за мајсторот
     const res = await fetch(`${supabaseUrl}/rest/v1/majstor_profiles?id=eq.${id}&select=name,photo_url,description,city`, {
       headers: {
         'apikey': supabaseKey,
@@ -28,17 +24,17 @@ export default async function middleware(request) {
     });
     const data = await res.json();
     
+    // Ако нема мајстор, пуши ја нормалната страница
     if (!data || data.length === 0) {
-      return new Response(null, { headers: { 'x-middleware-next': '1' } });
+      return; 
     }
 
     const master = data[0];
-    const masterName = master.name || 'Мајстор';
+    const title = `${master.name || 'Мајстор'} - Majsto.mk`;
+    const desc = `Погледнете го профилот на ${master.name || 'Мајстор'} во ${master.city || 'Македонија'}.`;
     const masterImage = master.photo_url || 'https://majsto.mk/og-image.png';
-    const title = `${masterName} - Majsto.mk`;
-    const desc = `Погледнете го профилот на ${masterName} во ${master.city || 'Македонија'}.`;
 
-    // 3. Ја симнуваме страницата со специјалниот параметар (за да не се заглави)
+    // 3. Ја симнуваме страницата со специјалниот параметар
     const fetchUrl = new URL(request.url);
     fetchUrl.searchParams.set('internal_fetch', 'true');
     
@@ -54,11 +50,12 @@ export default async function middleware(request) {
     html = html.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${desc}">`);
     html = html.replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${masterImage}">`);
 
+    // 5. Враќаме изменета страница
     return new Response(html, {
-      headers: response.headers,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
     });
   } catch (e) {
-    // Ако нешто тргне наопаку, само пушти ја нормалната страница
-    return new Response(null, { headers: { 'x-middleware-next': '1' } });
+    // Ако нешто тргне наопаку, само пуши ја нормалната страница
+    return; 
   }
 }
