@@ -37,13 +37,13 @@ export default async function middleware(request) {
     const response = await fetch(request);
     let html = await response.text();
 
-    // 3. Ги менуваме Open Graph таговите со вистинските податоци
-    html = html.replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${title}"`);
-    html = html.replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${desc}"`);
-    html = html.replace(/<meta property="og:image" content="[^"]*"/, `<meta property="og:image" content="${masterImage}"`);
-    html = html.replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${title}"`);
-    html = html.replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${desc}"`);
-    html = html.replace(/<meta name="twitter:image" content="[^"]*"/, `<meta name="twitter:image" content="${masterImage}"`);
+    // 3. Ги менуваме Open Graph таговите (ВНИМАВАЈ НА > НА КРАЈ)
+    html = html.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${title}">`);
+    html = html.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${desc}">`);
+    html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${masterImage}">`);
+    html = html.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${title}">`);
+    html = html.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${desc}">`);
+    html = html.replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${masterImage}">`);
 
     return new Response(html, {
       headers: response.headers,
