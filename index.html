@@ -454,15 +454,15 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <div class="welcome-modal-content">
     <button class="welcome-modal-close" onclick="closeWelcomeModal()">✕</button>
     <img src="/og-image.png" alt="Majsto.mk" style="width:100%; border-radius:12px; margin-bottom:20px;">
-    <h2 style="color:#ff6b35; font-size:24px; margin-bottom:10px; text-align:center;">🎁 1 ГОДИНА БЕСПЛАТНО</h2>
-    <p style="color:#fff; font-size:16px; margin-bottom:15px; text-align:center;">за нови мајстори</p>
-    <ul style="color:#ddd; font-size:14px; line-height:1.8; margin-bottom:20px; list-style:none; padding:0;">
-      <li>✅ Профил (12 месеци)</li>
-      <li>✅ Директни клиенти</li>
-      <li>✅ Без провизија</li>
-    </ul>
-    <p style="color:#fff; font-size:15px; margin-bottom:5px; text-align:center;">Вредност: 1,200 ден</p>
-    <p style="color:#ff6b35; font-size:18px; font-weight:700; margin-bottom:20px; text-align:center;">Цена за тебе: 0 ден</p>
+            <h2 style="color:#ff6b35; font-size:24px; margin-bottom:10px; text-align:center;">🎁 РЕГИСТРИРАЈ СЕ БЕСПЛАТНО</h2>
+          <p style="color:#fff; font-size:16px; margin-bottom:15px; text-align:center;">за нови мајстори</p>
+          <ul style="color:#ddd; font-size:14px; line-height:1.8; margin-bottom:20px; list-style:none; padding:0;">
+            <li>✅ Основен профил (до 5 слики)</li>
+            <li>✅ Директни клиенти</li>
+            <li>⭐ Премиум (до 15 слики + Featured)</li>
+          </ul>
+          <p style="color:#fff; font-size:15px; margin-bottom:5px; text-align:center;">Премиум (Featured + Верификација)</p>
+          <p style="color:#ff6b35; font-size:18px; font-weight:700; margin-bottom:20px; text-align:center;">Само 600 ден/год</p>
     <button onclick="goToRegister()" style="width:100%; padding:15px; background:#ff6b35; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; font-family:inherit;">👉 Регистрирај се сега</button>
   </div>
 </div>
@@ -1736,7 +1736,7 @@ async function handleAddImage() {
 
   // Проверка за лимитот од 10 слики
   const { data: existing } = await supabaseClient.from('majstor_media').select('id').eq('majstor_id', currentMajstorProfile.id).eq('type', 'image');
-  if (existing && existing.length + files.length > 10) { 
+  if (existing && existing.length + files.length > 5) { 
     msg.textContent = tr.maxImages; 
     msg.className = 'modal-msg error'; 
     return; 
