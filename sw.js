@@ -1,10 +1,9 @@
 // Majsto.mk Service Worker
-// Верзија 1.0
+// Верзија 2.0 (Поправено за динамични страници)
 
-const CACHE_NAME = 'majsto-v1';
+const CACHE_NAME = 'majsto-v2'; // Сменивме v1 во v2 за да се избрише стариот кеш
 const urlsToCache = [
   '/',
-  '/index.html',
   '/icon-192.png',
   '/icon-512.png',
   '/manifest.json'
@@ -19,10 +18,10 @@ self.addEventListener('install', (event) => {
       });
     })
   );
-  self.skipWaiting();
+  self.skipWaiting(); // Принуди го да се активира веднаш
 });
 
-// Активација — избриши стари кеширања
+// Активација — избриши ги старите кеширања
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -35,23 +34,30 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  self.clients.claim();
+  self.clients.claim(); // Земете контрола над отворените страници
 });
 
-// Fetch — мрежа прво, кеш како fallback
+// Fetch — стратегија
 self.addEventListener('fetch', (event) => {
-  // Не кеширај Supabase барања
+  // 1. Не кеширај Supabase барања
   if (event.request.url.includes('supabase.co')) {
     return;
   }
-  // Не кеширај POST, PUT, DELETE — само GET
+
+  // 2. Не кеширај HTML страници (majstor.html) за да не се заглавуваат празни страници
+  if (event.request.url.includes('.html')) {
+    return;
+  }
+
+  // 3. Само GET барања
   if (event.request.method !== 'GET') {
     return;
   }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Кеширај успешни одговори
+        // Кеширај ги само успешните слики и CSS
         if (response && response.status === 200) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -61,7 +67,7 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => {
-        // Ако мрежата не работи, врати од кеш
+        // Ако мрежата не работи, врати од кеш (само за слики/иконки)
         return caches.match(event.request);
       })
   );
