@@ -1738,10 +1738,11 @@ async function handleAddImage() {
   const msg = document.getElementById('add-image-msg');
   if (!files || files.length === 0) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
 
-  // Проверка за лимитот од 10 слики
+   // Проверка за лимитот (5 за обични, 15 за премиум)
+  const limit = currentMajstorProfile.is_premium ? 15 : 5;
   const { data: existing } = await supabaseClient.from('majstor_media').select('id').eq('majstor_id', currentMajstorProfile.id).eq('type', 'image');
-  if (existing && existing.length + files.length > 5) { 
-    msg.textContent = tr.maxImages; 
+  if (existing && existing.length + files.length > limit) { 
+    msg.textContent = `Максимум ${limit} слики. Избриши некоја прво.`; 
     msg.className = 'modal-msg error'; 
     return; 
   }
