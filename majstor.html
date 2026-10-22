@@ -297,11 +297,11 @@ async function loadMajstor() {
   const avatar = data.photo_url ? `<img src="${data.photo_url}" alt="${data.name}">` : (data.name || '?').charAt(0).toUpperCase();
 
   document.getElementById('content').innerHTML = `
-    <div class="profile-header">
+    <div class="profile-header" style="${data.is_premium ? 'border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);' : ''}">
            <div class="profile-top">
         <div class="big-avatar">${avatar}</div>
         <div class="profile-name-block">
-          <div class="profile-name">${data.name || 'Мајстор'}</div>
+          <div class="profile-name">${data.name || 'Мајстор'} ${data.is_premium ? '<span style="background: linear-gradient(45deg, #ffd700, #ff8c00); color: #000; font-size: 14px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-left: 10px; vertical-align: middle;">👑 ПРЕМИУМ</span>' : ''}</div>
           <div class="profile-category">${CAT_NAMES[data.category] || data.category}</div>
           <div class="profile-rating">⭐ ${avgRating} (${totalCount} оценки)</div>
         </div>
