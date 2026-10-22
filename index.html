@@ -2013,6 +2013,7 @@ function prepareRegisterMajstor() {
   const email = document.getElementById('m-email').value.trim();
   const password = document.getElementById('m-password').value;
   const facebook = document.getElementById('m-facebook').value.trim();
+    const website = document.getElementById('m-website').value.trim();
     const selectedPackage = document.querySelector('input[name="package"]:checked').value;
   const isPremium = selectedPackage === 'premium';
 
@@ -2020,7 +2021,7 @@ function prepareRegisterMajstor() {
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
   if (!document.getElementById('m-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
-  pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook, isPremium };
+  pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook, website, isPremium };
   closeModal();
   document.getElementById('confirmModal').classList.add('open');
 }
@@ -2036,7 +2037,7 @@ function cancelMajstorRegistration() {
 async function confirmMajstorRegistration() {
   if (!pendingMajstorData) return;
   const tr = t[currentLang];
-    const { name, surname, phone, city, category, description, email, password, facebook, isPremium } = pendingMajstorData;
+      const { name, surname, phone, city, category, description, email, password, facebook, website, isPremium } = pendingMajstorData;
   let userIP = 'unknown';
   try {
     const ipRes = await fetch('https://api.ipify.org?format=json');
