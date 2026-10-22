@@ -1713,7 +1713,41 @@ async function handleEditInfo() {
   setTimeout(() => { closeEditInfo(); renderMyProfile(currentMajstorProfile); }, 1000);
 }
 
-function openChangeAvatar() {
+function openChangeCover() {
+  document.getElementById('cover-file').value = '';
+  document.getElementById('change-cover-msg').className = 'modal-msg';
+  document.getElementById('changeCoverModal').classList.add('open');
+}
+
+function closeChangeCover() { document.getElementById('changeCoverModal').classList.remove('open'); }
+
+async function handleChangeCover() {
+  const tr = t[currentLang];
+  const file = document.getElementById('cover-file').files[0];
+  const msg = document.getElementById('change-cover-msg');
+  if (!file) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
+
+  msg.textContent = 'Се качува...';
+  msg.className = 'modal-msg info';
+
+  // Компресија на сликата
+  const compressedFile = await compressImage(file, 1200, 0.7);
+
+  const fileName = `cover_${currentMajstorProfile.id}_${Date.now()}.jpg`;
+  const { error: upErr } = await supabaseClient.storage.from('majstor-images').upload(fileName, compressedFile);
+  if (upErr) { msg.textContent = tr.error + upErr.message; msg.className = 'modal-msg error'; return; }
+
+  const { data: urlData } = supabaseClient.storage.from('majstor-images').getPublicUrl(fileName);
+  const { error: updErr } = await supabaseClient.from('majstor_profiles').update({ cover_url: urlData.publicUrl }).eq('id', currentMajstorProfile.id);
+  if (updErr) { msg.textContent = tr.error + updErr.message; msg.className = 'modal-msg error'; return; }
+
+  msg.textContent = '✅ Банеřот е променет!';
+  msg.className = 'modal-msg success';
+  currentMajstorProfile.cover_url = urlData.publicUrl;
+  setTimeout(() => { closeChangeCover(); renderMyProfile(currentMajstorProfile); }, 1000);
+}
+
+  function openChangeAvatar() {
   document.getElementById('avatar-file').value = '';
   document.getElementById('change-avatar-msg').className = 'modal-msg';
   document.getElementById('changeAvatarModal').classList.add('open');
