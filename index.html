@@ -699,6 +699,17 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
        <input type="url" id="m-website" placeholder="🌐 Веб-сајт (опционо)"> 
         <input type="email" id="m-email" placeholder="Е-пошта">
         <input type="password" id="m-password" placeholder="Лозинка (мин. 6 знаци)">
+              <div style="margin: 15px 0; padding: 15px; background: #1a1a1a; border-radius: 10px; border: 1px solid #333;">
+          <p style="color: #fff; font-size: 14px; margin-bottom: 10px; font-weight: 600;">Избери пакет:</p>
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 10px; padding: 10px; border: 1px solid #333; border-radius: 8px;">
+            <input type="radio" name="package" value="basic" checked style="width: 18px; height: 18px;">
+            <span style="color: #ccc;">🆓 <b>Основен</b> (Бесплатно) - до 5 слики</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; border: 1px solid #ff6b35; border-radius: 8px; background: #2a1a10;">
+            <input type="radio" name="package" value="premium" style="width: 18px; height: 18px;">
+            <span style="color: #fff;">⭐ <b>Премиум</b> (600 ден/год) - Featured, Верификација, 15 слики, Видеа</span>
+          </label>
+        </div>
         <div style="margin: 15px 0; padding: 12px; background: #1a1a1a; border-radius: 8px; border: 1px solid #2a2a2a;">
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: #ccc;">
             <input type="checkbox" id="m-terms" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
@@ -2002,12 +2013,14 @@ function prepareRegisterMajstor() {
   const email = document.getElementById('m-email').value.trim();
   const password = document.getElementById('m-password').value;
   const facebook = document.getElementById('m-facebook').value.trim();
+    const selectedPackage = document.querySelector('input[name="package"]:checked').value;
+  const isPremium = selectedPackage === 'premium';
 
   if (!name || !email || !password || !category || !city) { showModalMsg(tr.fillAll, 'error'); return; }
   if (password.length < 6) { showModalMsg(tr.passwordShort, 'error'); return; }
   if (!document.getElementById('m-terms').checked) { showModalMsg('Мора да се согласиш со условите за користење.', 'error'); return; }
 
-  pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook };
+  pendingMajstorData = { name, surname, phone, city, category, description, email, password, facebook, isPremium };
   closeModal();
   document.getElementById('confirmModal').classList.add('open');
 }
@@ -2023,7 +2036,7 @@ function cancelMajstorRegistration() {
 async function confirmMajstorRegistration() {
   if (!pendingMajstorData) return;
   const tr = t[currentLang];
-  const { name, surname, phone, city, category, description, email, password, facebook } = pendingMajstorData;
+    const { name, surname, phone, city, category, description, email, password, facebook, isPremium } = pendingMajstorData;
   let userIP = 'unknown';
   try {
     const ipRes = await fetch('https://api.ipify.org?format=json');
@@ -2043,9 +2056,10 @@ async function confirmMajstorRegistration() {
 
   const userId = data.user.id;
   const fullName = (name + ' ' + surname).trim();
+    const premiumUntil = isPremium ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null;
 
-  await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
-  await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, website_url: website || null, website_url: website || null, website_url: website || null, website_url: website || null, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
+ await supabaseClient.from('profiles').insert({ id: userId, user_type: 'majstor', name: fullName, phone: phone, city: city, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
+ await supabaseClient.from('majstor_profiles').insert({ user_id: userId, name: fullName, phone: phone, city: city, category: category, description: description, rating: 0, rating_count: 0, country: 'MK', facebook_url: facebook || null, website_url: website || null, is_premium: isPremium, premium_until: premiumUntil, agreed_to_terms: true, agreed_at: new Date().toISOString(), agreed_ip: userIP, agreed_user_agent: userAgent });
 
   pendingMajstorData = null;
   await checkUser();
