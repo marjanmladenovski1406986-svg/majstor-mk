@@ -825,16 +825,27 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
-<!-- CHANGE AVATAR MODAL -->
-<div class="modal" id="changeAvatarModal">
-  <div class="modal-content">
-    <h2 id="change-avatar-title">📸 Промена на слика</h2>
-    <div id="change-avatar-msg" class="modal-msg"></div>
-    <input type="file" id="avatar-file" accept="image/*">
-    <button onclick="handleChangeAvatar()" id="btn-change-avatar">Зачувај слика</button>
-    <button onclick="closeChangeAvatar()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+  <!-- CHANGE COVER MODAL -->
+  <div class="modal" id="changeCoverModal">
+    <div class="modal-content">
+      <h2>🖼️ Промена на банеř</h2>
+      <div id="change-cover-msg" class="modal-msg"></div>
+      <input type="file" id="cover-file" accept="image/*">
+      <button onclick="handleChangeCover()">Зачувај банеř</button>
+      <button onclick="closeChangeCover()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+    </div>
   </div>
-</div>
+
+  <!-- CHANGE AVATAR MODAL -->
+  <div class="modal" id="changeAvatarModal">
+    <div class="modal-content">
+      <h2 id="change-avatar-title">📸 Промена на слика</h2>
+      <div id="change-avatar-msg" class="modal-msg"></div>
+      <input type="file" id="avatar-file" accept="image/*">
+      <button onclick="handleChangeAvatar()" id="btn-change-avatar">Зачувај слика</button>
+      <button onclick="closeChangeAvatar()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
+    </div>
+  </div>
 
 <!-- ADD IMAGE MODAL -->
 <div class="modal" id="addImageModal">
@@ -1486,6 +1497,7 @@ function renderMyProfile(m) {
     <div class="settings-section">
       <h4>${tr.mySettings}</h4>
       <button onclick="openChangeAvatar()">${tr.changeAvatar}</button>
+            ${m.is_premium ? `<button onclick="openChangeCover()">🖼️ Промени банеř (Премиум)</button>` : ''}
       <button onclick="openChangePassword()">${tr.changePassword}</button>
       <button onclick="openEditInfo()">${tr.editInfo}</button>
     </div>`;
