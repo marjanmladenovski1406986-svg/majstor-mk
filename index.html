@@ -1356,7 +1356,7 @@ async function loadRatings(majstorId) {
   if (currentUser && !userType) {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
-      const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).single();
+      const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
       userType = profile?.user_type || null;
       currentUserType = userType;
     }
@@ -1431,11 +1431,11 @@ async function openMyProfile() {
   let profile = null;
   if (user.email === 'marjanmladenovski1406986@gmail.com' && editId) {
     // Админот уредува специфичен мајстор
-    const { data } = await supabaseClient.from('majstor_profiles').select('*').eq('id', editId).single();
+    const { data } = await supabaseClient.from('majstor_profiles').select('*').eq('id', editId).maybeSingle();
     profile = data;
   } else {
     // Мајсторот си го уредува сопствениот профил
-    const { data } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).single();
+    const { data } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).maybeSingle();
     profile = data;
   }
 
@@ -1554,7 +1554,7 @@ async function deleteMedia(mediaId, type) {
   if (!confirm(tr.deleteConfirm)) return;
   
   // 1. Прво ги земаме податоците за сликата/видеото
-  const { data: m } = await supabaseClient.from('majstor_media').select('*').eq('id', mediaId).single();
+  const { data: m } = await supabaseClient.from('majstor_media').select('*').eq('id', mediaId).maybeSingle();
   
   if (m) {
     // 2. Ако е СЛИКА, избриши го физичкиот фајл од Supabase Storage
@@ -2134,7 +2134,7 @@ async function checkUser() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (user) {
     currentUser = user.email;
-    const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).single();
+    const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
     currentUserType = profile?.user_type || null;
     showLoggedIn(user.email);
 
@@ -2145,7 +2145,7 @@ async function checkUser() {
         setTimeout(() => openMyProfile(), 500);
       }
     } else if (currentUserType === 'majstor') {
-      const { data: m } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).single();
+      const { data: m } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).maybeSingle();
       if (m) {
         currentMajstorProfile = m;
         document.getElementById('btn-my-profile').classList.remove('hidden');
