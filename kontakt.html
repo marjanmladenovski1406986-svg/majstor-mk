@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакт — Мајстор.мк</title>
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff6b35">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+  
+  header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 10px; }
+  .logo { font-size: 20px; font-weight: 700; color: #ff6b35; cursor: pointer; text-decoration: none; }
+  .btn-auth { background: #ff6b35; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; font-family: inherit; text-decoration: none; }
+  .btn-auth:hover { opacity: 0.9; }
+
+  .container { max-width: 800px; margin: 40px auto; padding: 0 20px; flex: 1; }
+  .page-title { color: #ff6b35; font-size: 32px; margin-bottom: 20px; text-align: center; }
+  
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+
+  .contact-info { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 30px; }
+  .contact-info h3 { color: #ff6b35; margin-bottom: 20px; }
+  .contact-info p { margin-bottom: 15px; color: #ddd; display: flex; align-items: center; gap: 10px; font-size: 16px; }
+  .contact-info a { color: #ddd; text-decoration: none; }
+  .contact-info a:hover { color: #ff6b35; }
+
+  .contact-form { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 30px; }
+  .contact-form h3 { color: #ff6b35; margin-bottom: 20px; }
+  .contact-form input, .contact-form textarea { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 15px; font-family: inherit; }
+  .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: #ff6b35; }
+  .contact-form textarea { min-height: 120px; resize: vertical; }
+  .contact-form button { width: 100%; padding: 14px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .contact-form button:hover { background: #e55a2b; }
+  .msg { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; display: none; }
+  .msg.success { background: #1a3a1a; color: #6bff6b; display: block; }
+  .msg.error { background: #3a1a1a; color: #ff6b6b; display: block; }
+
+  .footer { background: #1a1a1a; padding: 40px 20px 20px; border-top: 1px solid #2a2a2a; color: #999; margin-top: auto; }
+  .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #666; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">🔨 Мајстор.мк</a>
+  <div class="header-right">
+    <a href="/" class="btn-auth">← Назад кон сајтот</a>
+  </div>
+</header>
+
+<div class="container">
+  <h1 class="page-title">Контакт</h1>
+  
+  <div class="contact-grid">
+    <!-- Информации -->
+    <div class="contact-info">
+      <h3>📞 Контакт информации</h3>
+      <p>📱 <a href="tel:076638703">076 638 703</a></p>
+      <p>📧 <a href="mailto:info@majsto.mk">info@majsto.mk</a></p>
+      <p>📍 Скопје, Македонија</p>
+      
+      <h3 style="margin-top: 30px;">🌐 Социјални мрежи</h3>
+      <p>📘 <a href="https://www.facebook.com/share/19TQpzU9qL/" target="_blank">Facebook</a></p>
+      <p>📸 <a href="#" target="_blank">Instagram</a></p>
+      <p>🎵 <a href="#" target="_blank">TikTok</a></p>
+    </div>
+
+    <!-- Форма -->
+    <div class="contact-form">
+      <h3>✉️ Испрати порака</h3>
+      <div id="form-msg" class="msg"></div>
+      <input type="text" id="contact-name" placeholder="Твоето име">
+      <input type="email" id="contact-email" placeholder="Твојата е-пошта">
+      <textarea id="contact-message" placeholder="Твојата порака..."></textarea>
+      <button onclick="sendContactMessage()">Испрати порака</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-bottom">
+    <p>© 2026 Мајстор.мк · Сите права задржани 🇲🇰</p>
+  </div>
+</footer>
+
+<!-- Supabase Script -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function sendContactMessage() {
+  const name = document.getElementById('contact-name').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  const message = document.getElementById('contact-message').value.trim();
+  const msgBox = document.getElementById('form-msg');
+
+  if (!name || !email || !message) {
+    msgBox.textContent = 'Пополни ги сите полиња.';
+    msgBox.className = 'msg error';
+    return;
+  }
+
+  msgBox.textContent = 'Се испраќа...';
+  msgBox.className = 'msg';
+
+  // Го користиме истиот feedback систем што веќе работи
+  const fullMessage = `[Контакт форма]\nИме: ${name}\nЕ-пошта: ${email}\nПорака: ${message}`;
+
+  const { error } = await supabaseClient.from('feedback').insert({
+    message: fullMessage,
+    page_url: '/kontakt.html',
+    user_id: null
+  });
+
+  if (error) {
+    msgBox.textContent = 'Грешка: ' + error.message;
+    msgBox.className = 'msg error';
+    return;
+  }
+
+  msgBox.textContent = '✅ Пораката е испратена успешно! Ќе ти одговориме наскоро.';
+  msgBox.className = 'msg success';
+  
+  // Исчисти ги полињата
+  document.getElementById('contact-name').value = '';
+  document.getElementById('contact-email').value = '';
+  document.getElementById('contact-message').value = '';
+}
+</script>
+
+</body>
+</html>
