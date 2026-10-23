@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>За Нас — Мајстор.мк</title>
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff6b35">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+  
+  /* Header (истиот како на почетна) */
+  header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 10px; }
+  .logo { font-size: 20px; font-weight: 700; color: #ff6b35; cursor: pointer; text-decoration: none; }
+  .btn-auth { background: #ff6b35; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; font-family: inherit; text-decoration: none; }
+  .btn-auth:hover { opacity: 0.9; }
+
+  /* Содржина */
+  .container { max-width: 800px; margin: 40px auto; padding: 0 20px; flex: 1; }
+  .page-title { color: #ff6b35; font-size: 32px; margin-bottom: 20px; text-align: center; }
+  .content-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 30px; line-height: 1.8; color: #ddd; font-size: 16px; }
+  .content-box p { margin-bottom: 15px; }
+  .content-box h3 { color: #ff6b35; margin: 25px 0 15px 0; font-size: 20px; }
+  .content-box ul { list-style: none; padding-left: 0; margin-bottom: 20px; }
+  .content-box li { margin-bottom: 10px; padding-left: 25px; position: relative; }
+  .content-box li::before { content: '✅'; position: absolute; left: 0; }
+
+  /* Footer (истиот како на почетна) */
+  .footer { background: #1a1a1a; padding: 40px 20px 20px; border-top: 1px solid #2a2a2a; color: #999; margin-top: auto; }
+  .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #666; }
+  .footer a { color: #ccc; text-decoration: none; }
+  .footer a:hover { color: #ff6b35; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">🔨 Мајстор.мк</a>
+  <div class="header-right">
+    <a href="/" class="btn-auth">← Назад кон сајтот</a>
+  </div>
+</header>
+
+<div class="container">
+  <h1 class="page-title">За Нас</h1>
+  
+  <div class="content-box">
+    <p><strong>Majsto.mk</strong> е создадена со една едноставна цел: да ги поврзе најдобрите мајстори во Македонија со клиентите на кои им е потребна нивната услуга.</p>
+    
+    <p>Знаеме колку е тешко да се најде проверен мајстор за електрика, водовод, клима или градежни работи. Затоа, создадовме платформа каде што секој мајстор може да ја претстави својата работа преку слики, видеа и рецензии, а клиентите можат лесно да ги контактираат.</p>
+    
+    <p>Нашата мисија е да изградиме доверба помеѓу клиентите и мајсторите. Сите мајстори на платформата имаат можност да бидат верифицирани, а премиум профилите добиваат дополнителна видливост.</p>
+    
+    <h3>Зошто Majsto.mk?</h3>
+    <ul>
+      <li>Проверени и верифицирани мајстори</li>
+      <li>Реални слики и видеа од завршени работи</li>
+      <li>Вистински оценки и коментари од клиенти</li>
+      <li>Директен контакт без посредници</li>
+    </ul>
+    
+    <p>Ви благодариме што сте дел од нашата заедница!</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-bottom">
+    <p>© 2026 Мајстор.мк · Сите права задржани 🇲🇰</p>
+  </div>
+</footer>
+
+</body>
+</html>
