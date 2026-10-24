@@ -1236,7 +1236,7 @@ function renderVideos() {
     } else if (v.type === 'image') {
       // Овде додадовме класа no-play за да нема икона за плеј
       grid.innerHTML += `
-        <div class="card" onclick="window.location.href='/majstor.html?id=${v.majstorId}'" style="cursor:pointer;">
+        <div class="card" onclick="window.location.href='/profile.html?id=${v.majstorId}'" style="cursor:pointer;">
           <div class="thumb no-play" style="aspect-ratio: 1;">
             <img loading="lazy" src="${v.url}" alt="Слика" style="object-fit: cover;">
           </div>
@@ -1271,7 +1271,7 @@ function renderMajstori() {
     const rating = m.computed_rating ? `⭐ ${m.computed_rating}` : '';
     const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
     grid.innerHTML += `
-      <div class="majstor-card" onclick="window.location.href='/majstor.html?id=${m.id}'">
+      <div class="majstor-card" onclick="window.location.href='/profile.html?id=${m.id}'">
         <div class="majstor-avatar">${avatar}</div>
         <div class="majstor-info">
           <div class="majstor-name">${m.name || 'Мајстор'}</div>
