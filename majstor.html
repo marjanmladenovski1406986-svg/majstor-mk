@@ -293,6 +293,10 @@ async function loadMajstor() {
   // --- Open Graph (за Facebook/Viber) ---
   document.querySelector('meta[property="og:title"]').setAttribute('content', seoTitle);
   document.querySelector('meta[property="og:description"]').setAttribute('content', seoDesc);
+  document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
+if (data.photo_url) {
+    document.querySelector('meta[property="og:image"]').setAttribute('content', data.photo_url);
+}
 
   const avatar = data.photo_url ? `<img src="${data.photo_url}" alt="${data.name}">` : (data.name || '?').charAt(0).toUpperCase();
 
