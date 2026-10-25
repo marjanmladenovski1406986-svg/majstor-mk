@@ -454,17 +454,27 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   <div class="welcome-modal-content">
     <button class="welcome-modal-close" onclick="closeWelcomeModal()">✕</button>
     <img src="/icon-512.png" alt="Majsto.mk" style="width:100%; border-radius:12px; margin-bottom:20px;">
-                     <h2 style="color:#ff6b35; font-size:24px; margin-bottom:10px; text-align:center;">🎁 РЕГИСТРИРАЈ СЕ БЕСПЛАТНО</h2>
-          <p style="color:#fff; font-size:16px; margin-bottom:15px; text-align:center;">за нови мајстори</p>
-          <ul style="color:#ddd; font-size:14px; line-height:1.8; margin-bottom:20px; list-style:none; padding:0;">
-            <li>✅ Основен профил</li>
-            <li>✅ Директни клиенти</li>
-            <li>✅ Оценки и коментари</li>
-          </ul>
-          <div style="text-align:center; margin-bottom:20px; background: #2a2a2a; padding: 10px; border-radius: 8px; border: 1px solid #ff6b35;">
-            <p style="color:#fff; font-size:15px; font-weight:700; margin-bottom:5px;">⭐ ПРЕМИУМ ПАКЕТ</p>
-            <p style="color:#ff6b35; font-size:18px; font-weight:700;">Само 600 ден/год</p>
-          </div>
+    
+    <h2 style="color:#6bff6b; font-size:24px; margin-bottom:10px; text-align:center;">🎁 РЕГИСТРИРАЈ СЕ БЕСПЛАТНО</h2>
+    <p style="color:#fff; font-size:16px; margin-bottom:15px; text-align:center;">за нови мајстори</p>
+    
+    <div style="margin-bottom: 15px;">
+      <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid #2a2a2a; margin-bottom: 10px;">
+        <p style="color:#6bff6b; font-size:16px; font-weight:700; margin-bottom:10px;">🆓 ОСНОВЕН ПАКЕТ (0 денари)</p>
+        <ul style="color:#ddd; font-size:14px; line-height:1.6; margin:0; list-style:none; padding:0;">
+          <li>✅ Основен профил</li>
+          <li>✅ Директни клиенти</li>
+          <li>✅ Оценки и коментари</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-bottom:20px; background: linear-gradient(145deg, #2a1a10, #1a1a1a); padding: 15px; border-radius: 8px; border: 1px solid #ff6b35;">
+      <p style="color:#ff6b35; font-size:16px; font-weight:700; margin-bottom:5px;">⭐ ПРЕМИУМ ПАКЕТ</p>
+      <p style="color:#fff; font-size:14px; margin-bottom:5px;">Верификација, Банеř, Видеа</p>
+      <p style="color:#ff6b35; font-size:18px; font-weight:700;">Само 600 ден/год</p>
+    </div>
+
     <button onclick="goToRegister()" style="width:100%; padding:15px; background:#ff6b35; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; font-family:inherit;">👉 Регистрирај се сега</button>
   </div>
 </div>
@@ -582,8 +592,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <!-- Колона 1: Платформа -->
     <div class="footer-column">
       <h4>ПЛАТФОРМА</h4>
-      <a href="#">За Нас</a>
-      <a href="#" onclick="event.preventDefault(); openFeedback();">Контакт</a>
+      <a href="/za-nas.html">За Нас</a>
+      <a href="/kontakt.html">Контакт</a>
       <a href="#">Блог</a>
     </div>
 
@@ -607,10 +617,10 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <div class="footer-column">
       <h4>КОНТАКТ</h4>
             <a href="tel:076638703">📞 076 638 703</a>
-      <a href="mailto:info@majsto.mk">📧 info@majsto.mk</a>
+      <a href="mailto:majsto.info@gmail.com">📧 majsto.info@gmail.com</a>
       <p>📍 Скопје, Македонија</p>
       <div class="footer-social">
-        <a href="https://www.facebook.com/share/19TQpzU9qL/" target="_blank" title="Facebook">📘</a>
+        <a href="https://www.facebook.com/share/1JQrhmydZk/" target="_blank" title="Facebook">📘</a>
         <a href="#" target="_blank" title="Instagram">📸</a>
         <a href="#" target="_blank" title="TikTok">🎵</a>
       </div>
@@ -846,7 +856,16 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
       <button onclick="closeChangeAvatar()" style="background:transparent; border:1px solid #333; color:#999;">Откажи</button>
     </div>
   </div>
-
+  
+<!-- MY STATS MODAL -->
+<div class="modal" id="myStatsModal">
+  <div class="modal-content">
+    <h2>📊 Моја Статистика</h2>
+    <div id="my-stats-content" style="text-align: center; color: #999; margin: 20px 0;">Вчитувам податоци...</div>
+    <button onclick="closeMyStats()" style="background:transparent; border:1px solid #333; color:#999; margin-top:15px;">Затвори</button>
+  </div>
+</div>
+  
 <!-- ADD IMAGE MODAL -->
 <div class="modal" id="addImageModal">
   <div class="modal-content">
@@ -1132,7 +1151,7 @@ async function loadVideos() {
   document.getElementById('loading').textContent = t[currentLang].loadingText;
 
   // 1. Вчитај видеа
-  const { data: vids, error: errVids } = await supabaseClient.from('videos').select('*').order('likes', { ascending: false });
+  const { data: vids, error: errVids } = await supabaseClient.from('videos').select('id, title, title_en, youtube_id, category, likes, majstor_id').order('likes', { ascending: false });
   if (errVids) { console.error(errVids); }
 
   // 2. Вчитај слики (последни 20)
@@ -1172,7 +1191,7 @@ async function loadVideos() {
   renderVideos();
 }
 async function loadMajstori() {
-    const { data, error } = await supabaseClient.from('majstor_profiles').select('*').eq('is_paused', false).order('id', { ascending: true });
+    select('id, name, category, city, photo_url, rating, is_premium, is_verified, is_featured')
   if (error) { console.error(error); return; }
     const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating').eq('status', 'approved');
   majstori = (data || []).map(m => {
@@ -1236,7 +1255,7 @@ function renderVideos() {
     } else if (v.type === 'image') {
       // Овде додадовме класа no-play за да нема икона за плеј
       grid.innerHTML += `
-        <div class="card" onclick="window.location.href='/majstor.html?id=${v.majstorId}'" style="cursor:pointer;">
+        <div class="card" onclick="window.location.href='/profile.html?id=${v.majstorId}'" style="cursor:pointer;">
           <div class="thumb no-play" style="aspect-ratio: 1;">
             <img loading="lazy" src="${v.url}" alt="Слика" style="object-fit: cover;">
           </div>
@@ -1271,7 +1290,7 @@ function renderMajstori() {
     const rating = m.computed_rating ? `⭐ ${m.computed_rating}` : '';
     const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
     grid.innerHTML += `
-      <div class="majstor-card" onclick="window.location.href='/majstor.html?id=${m.id}'">
+      <div class="majstor-card" onclick="window.location.href='/profile.html?id=${m.id}'">
         <div class="majstor-avatar">${avatar}</div>
         <div class="majstor-info">
           <div class="majstor-name">${m.name || 'Мајстор'}</div>
@@ -1497,6 +1516,7 @@ function renderMyProfile(m) {
     <div class="settings-section">
       <h4>${tr.mySettings}</h4>
       <button onclick="openChangeAvatar()">${tr.changeAvatar}</button>
+            ${m.is_premium ? `<button onclick="openMyStats()" style="border-color: #ff6b35; color: #ff6b35;">📊 Моја Статистика (Премиум)</button>` : ''}
             ${m.is_premium ? `<button onclick="openChangeCover()">🖼️ Промени банеř (Премиум)</button>` : ''}
       <button onclick="openChangePassword()">${tr.changePassword}</button>
       <button onclick="openEditInfo()">${tr.editInfo}</button>
@@ -2337,6 +2357,74 @@ if ('serviceWorker' in navigator) {
       .then((reg) => console.log('✅ Service Worker registered:', reg.scope))
       .catch((err) => console.log('❌ Service Worker failed:', err));
   });
+}
+  async function openMyStats() {
+  if (!currentMajstorProfile) return;
+  
+  // Го отвораме прозорчето
+  document.getElementById('myStatsModal').classList.add('open');
+  const content = document.getElementById('my-stats-content');
+  content.innerHTML = 'Вчитувам податоци...';
+
+  // 1. Земaме податоци од majstor_stats (прегледи, веб и фб кликови)
+  const { data: stats } = await supabaseClient.from('majstor_stats').select('*').eq('majstor_id', currentMajstorProfile.id);
+  
+  // 2. Земaме податоци од phone_clicks (телефонски кликови)
+  const { data: clicks } = await supabaseClient.from('phone_clicks').select('*').eq('majstor_id', currentMajstorProfile.id);
+
+  const now = new Date();
+  
+  // Пресметки за вкупно
+  const totalViews = (stats || []).filter(s => s.event_type === 'view').length;
+  const totalWeb = (stats || []).filter(s => s.event_type === 'web_click').length;
+  const totalFb = (stats || []).filter(s => s.event_type === 'fb_click').length;
+  const totalCalls = (clicks || []).length;
+
+  // Пресметки за денес
+  const todayViews = (stats || []).filter(s => s.event_type === 'view' && new Date(s.created_at).toDateString() === now.toDateString()).length;
+  const todayCalls = (clicks || []).filter(c => new Date(c.clicked_at).toDateString() === now.toDateString()).length;
+
+  // Прикажуваме на екран
+  content.innerHTML = `
+    <p style="color:#fff; margin-bottom: 20px; font-size: 14px; text-align: left;">Ова е статистиката за твојот профил. Колку повеќе слики и видеа имаш, толку повеќе прегледи ќе добиваш!</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+      <div style="background: #2a2a2a; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 24px; font-weight: 700; color: #ff6b35;">${totalViews}</div>
+        <div style="font-size: 12px; color: #999; margin-top: 5px;">👁️ Вкупно Прегледи</div>
+      </div>
+      <div style="background: #2a2a2a; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 24px; font-weight: 700; color: #ff6b35;">${totalCalls}</div>
+        <div style="font-size: 12px; color: #999; margin-top: 5px;">📞 Вкупно Кликови</div>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+      <div style="background: #2a2a2a; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 24px; font-weight: 700; color: #fff;">${todayViews}</div>
+        <div style="font-size: 12px; color: #999; margin-top: 5px;">👁️ Прегледи Денес</div>
+      </div>
+      <div style="background: #2a2a2a; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 24px; font-weight: 700; color: #fff;">${todayCalls}</div>
+        <div style="font-size: 12px; color: #999; margin-top: 5px;">📞 Кликови Денес</div>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div style="background: #1a2a3a; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 24px; font-weight: 700; color: #4db8ff;">${totalWeb}</div>
+        <div style="font-size: 12px; color: #999; margin-top: 5px;">🌐 Веб кликови</div>
+      </div>
+      <div style="background: #1a2a3a; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 24px; font-weight: 700; color: #4db8ff;">${totalFb}</div>
+        <div style="font-size: 12px; color: #999; margin-top: 5px;">📘 Facebook кликови</div>
+      </div>
+    </div>
+  `;
+}
+
+function closeMyStats() {
+  document.getElementById('myStatsModal').classList.remove('open');
 }
 </script>
 
