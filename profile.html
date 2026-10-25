@@ -272,7 +272,7 @@ async function loadMajstor() {
   }
   majstorData = data;
 
-  const { data: allRatings } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).eq('status', 'approved');
+  const { data: allRatings } = await supabaseClient.from('ratings').select('rating').eq('majstor_id', majstorId).eq('status', 'approved');
   const ratings = allRatings || [];
   const baseSum = (data.rating || 0) * (data.rating_count || 0);
   const newSum = ratings.reduce((s, r) => s + r.rating, 0);
