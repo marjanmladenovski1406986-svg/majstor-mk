@@ -1734,7 +1734,15 @@ async function handleEditInfo() {
     const website = document.getElementById('edit-website').value.trim();
   const msg = document.getElementById('edit-info-msg');
   if (!name || !category) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-  const { error } = await supabaseClient.from('majstor_profiles').update({      name,      phone,      city,      category,      description,      facebook_url: facebook || null,      website_url: website || null    }).eq('id', currentMajstorProfile.id);
+    const { error } = await supabaseClient.from('majstor_profiles').update({ 
+    name, 
+    phone, 
+    city, 
+    category, 
+    description, 
+    facebook_url: facebook || null, 
+    website_url: website || null 
+  }).eq('id', currentMajstorProfile.id);
   if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
   msg.textContent = tr.infoChanged;
   msg.className = 'modal-msg success';
