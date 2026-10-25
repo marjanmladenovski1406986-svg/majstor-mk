@@ -1167,7 +1167,7 @@ async function loadVideos() {
    // 2. Вчитај слики (последни 30)
   const { data: imgs, error: errImgs } = await supabaseClient
     .from('majstor_media')
-    .select('*')
+        .select('id, majstor_id, url, title')
     .eq('type', 'image')
     .order('id', { ascending: false })
     .limit(30);
@@ -1206,9 +1206,28 @@ async function loadVideos() {
   renderVideos();
 }
 async function loadMajstori() {
-    select('id, name, category, city, photo_url, rating, is_premium, is_verified, is_featured')
+  const cacheKey = 'majstori_cache_v1';
+  const cacheTimeKey = 'majstori_cache_time';
+  const now = new Date().getTime();
+  const cachedData = localStorage.getItem(cacheKey);
+  const cachedTime = localStorage.getItem(cacheTimeKey);
+
+  // Ако има кеш помлад од 1 час (3600000 ms), користи го него
+  if (cachedData && cachedTime && (now - cachedTime < 3600000)) {
+    majstori = JSON.parse(cachedData);
+    renderMajstori();
+    return; 
+  }
+
+  // Ако нема кеш или е стар, вчитај од базата
+  const { data, error } = await supabaseClient
+    .from('majstor_profiles')
+    .select('id, name, category, city, photo_url, rating, is_verified, is_featured'); 
+    
   if (error) { console.error(error); return; }
-    const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating').eq('status', 'approved');
+  
+  const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating').eq('status', 'approved');
+  
   majstori = (data || []).map(m => {
     const mRatings = (allRatings || []).filter(r => r.majstor_id === m.id);
     const baseSum = (m.rating || 0) * (m.rating_count || 0);
@@ -1217,6 +1236,11 @@ async function loadMajstori() {
     const rating = totalCount > 0 ? parseFloat(((baseSum + newSum) / totalCount).toFixed(1)) : 0;
     return { ...m, computed_rating: rating, computed_count: totalCount };
   });
+
+  // Зачувај го новото во кеш
+  localStorage.setItem(cacheKey, JSON.stringify(majstori));
+  localStorage.setItem(cacheTimeKey, now);
+
   renderMajstori();
 }
 
@@ -1366,8 +1390,8 @@ async function loadPublicMajstorMedia(majstorId) {
   const imgSection = document.getElementById('majstor-images-section');
   const vidSection = document.getElementById('majstor-videos-section');
 
-  const { data: images } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'image');
-  const { data: vids } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'video');
+    const { data: images } = await supabaseClient.from('majstor_media').select('id, url, title').eq('majstor_id', majstorId).eq('type', 'image');
+  const { data: vids } = await supabaseClient.from('majstor_media').select('id, url, title').eq('majstor_id', majstorId).eq('type', 'video');
 
   if (images && images.length > 0) {
     imgSection.innerHTML = `
