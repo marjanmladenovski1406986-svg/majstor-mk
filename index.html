@@ -1272,7 +1272,7 @@ function renderVideos() {
       grid.innerHTML += `
         <div class="card" onclick="window.location.href='/profile.html?id=${v.majstorId}'" style="cursor:pointer;">
           <div class="thumb no-play" style="aspect-ratio: 1;">
-            <img loading="lazy" src="${v.url}" alt="Слика" style="object-fit: cover;">
+            <img loading="lazy" src="${getOptimizedUrl(v.url, 400, 75)}" alt="Слика" style="object-fit: cover;">
           </div>
           <div class="card-body">
             <div class="card-title">📸 Слика од работа</div>
@@ -1303,7 +1303,7 @@ function renderMajstori() {
     });
   filtered.forEach(m => {
     const rating = m.computed_rating ? `⭐ ${m.computed_rating}` : '';
-    const avatar = m.photo_url ? `<img src="${m.photo_url}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
+    const avatar = m.photo_url ? `<img src="${getOptimizedUrl(m.photo_url, 100, 80)}" alt="${m.name}">` : (m.name || '?').charAt(0).toUpperCase();
     grid.innerHTML += `
       <div class="majstor-card" onclick="window.location.href='/profile.html?id=${m.id}'">
         <div class="majstor-avatar">${avatar}</div>
@@ -1374,7 +1374,7 @@ async function loadPublicMajstorMedia(majstorId) {
       <div class="media-section">
         <h4>📸 ${tr.myMedia}</h4>
         <div class="media-grid">
-          ${images.map(img => `<div class="media-item"><img src="${img.url}" alt="" onclick="openImageFull('${img.url}')"></div>`).join('')}
+          ${images.map(img => `<div class="media-item"><img src="${getOptimizedUrl(img.url, 400, 80)}" alt="" onclick="openImageFull('${img.url}')"></div>`).join('')}
         </div>
       </div>`;
   }
@@ -1734,7 +1734,7 @@ async function handleEditInfo() {
     const website = document.getElementById('edit-website').value.trim();
   const msg = document.getElementById('edit-info-msg');
   if (!name || !category) { msg.textContent = tr.fillAllSimple; msg.className = 'modal-msg error'; return; }
-  const { error } = await supabaseClient.from('majstor_profiles').update({ name, phone, city, category, description, facebook_url: facebook || null, website_url: website || null, website_url: website || null, website_url: website || null, website_url: website || null, website_url: website || null }).eq('id', currentMajstorProfile.id);
+  const { error } = await supabaseClient.from('majstor_profiles').update({      name,      phone,      city,      category,      description,      facebook_url: facebook || null,      website_url: website || null    }).eq('id', currentMajstorProfile.id);
   if (error) { msg.textContent = tr.error + error.message; msg.className = 'modal-msg error'; return; }
   msg.textContent = tr.infoChanged;
   msg.className = 'modal-msg success';
