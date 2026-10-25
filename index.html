@@ -1151,7 +1151,7 @@ async function loadVideos() {
   document.getElementById('loading').textContent = t[currentLang].loadingText;
 
   // 1. Вчитај видеа
-  const { data: vids, error: errVids } = await supabaseClient.from('videos').select('*').order('likes', { ascending: false });
+  const { data: vids, error: errVids } = await supabaseClient.from('videos').select('id, title, title_en, youtube_id, category, likes, majstor_id').order('likes', { ascending: false });
   if (errVids) { console.error(errVids); }
 
   // 2. Вчитај слики (последни 20)
@@ -1191,7 +1191,7 @@ async function loadVideos() {
   renderVideos();
 }
 async function loadMajstori() {
-    const { data, error } = await supabaseClient.from('majstor_profiles').select('*').eq('is_paused', false).order('id', { ascending: true });
+    select('id, name, category, city, photo_url, rating, is_premium, is_verified, is_featured')
   if (error) { console.error(error); return; }
     const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating').eq('status', 'approved');
   majstori = (data || []).map(m => {
