@@ -955,6 +955,16 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+ // Помошна функција за автоматско намалување на сликите (Supabase Image Transformation)
+function getOptimizedUrl(originalUrl, width = 400, quality = 75) {
+  if (!originalUrl) return '';
+  // Ако линкот не е од Supabase (или веќе е оптимизиран), врати го како што е
+  if (!originalUrl.includes('supabase.co') || originalUrl.includes('/render/image/')) return originalUrl;
+  
+  // Замени го патот за да користи Supabase рендерер на слики
+  const renderUrl = originalUrl.replace('/object/public/', '/render/image/public/');
+  return `${renderUrl}?width=${width}&quality=${quality}`;
+} 
 
 const CITIES = ['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
 
@@ -1154,8 +1164,13 @@ async function loadVideos() {
   const { data: vids, error: errVids } = await supabaseClient.from('videos').select('id, title, title_en, youtube_id, category, likes, majstor_id').order('likes', { ascending: false });
   if (errVids) { console.error(errVids); }
 
-  // 2. Вчитај слики (последни 20)
-  const { data: imgs, error: errImgs } = await supabaseClient.from('majstor_media').select('*').eq('type', 'image').order('id', { ascending: false });
+   // 2. Вчитај слики (последни 30)
+  const { data: imgs, error: errImgs } = await supabaseClient
+    .from('majstor_media')
+    .select('*')
+    .eq('type', 'image')
+    .order('id', { ascending: false })
+    .limit(30);
   if (errImgs) { console.error(errImgs); }
 
   // 3. Форматирај видеа
