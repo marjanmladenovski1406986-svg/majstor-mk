@@ -438,7 +438,7 @@ async function loadMedia() {
 }
 
 async function loadRatings() {
-  const { data } = await supabaseClient.from('ratings').select('*').eq('majstor_id', majstorId).eq('status', 'approved').order('created_at', { ascending: false });
+  const { data } = await supabaseClient.from('ratings').select('rating, comment, created_at').eq('majstor_id', majstorId).eq('status', 'approved').order('created_at', { ascending: false });
   const content = document.getElementById('ratingsContent');
 
   if (!data || data.length === 0) {
@@ -458,7 +458,7 @@ async function loadRatings() {
 }
 
 async function loadForum() {
-  const { data } = await supabaseClient.from('majstor_forum').select('*').eq('majstor_id', majstorId).eq('status', 'approved').order('created_at', { ascending: true });
+  const { data } = await supabaseClient.from('majstor_forum').select('user_name, message, created_at').eq('majstor_id', majstorId).eq('status', 'approved').order('created_at', { ascending: true });
   const list = document.getElementById('forumList');
 
   if (!data || data.length === 0) {
@@ -515,13 +515,13 @@ async function submitForum() {
 }
 
 async function loadPartners() {
-  const { data } = await supabaseClient.from('partners').select('*').order('display_order', { ascending: true });
+  const { data } = await supabaseClient.from('partners').select('name, description, website_url, logo_url').order('display_order', { ascending: true });
   if (!data || data.length === 0) return;
 
   document.getElementById('partnersSection').style.display = 'block';
   document.getElementById('partnersGrid').innerHTML = data.map(p => `
     <a href="${p.website_url}" target="_blank" rel="noopener" class="partner-card">
-      ${p.logo_url ? `<img src="${p.logo_url}" alt="${p.name}">` : ''}
+      ${p.logo_url ? `<img src="${getOptimizedUrl(p.logo_url, 100, 80)}" alt="${p.name}">` : ''}
       <div class="info">
         <div class="name">${p.name}</div>
         ${p.description ? `<div class="desc">${p.description}</div>` : ''}
