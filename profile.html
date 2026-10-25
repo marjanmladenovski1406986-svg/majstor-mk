@@ -203,6 +203,13 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Помошна функција за автоматско намалување на сликите
+function getOptimizedUrl(originalUrl, width = 400, quality = 75) {
+  if (!originalUrl) return '';
+  if (!originalUrl.includes('supabase.co') || originalUrl.includes('/render/image/')) return originalUrl;
+  const renderUrl = originalUrl.replace('/object/public/', '/render/image/public/');
+  return `${renderUrl}?width=${width}&quality=${quality}`;
+}
 
 const CAT_NAMES = {
   elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
@@ -258,7 +265,7 @@ async function trackView() {
 }
 
 async function loadMajstor() {
-  const { data, error } = await supabaseClient.from('majstor_profiles').select('*').eq('id', majstorId).single();
+  const { data, error } = await supabaseClient.from('majstor_profiles').select('id, name, category, city, phone, description, photo_url, cover_url, facebook_url, website_url, is_premium, rating, rating_count, profile_views').eq('id', majstorId).single();
   if (error || !data) {
     showError('Мајстор не е најден', 'Овој мајстор не постои или е избришан.');
     return;
@@ -298,13 +305,13 @@ if (data.photo_url) {
     document.querySelector('meta[property="og:image"]').setAttribute('content', data.photo_url);
 }
 
-  const avatar = data.photo_url ? `<img src="${data.photo_url}" alt="${data.name}">` : (data.name || '?').charAt(0).toUpperCase();
+  const avatar = data.photo_url ? `<img src="${getOptimizedUrl(data.photo_url, 200, 80)}" alt="${data.name}">` : (data.name || '?').charAt(0).toUpperCase();
 
          document.getElementById('content').innerHTML = `
           <div class="profile-header" style="${data.is_premium ? 'border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);' : ''}">
             
             <!-- ПОПРАВЕНО: Додаден </div> на крајот, сменето во contain, додадено margin-bottom -->
-            ${data.cover_url ? `<div style="width: 100%; height: 200px; background: #000 url('${data.cover_url}') center/contain no-repeat; border-radius: 16px 16px 0 0; margin-bottom: 20px;"></div>` : ''}
+            ${data.cover_url ? `<div style="width: 100%; height: 200px; background: #000 url('${getOptimizedUrl(data.cover_url, 1000, 75)}') center/contain no-repeat; border-radius: 16px 16px 0 0; margin-bottom: 20px;"></div>` : ''}
             
             <!-- ПОПРАВЕНО: Додадено margin-top: 0 !important за да не се качува врз банеřот -->
             <div class="profile-top" style="margin-top: 0 !important;">
@@ -406,14 +413,13 @@ async function trackWeb() {
   });
 }
 async function loadMedia() {
-  const { data: images } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'image');
-  const { data: vids } = await supabaseClient.from('majstor_media').select('*').eq('majstor_id', majstorId).eq('type', 'video');
-
+  const { data: images } = await supabaseClient.from('majstor_media').select('id, url, title').eq('majstor_id', majstorId).eq('type', 'image');
+  const { data: vids } = await supabaseClient.from('majstor_media').select('id, url, title').eq('majstor_id', majstorId).eq('type', 'video');
   const imgGrid = document.getElementById('imagesGrid');
   if (images && images.length > 0) {
     imgGrid.innerHTML = images.map(img => `
       <div class="media-item" onclick="window.open('${img.url}', '_blank')">
-        <img loading="lazy" src="${img.url}" alt="">
+        <img loading="lazy" src="${getOptimizedUrl(img.url, 400, 80)}" alt="">
       </div>`).join('');
   } else {
     imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема слики сè уште</p>';
