@@ -2469,47 +2469,35 @@ if ('serviceWorker' in navigator) {
 function closeMyStats() {
   document.getElementById('myStatsModal').classList.remove('open');
 }
-  // ===== CLERK AUTHENTICATION =====
+  
+// ===== CLERK AUTHENTICATION =====
 window.addEventListener('load', async function () {
-  // Чекаме Clerk да се вчита целосно
   await window.Clerk.load();
   
   const clerkHeader = document.getElementById('clerk-header');
   if (!clerkHeader) return;
 
-  // Функција за прикажување на копчињата
   function updateClerkUI() {
-    clerkHeader.innerHTML = ''; // Исчисти го претходното
+    clerkHeader.innerHTML = ''; 
     
     if (window.Clerk.user) {
-      // Ако корисникот е најавен, покажи ја сликата од профилот
+      // Ако е најавен, покажи ја сликата од профилот
       window.Clerk.mountUserButton(clerkHeader, {
         afterSignOutUrl: '/'
       });
-      
-      // Тука подоцна ќе го додадеме кодот за вчитување на податоци
-      // document.getElementById('welcome-box').classList.add('hidden');
-      // document.getElementById('hero-section').classList.add('hidden');
-      
-        } else {
-      // Ако не е најавен, креирај копче рачно
+    } else {
+      // Ако не е најавен, креирај копче
       const loginBtn = document.createElement('button');
-      loginBtn.className = 'btn-auth'; // Ја користи твојата постоечка класа за стил
+      loginBtn.className = 'btn-auth'; 
       loginBtn.style.marginLeft = '10px';
       loginBtn.textContent = 'Најава';
-      loginBtn.onclick = () => window.Clerk.openSignIn(); // Го отвора прозорчето на Clerk
+      loginBtn.onclick = () => window.Clerk.openSignIn(); 
       clerkHeader.appendChild(loginBtn);
-    }
-      
-      // document.getElementById('welcome-box').classList.remove('hidden');
-      // document.getElementById('hero-section').classList.remove('hidden');
     }
   }
 
-  // Вчитај ја почетната состојба
   updateClerkUI();
 
-  // Слушај за промени (кога некој ќе се најави или одјави)
   window.Clerk.addListener(({ user }) => {
     updateClerkUI();
   });
