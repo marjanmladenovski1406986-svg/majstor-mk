@@ -14,7 +14,7 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="canonical" href="https://majsto.mk/">
 <meta name="theme-color" content="#ff6b35">
-<script defer src="/_vercel/insights/script.js"></script>
+
   <meta name="description" content="Најди проверен мајстор во Македонија. Бесплатна платформа со видеа, оценки и контакт.">
   <!-- Clerk Authentication -->
   <script
@@ -2213,22 +2213,22 @@ async function handleLogout() {
   showLoggedOut();
 }
 
-function showLoggedIn(email) {
-  currentUser = email;
-  document.getElementById('auth-area').classList.add('hidden');
-  document.getElementById('user-area').classList.remove('hidden');
-  document.getElementById('user-email-header').textContent = email;
-  document.getElementById('welcome-box').classList.add('hidden');
-  document.getElementById('hero-section').classList.add('hidden');
-}
+// function showLoggedIn(email) {
+//   currentUser = email;
+//   document.getElementById('auth-area').classList.add('hidden');
+//   document.getElementById('user-area').classList.remove('hidden');
+//   document.getElementById('user-email-header').textContent = email;
+//   document.getElementById('welcome-box').classList.add('hidden');
+//   document.getElementById('hero-section').classList.add('hidden');
+// }
 
-function showLoggedOut() {
-  document.getElementById('auth-area').classList.remove('hidden');
-  document.getElementById('user-area').classList.add('hidden');
-  document.getElementById('welcome-box').classList.remove('hidden');
-  document.getElementById('hero-section').classList.remove('hidden');
-  document.getElementById('btn-my-profile').classList.add('hidden');
-}
+// function showLoggedOut() {
+//   document.getElementById('auth-area').classList.remove('hidden');
+//   document.getElementById('user-area').classList.add('hidden');
+//   document.getElementById('welcome-box').classList.remove('hidden');
+//   document.getElementById('hero-section').classList.remove('hidden');
+//   document.getElementById('btn-my-profile').classList.add('hidden');
+// }
 
 function updateProfileMiniAvatar() {
   const el = document.getElementById('profile-avatar-mini');
@@ -2240,35 +2240,35 @@ function updateProfileMiniAvatar() {
   }
 }
 
-async function checkUser() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (user) {
-    currentUser = user.email;
-    const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
-    currentUserType = profile?.user_type || null;
-    showLoggedIn(user.email);
+// async function checkUser() {
+//   const { data: { user } } = await supabaseClient.auth.getUser();
+//   if (user) {
+//     currentUser = user.email;
+//     const { data: profile } = await supabaseClient.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+//     currentUserType = profile?.user_type || null;
+//     showLoggedIn(user.email);
 
-    if (user.email === 'marjanmladenovski1406986@gmail.com') {
-      document.getElementById('btn-my-profile').classList.remove('hidden');
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('edit_id')) {
-        setTimeout(() => openMyProfile(), 500);
-      }
-    } else if (currentUserType === 'majstor') {
-      const { data: m } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).maybeSingle();
-      if (m) {
-        currentMajstorProfile = m;
-        document.getElementById('btn-my-profile').classList.remove('hidden');
-        updateProfileMiniAvatar();
-      }
-    }
-  } else {
-    currentUser = null;
-    currentUserType = null;
-    currentMajstorProfile = null;
-    showLoggedOut();
-  }
-}
+//     if (user.email === 'marjanmladenovski1406986@gmail.com') {
+//       document.getElementById('btn-my-profile').classList.remove('hidden');
+//       const urlParams = new URLSearchParams(window.location.search);
+//       if (urlParams.get('edit_id')) {
+//         setTimeout(() => openMyProfile(), 500);
+//       }
+//     } else if (currentUserType === 'majstor') {
+//       const { data: m } = await supabaseClient.from('majstor_profiles').select('*').eq('user_id', user.id).maybeSingle();
+//       if (m) {
+//         currentMajstorProfile = m;
+//         document.getElementById('btn-my-profile').classList.remove('hidden');
+//         updateProfileMiniAvatar();
+//       }
+//     }
+//   } else {
+//     currentUser = null;
+//     currentUserType = null;
+//     currentMajstorProfile = null;
+//     showLoggedOut();
+//   }
+// }
 
 function openDoc(id) {
   document.getElementById(id).classList.add('open');
@@ -2373,7 +2373,7 @@ function compressImage(file, maxWidth = 1200, quality = 0.7) {
 }
 
   showWelcomeModal();
-checkUser();
+// checkUser();
 loadMajstori().then(() => {
   loadVideos();
 });
@@ -2388,11 +2388,11 @@ if (urlParams.get('reset') === 'true') {
 }
 
 // Supabase автоматски фаќа PASSWORD_RECOVERY event
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  if (event === 'PASSWORD_RECOVERY') {
-    document.getElementById('resetPasswordModal').classList.add('open');
-  }
-});
+// supabaseClient.auth.onAuthStateChange((event, session) => {
+//   if (event === 'PASSWORD_RECOVERY') {
+//     document.getElementById('resetPasswordModal').classList.add('open');
+//   }
+// });
   // ===== PWA Service Worker Registration =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -2491,15 +2491,15 @@ window.addEventListener('load', async function () {
       // document.getElementById('welcome-box').classList.add('hidden');
       // document.getElementById('hero-section').classList.add('hidden');
       
-    } else {
-      // Ако не е најавен, покажи го копчето за најава
-      window.Clerk.mountSignInButton(clerkHeader, {
-        appearance: {
-          elements: {
-            formButtonPrimary: 'bg-[#ff6b35] hover:bg-[#e55a2b] text-sm'
-          }
-        }
-      });
+        } else {
+      // Ако не е најавен, креирај копче рачно
+      const loginBtn = document.createElement('button');
+      loginBtn.className = 'btn-auth'; // Ја користи твојата постоечка класа за стил
+      loginBtn.style.marginLeft = '10px';
+      loginBtn.textContent = 'Најава';
+      loginBtn.onclick = () => window.Clerk.openSignIn(); // Го отвора прозорчето на Clerk
+      clerkHeader.appendChild(loginBtn);
+    }
       
       // document.getElementById('welcome-box').classList.remove('hidden');
       // document.getElementById('hero-section').classList.remove('hidden');
