@@ -16,7 +16,14 @@
 <meta name="theme-color" content="#ff6b35">
 <script defer src="/_vercel/insights/script.js"></script>
   <meta name="description" content="Најди проверен мајстор во Македонија. Бесплатна платформа со видеа, оценки и контакт.">
-
+  <!-- Clerk Authentication -->
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key=pk_test_ZnVsbC1zaGFkLTcyNS5jbGVyay5hY2NvdW50cy5kZXYk
+    src="https://full-shad-725.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
 <!-- Open Graph (за Viber, Facebook, WhatsApp, Instagram) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Majsto.mk">
@@ -487,18 +494,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
       <button class="lang-btn active" data-lang="mk" onclick="switchLang('mk')">🇲🇰 МК</button>
       <button class="lang-btn" data-lang="en" onclick="switchLang('en')">🇬🇧 EN</button>
     </div>
-    <div id="auth-area">
-      <button class="btn-auth" onclick="openModal()" id="btn-login-header">Најава</button>
-    </div>
-    <div id="user-area" class="user-box hidden">
-      <button class="btn-profile hidden" id="btn-my-profile" onclick="openMyProfile()">
-        <div class="profile-avatar-mini" id="profile-avatar-mini">?</div>
-        <span id="btn-my-profile-text">Мој Профил</span>
-      </button>
-      <span class="user-email hidden" id="user-email-header"></span>
-      <button class="btn-auth logout" onclick="handleLogout()" id="btn-logout-header">Одјави се</button>
-    </div>
-  </div>
+        <div id="clerk-header"></div>
 </header>
 
 <section class="hero" id="hero-section">
@@ -2473,6 +2469,51 @@ if ('serviceWorker' in navigator) {
 function closeMyStats() {
   document.getElementById('myStatsModal').classList.remove('open');
 }
+  // ===== CLERK AUTHENTICATION =====
+window.addEventListener('load', async function () {
+  // Чекаме Clerk да се вчита целосно
+  await window.Clerk.load();
+  
+  const clerkHeader = document.getElementById('clerk-header');
+  if (!clerkHeader) return;
+
+  // Функција за прикажување на копчињата
+  function updateClerkUI() {
+    clerkHeader.innerHTML = ''; // Исчисти го претходното
+    
+    if (window.Clerk.user) {
+      // Ако корисникот е најавен, покажи ја сликата од профилот
+      window.Clerk.mountUserButton(clerkHeader, {
+        afterSignOutUrl: '/'
+      });
+      
+      // Тука подоцна ќе го додадеме кодот за вчитување на податоци
+      // document.getElementById('welcome-box').classList.add('hidden');
+      // document.getElementById('hero-section').classList.add('hidden');
+      
+    } else {
+      // Ако не е најавен, покажи го копчето за најава
+      window.Clerk.mountSignInButton(clerkHeader, {
+        appearance: {
+          elements: {
+            formButtonPrimary: 'bg-[#ff6b35] hover:bg-[#e55a2b] text-sm'
+          }
+        }
+      });
+      
+      // document.getElementById('welcome-box').classList.remove('hidden');
+      // document.getElementById('hero-section').classList.remove('hidden');
+    }
+  }
+
+  // Вчитај ја почетната состојба
+  updateClerkUI();
+
+  // Слушај за промени (кога некој ќе се најави или одјави)
+  window.Clerk.addListener(({ user }) => {
+    updateClerkUI();
+  });
+});
 </script>
 
 </body>
