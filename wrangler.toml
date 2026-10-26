@@ -1,0 +1,5 @@
+name = "majstor-mk"
+compatibility_date = "2026-10-25" # Користете ја денешната дата
+
+[assets]
+directory = "./" # Ова му кажува на Cloudflare да ги земе сите датотеки од главната папка
