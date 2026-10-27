@@ -1,4 +1,4 @@
-import { neon } from 'https://esm.sh/@neondatabase/serverless';
+import { neon } from '@neondatabase/serverless';
 
 export default {
   async fetch(request, env) {
@@ -14,7 +14,6 @@ export default {
       return new Response(null, { headers: corsHeaders });
     }
 
-    // Ако барањето е за API (податоци)
     if (url.pathname.startsWith('/api/')) {
       try {
         const sql = neon(env.DATABASE_URL);
@@ -49,7 +48,6 @@ export default {
       }
     }
 
-    // Ако не е API, отвори ги обичните HTML страници (index.html, profile.html...)
     return env.ASSETS.fetch(request);
   },
 };
