@@ -265,131 +265,112 @@ async function trackView() {
 }
 
 async function loadMajstor() {
-  const { data, error } = await supabaseClient.from('majstor_profiles').select('id, name, category, city, phone, description, photo_url, cover_url, facebook_url, website_url, is_premium, rating, rating_count, profile_views').eq('id', majstorId).single();
-  if (error || !data) {
-    showError('Мајстор не е најден', 'Овој мајстор не постои или е избришан.');
-    return;
-  }
-  majstorData = data;
+  try {
+    const res = await fetch('/api/majstori');
+    const data = await res.json();
+    const majstor = data.find(m => m.id == majstorId);
 
-  const { data: allRatings } = await supabaseClient.from('ratings').select('rating').eq('majstor_id', majstorId).eq('status', 'approved');
-  const ratings = allRatings || [];
-  const baseSum = (data.rating || 0) * (data.rating_count || 0);
-  const newSum = ratings.reduce((s, r) => s + r.rating, 0);
-  const totalCount = (data.rating_count || 0) + ratings.length;
-  const avgRating = totalCount > 0 ? ((baseSum + newSum) / totalCount).toFixed(1) : 0;
+    if (!majstor) {
+      showError('Мајстор не е најден', 'Овој мајстор не постои или е избришан.');
+      return;
+    }
+    
+    majstorData = majstor;
 
-  const { data: stats } = await supabaseClient.from('majstor_stats').select('event_type').eq('majstor_id', majstorId);
-  const allStats = stats || [];
-  const views = data.profile_views || 0;
-  const phoneClicks = allStats.filter(s => s.event_type === 'phone_click').length;
-  const fbClicks = allStats.filter(s => s.event_type === 'fb_click').length;
-  const webClicks = allStats.filter(s => s.event_type === 'web_click').length;
-  
-  // --- SEO: Автоматски наслов и опис за секој мајстор ---
-  const catText = CAT_NAMES[data.category] || data.category;
-  const cityText = data.city || 'Македонија';
-  const nameText = data.name || 'Мајстор';
-  
-  const seoTitle = `${catText} во ${cityText} – ${nameText} | Majsto.mk`;
-  const seoDesc = `Потребен ви е ${catText.toLowerCase()} во ${cityText}? Погледнете го профилот на ${nameText}, описот на услугите и достапните контакт-информации на Majsto.mk.`;
-  
-  document.getElementById('page-title').textContent = seoTitle;
-  document.getElementById('page-description').setAttribute('content', seoDesc);
+    const resRatings = await fetch('/api/ratings');
+    const allRatings = await resRatings.json();
+    const ratings = allRatings.filter(r => r.majstor_id == majstorId);
 
-  // --- Open Graph (за Facebook/Viber) ---
-  document.querySelector('meta[property="og:title"]').setAttribute('content', seoTitle);
-  document.querySelector('meta[property="og:description"]').setAttribute('content', seoDesc);
-  document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
-if (data.photo_url) {
-    document.querySelector('meta[property="og:image"]').setAttribute('content', data.photo_url);
-}
+    const baseSum = (majstor.rating || 0) * (majstor.rating_count || 0);
+    const newSum = ratings.reduce((s, r) => s + r.rating, 0);
+    const totalCount = (majstor.rating_count || 0) + ratings.length;
+    const avgRating = totalCount > 0 ? ((baseSum + newSum) / totalCount).toFixed(1) : 0;
 
-  const avatar = data.photo_url ? `<img src="${getOptimizedUrl(data.photo_url, 200, 80)}" alt="${data.name}">` : (data.name || '?').charAt(0).toUpperCase();
+    const catText = CAT_NAMES[majstor.category] || majstor.category;
+    const cityText = majstor.city || 'Македонија';
+    const nameText = majstor.name || 'Мајстор';
+    
+    const seoTitle = `${catText} во ${cityText} – ${nameText} | Majsto.mk`;
+    const seoDesc = `Потребен ви е ${catText.toLowerCase()} во ${cityText}? Погледнете го профилот на ${nameText}, описот на услугите и достапните контакт-информации на Majsto.mk.`;
+    
+    document.getElementById('page-title').textContent = seoTitle;
+    document.getElementById('page-description').setAttribute('content', seoDesc);
 
-         document.getElementById('content').innerHTML = `
-          <div class="profile-header" style="${data.is_premium ? 'border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);' : ''}">
-            
-            <!-- ПОПРАВЕНО: Додаден </div> на крајот, сменето во contain, додадено margin-bottom -->
-            ${data.cover_url ? `<div style="width: 100%; height: 200px; background: #000 url('${getOptimizedUrl(data.cover_url, 1000, 75)}') center/contain no-repeat; border-radius: 16px 16px 0 0; margin-bottom: 20px;"></div>` : ''}
-            
-            <!-- ПОПРАВЕНО: Додадено margin-top: 0 !important за да не се качува врз банеřот -->
-            <div class="profile-top" style="margin-top: 0 !important;">
-              <div class="big-avatar">${avatar}</div>
-              <div class="profile-name-block">
-                <div class="profile-name">${data.name || 'Majstor'} ${data.is_premium ? '<span style="background: linear-gradient(45deg, #ffd700, #ff8c00); color: #000; font-size: 12px; padding: 3px 10px; border-radius: 12px; margin-left: 8px; font-weight: 700;">👑 ПРЕМИУМ</span>' : ''}</div>
-                <div class="profile-category">${CAT_NAMES[data.category] || data.category}</div>
-                <div class="profile-rating">⭐ ${avgRating} (${totalCount} оценки)</div>
-              </div>
-              
-        <button class="share-btn" onclick="toggleShareMenu(event)">📤 Сподели</button>
-        <div class="share-menu" id="shareMenu" onclick="event.stopPropagation()">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" rel="noopener">📘 Facebook</a>
-          <a href="https://wa.me/?text=${encodeURIComponent((data.name || 'Мајстор') + ' - Majsto.mk ' + window.location.href)}" target="_blank" rel="noopener">💬 WhatsApp</a>
-          <a href="viber://forward?text=${encodeURIComponent((data.name || 'Мајстор') + ' - Majsto.mk ' + window.location.href)}">📱 Viber</a>
-          <button onclick="copyShareLink()">🔗 Копирај линк</button>
+    document.querySelector('meta[property="og:title"]').setAttribute('content', seoTitle);
+    document.querySelector('meta[property="og:description"]').setAttribute('content', seoDesc);
+    document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
+    if (majstor.photo_url) {
+      document.querySelector('meta[property="og:image"]').setAttribute('content', majstor.photo_url);
+    }
+
+    const avatar = majstor.photo_url ? `<img src="${getOptimizedUrl(majstor.photo_url, 200, 80)}" alt="${majstor.name}">` : (majstor.name || '?').charAt(0).toUpperCase();
+
+    document.getElementById('content').innerHTML = `
+      <div class="profile-header" style="${majstor.is_premium ? 'border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);' : ''}">
+        ${majstor.cover_url ? `<div style="width: 100%; height: 200px; background: #000 url('${getOptimizedUrl(majstor.cover_url, 1000, 75)}') center/contain no-repeat; border-radius: 16px 16px 0 0; margin-bottom: 20px;"></div>` : ''}
+        
+        <div class="profile-top" style="margin-top: 0 !important;">
+          <div class="big-avatar">${avatar}</div>
+          <div class="profile-name-block">
+            <div class="profile-name">${majstor.name || 'Majstor'} ${majstor.is_premium ? '<span style="background: linear-gradient(45deg, #ffd700, #ff8c00); color: #000; font-size: 12px; padding: 3px 10px; border-radius: 12px; margin-left: 8px; font-weight: 700;">👑 ПРЕМИУМ</span>' : ''}</div>
+            <div class="profile-category">${CAT_NAMES[majstor.category] || majstor.category}</div>
+            <div class="profile-rating">⭐ ${avgRating} (${totalCount} оценки)</div>
+          </div>
+          
+          <button class="share-btn" onclick="toggleShareMenu(event)">📤 Сподели</button>
+          <div class="share-menu" id="shareMenu" onclick="event.stopPropagation()">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" rel="noopener">📘 Facebook</a>
+            <a href="https://wa.me/?text=${encodeURIComponent((majstor.name || 'Мајстор') + ' - Majsto.mk ' + window.location.href)}" target="_blank" rel="noopener">💬 WhatsApp</a>
+            <a href="viber://forward?text=${encodeURIComponent((majstor.name || 'Мајстор') + ' - Majsto.mk ' + window.location.href)}">📱 Viber</a>
+            <button onclick="copyShareLink()">🔗 Копирај линк</button>
+          </div>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-box"><div class="num">${majstor.profile_views || 0}</div><div class="lbl">👁️ Прегледи</div></div>
+          <div class="stat-box"><div class="num">${majstor.phone_clicks || 0}</div><div class="lbl">📞 Кликови</div></div>
+          <div class="stat-box"><div class="num">${majstor.fb_clicks || 0}</div><div class="lbl">📘 Facebook</div></div>
+          <div class="stat-box"><div class="num">${majstor.web_clicks || 0}</div><div class="lbl">🌐 Веб</div></div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-row"><span>📂 Категорија</span><span>${CAT_NAMES[majstor.category] || majstor.category}</span></div>
+          <div class="info-row"><span>🏙️ Град</span><span>${majstor.city || '-'}</span></div>
+          ${majstor.description ? `<div class="info-row"><span>📝 Опис</span><span>${majstor.description}</span></div>` : ''}
+        </div>
+
+        <div class="contact-buttons">
+          ${majstor.phone ? `<a href="tel:${majstor.phone}" onclick="trackPhone()" class="btn-contact btn-phone">📞 ${majstor.phone}</a>` : ''}
+          ${majstor.facebook_url ? `<a href="${majstor.facebook_url}" target="_blank" onclick="trackFb()" class="btn-contact btn-fb">📘 Facebook профил</a>` : ''}
+          ${majstor.website_url ? `<a href="${majstor.website_url}" target="_blank" onclick="trackWeb()" class="btn-contact btn-web">🌐 Веб-сајт</a>` : ''} 
         </div>
       </div>
-     
 
-      <div class="stats-grid">
-        <div class="stat-box"><div class="num">${views}</div><div class="lbl">👁️ Прегледи</div></div>
-        <div class="stat-box"><div class="num">${phoneClicks}</div><div class="lbl">📞 Кликови</div></div>
-        <div class="stat-box"><div class="num">${fbClicks}</div><div class="lbl">📘 Facebook</div></div>
-        <div class="stat-box"><div class="num">${webClicks}</div><div class="lbl">🌐 Веб</div></div>
+      <div class="section">
+        <h2>📸 Слики од работата</h2>
+        <div class="media-grid" id="imagesGrid">
+          <div class="loading">Вчитувам слики...</div>
+        </div>
       </div>
 
-      <div class="info-section">
-        <div class="info-row"><span>📂 Категорија</span><span>${CAT_NAMES[data.category] || data.category}</span></div>
-        <div class="info-row"><span>🏙️ Град</span><span>${data.city || '-'}</span></div>
-        ${data.description ? `<div class="info-row"><span>📝 Опис</span><span>${data.description}</span></div>` : ''}
+      <div class="section">
+        <h2>📹 Видеа</h2>
+        <div class="video-list" id="videosList">
+          <div class="loading">Вчитувам видеа...</div>
+        </div>
       </div>
 
-      <div class="contact-buttons">
-        ${data.phone ? `<a href="tel:${data.phone}" onclick="trackPhone()" class="btn-contact btn-phone">📞 ${data.phone}</a>` : ''}
-        ${data.facebook_url ? `<a href="${data.facebook_url}" target="_blank" onclick="trackFb()" class="btn-contact btn-fb">📘 Facebook профил</a>` : ''}
-       ${data.website_url ? `<a href="${data.website_url}" target="_blank" onclick="trackWeb()" class="btn-contact btn-web">🌐 Веб-сајт</a>` : ''} 
+      <div class="section">
+        <h2>⭐ Оценки и коментари</h2>
+        <div id="ratingsContent">
+          <div class="loading">Вчитувам оценки...</div>
+        </div>
       </div>
-    </div>
-
-    <div class="section">
-      <h2>📸 Слики од работата</h2>
-      <div class="media-grid" id="imagesGrid">
-        <div class="loading">Вчитувам слики...</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>📹 Видеа</h2>
-      <div class="video-list" id="videosList">
-        <div class="loading">Вчитувам видеа...</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>⭐ Оценки и коментари</h2>
-      <div id="ratingsContent">
-        <div class="loading">Вчитувам оценки...</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>💬 Прашај го мајсторот</h2>
-      <div class="forum-list" id="forumList">
-        <div class="loading">Вчитувам разговори...</div>
-      </div>
-      <div class="forum-form">
-        <textarea id="forumMessage" placeholder="Напиши прашање или коментар..."></textarea>
-        <div id="forumMsg" style="margin-bottom:10px; display:none; padding:10px; border-radius:8px; font-size:13px;"></div>
-        <button onclick="submitForum()">📩 Испрати</button>
-      </div>
-    </div>
-
-    <div class="partners-section" id="partnersSection" style="display:none;">
-      <h3>🤝 Наши партнери</h3>
-      <div class="partners-grid" id="partnersGrid"></div>
-    </div>
-  `;
+    `;
+  } catch (error) {
+    console.error("Грешка:", error);
+    showError('Грешка', 'Настана проблем при вчитување на податоците.');
+  }
 }
 
 async function trackPhone() {
