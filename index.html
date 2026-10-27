@@ -1194,26 +1194,8 @@ async function loadVideos() {
   }
 }
 
-  // 4. Форматирај слики (земaме категорија од мајсторот)
-  const imageList = (imgs || []).map(img => {
-    const m = majstori.find(x => x.id == img.majstor_id);
-    return {
-      type: 'image',
-      id: img.id,
-      title: img.title || 'Слика од работа',
-      url: img.url,
-      category: m ? m.category : 'opti',
-      likes: 0,
-      majstorId: img.majstor_id
-    };
-  });
 
-  // 5. Измешај ги (shuffle) за да биде поинтересно
-  videos = [...videoList, ...imageList].sort(() => Math.random() - 0.5);
-
-  document.getElementById('loading').style.display = 'none';
-  renderVideos();
-}
+  
 async function loadMajstori() {
   try {
     const res = await fetch('/api/majstori');
@@ -1227,6 +1209,12 @@ async function loadMajstori() {
         computed_count: m.rating_count || 0 
       };
     });
+    
+    renderMajstori();
+  } catch (error) {
+    console.error("Грешка при вчитување на мајстори:", error);
+  }
+}
     
     renderMajstori();
   } catch (error) {
