@@ -2258,11 +2258,11 @@ function closeDoc(id) {
 populateCities();
   
 // ===== PARTNERS =====
-async function loadPartners() {
-  const { data, error } = await supabaseClient.from('partners').select('*').order('display_order', { ascending: true });
-  if (error) { console.error(error); return; }
-  renderPartners(data || []);
-}
+// async function loadPartners() {
+//   const { data, error } = await supabaseClient.from('partners').select('*').order('display_order', { ascending: true });
+//   if (error) { console.error(error); return; }
+//   renderPartners(data || []);
+// }
 
 function renderPartners(partners) {
   const section = document.getElementById('partners-section');
@@ -2354,7 +2354,7 @@ function compressImage(file, maxWidth = 1200, quality = 0.7) {
 loadMajstori().then(() => {
   loadVideos();
 });
-loadPartners();
+// loadPartners();
   
 // Провери дали има ?reset=true (од мејл за ресетирање)
 const urlParams = new URLSearchParams(window.location.search);
