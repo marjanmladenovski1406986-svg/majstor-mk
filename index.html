@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png">
-  <link rel="manifest" href="/manifest.json">
+ 
   <link rel="canonical" href="https://majsto.mk/">
 <meta name="theme-color" content="#ff6b35">
 
@@ -2370,14 +2370,7 @@ if (urlParams.get('reset') === 'true') {
 //     document.getElementById('resetPasswordModal').classList.add('open');
 //   }
 // });
-  // ===== PWA Service Worker Registration =====
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((reg) => console.log('✅ Service Worker registered:', reg.scope))
-      .catch((err) => console.log('❌ Service Worker failed:', err));
-  });
-}
+
   async function openMyStats() {
   if (!currentMajstorProfile) return;
   
