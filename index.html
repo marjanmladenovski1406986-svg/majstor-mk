@@ -1216,36 +1216,6 @@ async function loadMajstori() {
   }
 }
     
-    renderMajstori();
-  } catch (error) {
-    console.error("Грешка при вчитување на мајстори:", error);
-  }
-}
-
-  // Ако нема кеш или е стар, вчитај од базата
-  const { data, error } = await supabaseClient
-    .from('majstor_profiles')
-    .select('id, name, category, city, photo_url, rating, is_verified, is_featured'); 
-    
-  if (error) { console.error(error); return; }
-  
-  const { data: allRatings } = await supabaseClient.from('ratings').select('majstor_id, rating').eq('status', 'approved');
-  
-  majstori = (data || []).map(m => {
-    const mRatings = (allRatings || []).filter(r => r.majstor_id === m.id);
-    const baseSum = (m.rating || 0) * (m.rating_count || 0);
-    const newSum = mRatings.reduce((s, r) => s + r.rating, 0);
-    const totalCount = (m.rating_count || 0) + mRatings.length;
-    const rating = totalCount > 0 ? parseFloat(((baseSum + newSum) / totalCount).toFixed(1)) : 0;
-    return { ...m, computed_rating: rating, computed_count: totalCount };
-  });
-
-  // Зачувај го новото во кеш
-  localStorage.setItem(cacheKey, JSON.stringify(majstori));
-  localStorage.setItem(cacheTimeKey, now);
-
-  renderMajstori();
-}
 
 function renderVideos() {
   const grid = document.getElementById('grid');
