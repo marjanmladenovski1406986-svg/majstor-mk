@@ -2450,8 +2450,21 @@ window.addEventListener('load', async function () {
   function updateClerkUI() {
     clerkHeader.innerHTML = ''; 
     
-    if (window.Clerk.user) {
-      // Ако е најавен, покажи ја сликата од профилот
+       if (window.Clerk.user) {
+      // 1. Креирање на копчето "Мој Профил"
+      const profileBtn = document.createElement('a');
+      // За сега користиме ID 35 (Дарко) за тест, подоцна ќе го направиме динамично
+      profileBtn.href = '/profile.html?id=35'; 
+      profileBtn.className = 'btn-profile';
+      profileBtn.style.marginRight = '10px';
+      profileBtn.style.textDecoration = 'none';
+      profileBtn.style.display = 'inline-flex';
+      profileBtn.style.alignItems = 'center';
+      profileBtn.innerHTML = `<span style="font-size: 16px; margin-right: 5px;">👤</span> <span>Мој Профил</span>`;
+      
+      clerkHeader.appendChild(profileBtn);
+
+      // 2. Додавање на официјалното Clerk копче (за слика и одјава)
       window.Clerk.mountUserButton(clerkHeader, {
         afterSignOutUrl: '/'
       });
