@@ -4,6 +4,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     
+    // Ова е клучното за Clerk - препраќаме се кон clerk.majsto.mk
+    if (url.hostname === 'clerk.majsto.mk') {
+      return fetch(`https://frontend-api.clerk.services${url.pathname}${url.search}`, request);
+    }
+
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
@@ -15,7 +20,6 @@ export default {
     }
 
     if (url.pathname.startsWith('/api/')) {
-      // Ова е клучното за да не кешира Cloudflare
       const apiHeaders = {
         ...corsHeaders, 
         "Content-Type": "application/json",
