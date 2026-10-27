@@ -945,12 +945,9 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
  // Помошна функција за автоматско намалување на сликите (Supabase Image Transformation)
 function getOptimizedUrl(originalUrl, width = 400, quality = 75) {
   if (!originalUrl) return '';
@@ -1156,30 +1153,46 @@ async function loadVideos() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('loading').textContent = t[currentLang].loadingText;
 
-  // 1. Вчитај видеа
-  const { data: vids, error: errVids } = await supabaseClient.from('videos').select('id, title, title_en, youtube_id, category, likes, majstor_id').order('likes', { ascending: false });
-  if (errVids) { console.error(errVids); }
+  try {
+    const resMedia = await fetch('/api/media');
+    const mediaData = await resMedia.json();
 
-   // 2. Вчитај слики (последни 30)
-  const { data: imgs, error: errImgs } = await supabaseClient
-    .from('majstor_media')
-        .select('id, majstor_id, url, title')
-    .eq('type', 'image')
-    .order('id', { ascending: false })
-    .limit(30);
-  if (errImgs) { console.error(errImgs); }
+    const videoList = mediaData.filter(m => m.type === 'video').map(v => {
+      const m = majstori.find(x => x.id == v.majstor_id);
+      return {
+        type: 'video',
+        id: v.id,
+        title: v.title,
+        titleEn: v.title,
+        youtube: v.url,
+        category: m ? m.category : 'opti',
+        likes: 0,
+        majstorId: v.majstor_id
+      };
+    });
 
-  // 3. Форматирај видеа
-  const videoList = (vids || []).map(v => ({
-    type: 'video',
-    id: v.id,
-    title: v.title,
-    titleEn: v.title_en,
-    youtube: v.youtube_id,
-    category: v.category,
-    likes: v.likes,
-    majstorId: v.majstor_id
-  }));
+    const imageList = mediaData.filter(m => m.type === 'image').map(img => {
+      const m = majstori.find(x => x.id == img.majstor_id);
+      return {
+        type: 'image',
+        id: img.id,
+        title: img.title || 'Слика од работа',
+        url: img.url,
+        category: m ? m.category : 'opti',
+        likes: 0,
+        majstorId: img.majstor_id
+      };
+    });
+
+    videos = [...videoList, ...imageList].sort(() => Math.random() - 0.5);
+    document.getElementById('loading').style.display = 'none';
+    renderVideos();
+    
+  } catch (error) {
+    console.error("Грешка при вчитување на видеа/слики:", error);
+    document.getElementById('loading').style.display = 'none';
+  }
+}
 
   // 4. Форматирај слики (земaме категорија од мајсторот)
   const imageList = (imgs || []).map(img => {
@@ -1202,18 +1215,24 @@ async function loadVideos() {
   renderVideos();
 }
 async function loadMajstori() {
-  const cacheKey = 'majstori_cache_v1';
-  const cacheTimeKey = 'majstori_cache_time';
-  const now = new Date().getTime();
-  const cachedData = localStorage.getItem(cacheKey);
-  const cachedTime = localStorage.getItem(cacheTimeKey);
-
-  // Ако има кеш помлад од 1 час (3600000 ms), користи го него
-  if (cachedData && cachedTime && (now - cachedTime < 3600000)) {
-    majstori = JSON.parse(cachedData);
+  try {
+    const res = await fetch('/api/majstori');
+    if (!res.ok) throw new Error('Network response was not ok');
+    const data = await res.json();
+    
+    majstori = data.map(m => {
+      return { 
+        ...m, 
+        computed_rating: m.rating || 0, 
+        computed_count: m.rating_count || 0 
+      };
+    });
+    
     renderMajstori();
-    return; 
+  } catch (error) {
+    console.error("Грешка при вчитување на мајстори:", error);
   }
+}
 
   // Ако нема кеш или е стар, вчитај од базата
   const { data, error } = await supabaseClient
