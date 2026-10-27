@@ -1,5 +1,6 @@
 name = "majstor-mk"
-compatibility_date = "2026-10-25" # Користете ја денешната дата
+main = "worker.js"
+compatibility_date = "2026-10-25"
 
 [assets]
-directory = "./" # Ова му кажува на Cloudflare да ги земе сите датотеки од главната папка
+directory = "./"
