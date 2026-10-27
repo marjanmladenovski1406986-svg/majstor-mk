@@ -252,17 +252,17 @@ function showError(title, msg) {
     </div>`;
 }
 
-async function trackView() {
-  if (!majstorId) return;
-  await supabaseClient.from('majstor_stats').insert({
-    majstor_id: parseInt(majstorId),
-    event_type: 'view'
-  });
-  const { data } = await supabaseClient.from('majstor_profiles').select('profile_views').eq('id', majstorId).single();
-  if (data) {
-    await supabaseClient.from('majstor_profiles').update({ profile_views: (data.profile_views || 0) + 1 }).eq('id', majstorId);
-  }
-}
+// async function trackView() {
+//   if (!majstorId) return;
+//   await supabaseClient.from('majstor_stats').insert({
+//     majstor_id: parseInt(majstorId),
+//     event_type: 'view'
+//   });
+//   const { data } = await supabaseClient.from('majstor_profiles').select('profile_views').eq('id', majstorId).single();
+//   if (data) {
+//     await supabaseClient.from('majstor_profiles').update({ profile_views: (data.profile_views || 0) + 1 }).eq('id', majstorId);
+//   }
+// }
 
 async function loadMajstor() {
   try {
@@ -394,38 +394,63 @@ async function trackWeb() {
   });
 }
 async function loadMedia() {
-  const { data: images } = await supabaseClient.from('majstor_media').select('id, url, title').eq('majstor_id', majstorId).eq('type', 'image');
-  const { data: vids } = await supabaseClient.from('majstor_media').select('id, url, title').eq('majstor_id', majstorId).eq('type', 'video');
-  const imgGrid = document.getElementById('imagesGrid');
-  if (images && images.length > 0) {
-    imgGrid.innerHTML = images.map(img => `
-      <div class="media-item" onclick="window.open('${img.url}', '_blank')">
-        <img loading="lazy" src="${getOptimizedUrl(img.url, 400, 80)}" alt="">
-      </div>`).join('');
-  } else {
-    imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема слики сè уште</p>';
-  }
+  try {
+    const resMedia = await fetch('/api/media');
+    const mediaData = await resMedia.json();
+    
+    const images = mediaData.filter(m => m.type === 'image' && m.majstor_id == majstorId);
+    const vids = mediaData.filter(m => m.type === 'video' && m.majstor_id == majstorId);
 
-  const vidList = document.getElementById('videosList');
-  if (vids && vids.length > 0) {
-    vidList.innerHTML = vids.map(v => `
-      <div class="video-item" onclick="openVideo('${v.url}')">
-        <div class="icon">▶️</div>
-        <div class="title">${v.title || 'Видео'}</div>
-      </div>`).join('');
-  } else {
-    vidList.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема видеа сè уште</p>';
+    const imgGrid = document.getElementById('imagesGrid');
+    if (images && images.length > 0) {
+      imgGrid.innerHTML = images.map(img => `
+        <div class="media-item" onclick="window.open('${img.url}', '_blank')">
+          <img loading="lazy" src="${getOptimizedUrl(img.url, 400, 80)}" alt="">
+        </div>`).join('');
+    } else {
+      imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема слики сè уште</p>';
+    }
+
+    const vidList = document.getElementById('videosList');
+    if (vids && vids.length > 0) {
+      vidList.innerHTML = vids.map(v => `
+        <div class="video-item" onclick="openVideo('${v.url}')">
+          <div class="icon">▶️</div>
+          <div class="title">${v.title || 'Видео'}</div>
+        </div>`).join('');
+    } else {
+      vidList.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема видеа сè уште</p>';
+    }
+  } catch (error) {
+    console.error("Грешка при медиуми:", error);
   }
 }
 
 async function loadRatings() {
-  const { data } = await supabaseClient.from('ratings').select('rating, comment, created_at').eq('majstor_id', majstorId).eq('status', 'approved').order('created_at', { ascending: false });
-  const content = document.getElementById('ratingsContent');
+  try {
+    const res = await fetch('/api/ratings');
+    const data = await res.json();
+    const myRatings = data.filter(r => r.majstor_id == majstorId);
+    
+    const content = document.getElementById('ratingsContent');
+    if (!myRatings || myRatings.length === 0) {
+      content.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема оценки сè уште</p>';
+      return;
+    }
 
-  if (!data || data.length === 0) {
-    content.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема оценки сè уште</p>';
-    return;
+    content.innerHTML = myRatings.map(r => {
+      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      const date = new Date(r.created_at).toLocaleDateString('mk-MK');
+      return `<div style="padding:15px; background:#252525; border-radius:10px; margin-bottom:10px;">
+        <div style="color:#ffb84d; font-size:18px; margin-bottom:8px;">${stars}</div>
+        ${r.comment ? `<div style="color:#ddd; font-size:14px; margin-bottom:8px;">${r.comment}</div>` : ''}
+        <div style="color:#666; font-size:11px;">${date}</div>
+      </div>`;
+    }).join('');
+  } catch (error) {
+    console.error("Грешка при оценки:", error);
   }
+}
 
   content.innerHTML = data.map(r => {
     const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
