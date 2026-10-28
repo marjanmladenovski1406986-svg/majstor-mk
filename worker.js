@@ -55,7 +55,7 @@ export default {
 
           const cloudinaryData = new FormData();
           cloudinaryData.append('file', file);
-          cloudinaryData.append('upload_preset', 'ml_default'); // Ова е стандарден preset, ќе го смениме ако треба
+          cloudinaryData.append('upload_preset', 'majsto_upload'); // Ова е стандарден preset, ќе го смениме ако треба
           cloudinaryData.append('api_key', env.CLOUDINARY_API_KEY);
 
           const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`, {
