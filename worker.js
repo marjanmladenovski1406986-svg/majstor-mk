@@ -102,6 +102,37 @@ export default {
           `;
           return new Response(JSON.stringify(result), { headers: apiHeaders });
         }
+                // ===== РЕГИСТРАЦИЈА НА НОВ МАЈСТОР (Со логика за првите 100) =====
+        if (url.pathname === "/api/register-majstor" && request.method === "POST") {
+          const body = await request.json();
+          
+          // 1. Проверуваме колку мајстори има моментално во базата
+          const countResult = await sql`SELECT COUNT(*) FROM majstori`;
+          const totalMajstori = parseInt(countResult[0].count);
+          
+          // 2. Логика: Ако има помалку од 100, добива Премиум бесплатно
+          const isPremium = totalMajstori < 100;
+          
+          // 3. Го запишуваме новиот мајстор
+          const result = await sql`
+            INSERT INTO majstori (
+              user_id, name, phone, city, category, description, 
+              facebook_url, website_url, is_premium, rating, rating_count
+            ) VALUES (
+              ${body.user_id}, ${body.name}, ${body.phone}, ${body.city}, ${body.category}, 
+              ${body.description || null}, ${body.facebook_url || null}, ${body.website_url || null}, 
+              ${isPremium}, 0, 0
+            ) RETURNING *
+          `;
+          
+          return new Response(JSON.stringify({ 
+            success: true, 
+            majstor: result[0], 
+            isFree: isPremium,
+            count: totalMajstori + 1
+          }), { headers: apiHeaders });
+        }
+
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
       } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
