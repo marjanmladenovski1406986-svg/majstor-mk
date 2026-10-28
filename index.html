@@ -294,14 +294,22 @@ window.addEventListener('load', async function () {
   function updateClerkUI() {
     clerkHeader.innerHTML = ''; 
     if (window.Clerk.user) {
-      const profileBtn = document.createElement('a');
-      // Овде подоцна ќе го поврземе со вистинскиот профил на најавениот корисник
-      profileBtn.href = '/profile.html?id=35'; 
-      profileBtn.className = 'btn-auth';
-      profileBtn.style.marginRight = '10px';
-      profileBtn.style.textDecoration = 'none';
-      profileBtn.innerHTML = `👤 Мој Профил`;
-      clerkHeader.appendChild(profileBtn);
+               const email = window.Clerk.user.primaryEmailAddress.emailAddress;
+          let myId = 35; // Стандардно за Дарко
+
+          if (email === 'majsto.info@gmail.com') {
+            myId = 29; // Ова е ID-то за "Majstor mk"
+          } else if (email === 'marjanmladenovski1406986@gmail.com') {
+            myId = 35; // Ова е ID-то за Дарко
+          }
+
+          const profileBtn = document.createElement('a');
+          profileBtn.href = `/profile.html?id=${myId}`; 
+          profileBtn.className = 'btn-auth';
+          profileBtn.style.marginRight = '10px';
+          profileBtn.style.textDecoration = 'none';
+          profileBtn.innerHTML = `👤 Мој Профил`;
+          clerkHeader.appendChild(profileBtn);;
 
       window.Clerk.mountUserButton(clerkHeader, { afterSignOutUrl: '/' });
     } else {
