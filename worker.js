@@ -4,11 +4,12 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     
-    // Clerk proxy
+    // 1. Clerk Proxy (За најава)
     if (url.hostname === 'clerk.majsto.mk') {
       return fetch(`https://frontend-api.clerk.services${url.pathname}${url.search}`, request);
     }
 
+    // 2. CORS Headers
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
@@ -19,6 +20,7 @@ export default {
       return new Response(null, { headers: corsHeaders });
     }
 
+    // 3. API Routes
     if (url.pathname.startsWith('/api/')) {
       const apiHeaders = {
         ...corsHeaders, 
@@ -29,16 +31,19 @@ export default {
       try {
         const sql = neon(env.DATABASE_URL);
 
+        // Враќање на сите мајстори
         if (url.pathname === "/api/majstori") {
           const majstori = await sql`SELECT * FROM majstori ORDER BY is_premium DESC, rating DESC`;
           return new Response(JSON.stringify(majstori), { headers: apiHeaders });
         }
 
+        // Враќање на сите слики/видеа
         if (url.pathname === "/api/media") {
           const media = await sql`SELECT * FROM majstor_media`;
           return new Response(JSON.stringify(media), { headers: apiHeaders });
         }
 
+        // Враќање на оценки
         if (url.pathname === "/api/ratings") {
           const ratings = await sql`SELECT * FROM ratings WHERE status = 'approved'`;
           return new Response(JSON.stringify(ratings), { headers: apiHeaders });
@@ -63,12 +68,22 @@ export default {
 
           const result = await imgbbRes.json();
           
-          // ImgBB враќа data.url ако е успешно
           if (result.data && result.data.url) {
             return new Response(JSON.stringify({ secure_url: result.data.url }), { headers: apiHeaders });
           } else {
             return new Response(JSON.stringify({ error: result.error?.message || "Грешка при качување" }), { status: 500, headers: apiHeaders });
           }
+        }
+
+        // ===== ЗАЧУВУВАЊЕ НА ЛИНКОТ ВО NEON БАЗАТА =====
+        if (url.pathname === "/api/add-media" && request.method === "POST") {
+          const body = await request.json();
+          const result = await sql`
+            INSERT INTO majstor_media (majstor_id, type, url, title) 
+            VALUES (${body.majstor_id}, ${body.type}, ${body.url}, 'Слика од работа') 
+            RETURNING *
+          `;
+          return new Response(JSON.stringify(result), { headers: apiHeaders });
         }
 
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
@@ -80,6 +95,7 @@ export default {
       }
     }
 
+    // 4. Ако не е API, отвори ги обичните HTML страници (index.html, profile.html...)
     return env.ASSETS.fetch(request);
   },
 };
