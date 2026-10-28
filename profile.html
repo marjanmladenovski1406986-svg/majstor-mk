@@ -262,6 +262,7 @@ async function uploadImage(input) {
   formData.append('file', file);
 
   try {
+    // 1. Качување на ImgBB
     const res = await fetch('/api/upload', {
       method: 'POST',
       body: formData
@@ -270,10 +271,23 @@ async function uploadImage(input) {
     const data = await res.json();
     
     if (data.secure_url) {
-      alert("✅ Сликата е качена успешно! Линк: " + data.secure_url);
-      // Тука подоцна ќе додадеме код за зачувување на линкот во базата (Neon)
-      // За сега, само освежи ја страницата за да видиш дека е качена
-      window.location.reload();
+      // 2. Зачувување во Neon базата
+      const saveRes = await fetch('/api/add-media', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          majstor_id: majstorId,
+          url: data.secure_url,
+          type: 'image'
+        })
+      });
+
+      if (saveRes.ok) {
+        alert("✅ Сликата е качена и зачувана!");
+        window.location.reload(); 
+      } else {
+        alert("Сликата е качена, но не е зачувана во базата.");
+      }
     } else {
       alert("❌ Грешка при качување: " + JSON.stringify(data));
     }
@@ -281,7 +295,7 @@ async function uploadImage(input) {
     alert("❌ Грешка во мрежата: " + err.message);
   }
 }
-
+  
 init();
 </script>
 </body>
