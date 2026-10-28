@@ -4,7 +4,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     
-    // Clerk Proxy
+    // Clerk proxy
     if (url.hostname === 'clerk.majsto.mk') {
       return fetch(`https://frontend-api.clerk.services${url.pathname}${url.search}`, request);
     }
@@ -44,7 +44,7 @@ export default {
           return new Response(JSON.stringify(ratings), { headers: apiHeaders });
         }
 
-        // ===== КАЧУВАЊЕ НА СЛИКИ НА CLOUDINARY =====
+        // ===== КАЧУВАЊЕ НА СЛИКИ НА IMGBB =====
         if (url.pathname === "/api/upload" && request.method === "POST") {
           const formData = await request.formData();
           const file = formData.get('file');
@@ -53,18 +53,22 @@ export default {
             return new Response(JSON.stringify({ error: "Нема слика" }), { status: 400, headers: apiHeaders });
           }
 
-          const cloudinaryData = new FormData();
-          cloudinaryData.append('file', file);
-          cloudinaryData.append('upload_preset', 'majsto_upload'); // Ова е стандарден preset, ќе го смениме ако треба
-          cloudinaryData.append('api_key', env.CLOUDINARY_API_KEY);
+          const imgbbData = new FormData();
+          imgbbData.append('image', file);
 
-          const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`, {
+          const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${env.IMGBB_API_KEY}`, {
             method: 'POST',
-            body: cloudinaryData
+            body: imgbbData
           });
 
-          const result = await cloudinaryRes.json();
-          return new Response(JSON.stringify(result), { headers: apiHeaders });
+          const result = await imgbbRes.json();
+          
+          // ImgBB враќа data.url ако е успешно
+          if (result.data && result.data.url) {
+            return new Response(JSON.stringify({ secure_url: result.data.url }), { headers: apiHeaders });
+          } else {
+            return new Response(JSON.stringify({ error: result.error?.message || "Грешка при качување" }), { status: 500, headers: apiHeaders });
+          }
         }
 
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
