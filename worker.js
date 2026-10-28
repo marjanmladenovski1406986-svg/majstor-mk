@@ -4,7 +4,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     
-    // Ова е клучното за Clerk - препраќаме се кон clerk.majsto.mk
+    // Clerk Proxy
     if (url.hostname === 'clerk.majsto.mk') {
       return fetch(`https://frontend-api.clerk.services${url.pathname}${url.search}`, request);
     }
@@ -42,6 +42,29 @@ export default {
         if (url.pathname === "/api/ratings") {
           const ratings = await sql`SELECT * FROM ratings WHERE status = 'approved'`;
           return new Response(JSON.stringify(ratings), { headers: apiHeaders });
+        }
+
+        // ===== КАЧУВАЊЕ НА СЛИКИ НА CLOUDINARY =====
+        if (url.pathname === "/api/upload" && request.method === "POST") {
+          const formData = await request.formData();
+          const file = formData.get('file');
+          
+          if (!file) {
+            return new Response(JSON.stringify({ error: "Нема слика" }), { status: 400, headers: apiHeaders });
+          }
+
+          const cloudinaryData = new FormData();
+          cloudinaryData.append('file', file);
+          cloudinaryData.append('upload_preset', 'ml_default'); // Ова е стандарден preset, ќе го смениме ако треба
+          cloudinaryData.append('api_key', env.CLOUDINARY_API_KEY);
+
+          const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`, {
+            method: 'POST',
+            body: cloudinaryData
+          });
+
+          const result = await cloudinaryRes.json();
+          return new Response(JSON.stringify(result), { headers: apiHeaders });
         }
 
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
