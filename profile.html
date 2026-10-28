@@ -401,7 +401,7 @@ async function uploadImage(input) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          majstor_id: majstorId,
+          majstor_id: parseInt(majstorId),
           url: data.secure_url,
           type: 'image'
         })
