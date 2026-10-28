@@ -3,6 +3,10 @@ main = "worker.js"
 compatibility_date = "2026-10-25"
 compatibility_flags = [ "nodejs_compat" ]
 
+[vars]
+DATABASE_URL = "postgresql://neondb_owner:npg_l0SMRQ2bWLDdA@ep-holy-hall-b5hg9op2-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+IMGBB_API_KEY = "41508b0597b071cd083268040d503800"
+
 [assets]
 directory = "./"
 binding = "ASSETS"
