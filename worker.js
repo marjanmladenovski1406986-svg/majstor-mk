@@ -85,7 +85,23 @@ export default {
           `;
           return new Response(JSON.stringify(result), { headers: apiHeaders });
         }
-
+        // ===== АЖУРИРАЊЕ НА ПРОФИЛ НА МАЈСТОР =====
+        if (url.pathname === "/api/update-majstor" && request.method === "POST") {
+          const body = await request.json();
+          const result = await sql`
+            UPDATE majstori 
+            SET name = ${body.name}, 
+                phone = ${body.phone}, 
+                city = ${body.city}, 
+                category = ${body.category}, 
+                description = ${body.description}, 
+                facebook_url = ${body.facebook_url}, 
+                website_url = ${body.website_url}
+            WHERE id = ${body.id}
+            RETURNING *
+          `;
+          return new Response(JSON.stringify(result), { headers: apiHeaders });
+        }
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
       } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
