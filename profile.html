@@ -420,7 +420,39 @@ async function uploadImage(input) {
     alert("❌ Грешка во мрежата: " + err.message);
   }
 }
+// ===== CLERK AUTHENTICATION =====
+window.addEventListener('load', async function () {
+  await window.Clerk.load();
+  
+  const clerkHeader = document.getElementById('clerk-header');
+  if (!clerkHeader) return;
 
+  function updateClerkUI() {
+    clerkHeader.innerHTML = ''; 
+    if (window.Clerk.user) {
+      window.Clerk.mountUserButton(clerkHeader, { afterSignOutUrl: '/' });
+      // Ако си најавен, повторно вчитај го профилот за да се појави копчето за уредување
+      if (typeof loadMajstor === 'function') loadMajstor();
+    } else {
+      const loginBtn = document.createElement('button');
+      loginBtn.className = 'btn-auth'; // користи стил од CSS
+      loginBtn.style.background = '#ffb84d';
+      loginBtn.style.color = '#000';
+      loginBtn.style.padding = '8px 15px';
+      loginBtn.style.borderRadius = '8px';
+      loginBtn.style.border = 'none';
+      loginBtn.style.fontWeight = '600';
+      loginBtn.style.cursor = 'pointer';
+      loginBtn.textContent = 'Најава';
+      loginBtn.onclick = () => window.Clerk.redirectToSignIn(); 
+      clerkHeader.appendChild(loginBtn);
+    }
+  }
+  
+  updateClerkUI();
+  window.Clerk.addListener(() => updateClerkUI());
+});
+  
 init();
 </script>
 </body>
