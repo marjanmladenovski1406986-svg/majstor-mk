@@ -3,179 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">Мајстор — Majsto.mk V2</title>
-<!-- Favicon за Google и пребарувачи -->
-<link rel="icon" type="image/png" sizes="48x48" href="/icon-192.png">
-<link rel="icon" type="image/png" sizes="96x96" href="/icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png">
+<title id="page-title">Мајстор — Majsto.mk</title>
+<link rel="icon" type="image/png" href="/icon-192.png">
 <meta name="theme-color" content="#ff6b35">
-  <meta name="description" id="page-description" content="Проверен мајстор на Majsto.mk. Контактирај директно.">
-
-<!-- Open Graph (за Viber, Facebook, WhatsApp, Instagram) -->
-<meta property="og:type" content="profile">
-<meta property="og:site_name" content="Majsto.mk">
-<meta property="og:title" content="Проверен мајстор — Majsto.mk">
-<meta property="og:description" content="Погледни го профилот и контактирај директно. majsto.mk">
-<meta property="og:image" content="https://majsto.mk/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://majsto.mk/majstor.html">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Проверен мајстор — Majsto.mk">
-<meta name="twitter:description" content="Погледни го профилот и контактирај директно.">
-<meta name="twitter:image" content="https://majsto.mk/og-image.png">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
 
-header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 10px; }
-.logo { font-size: 20px; font-weight: 700; color: #ff6b35; cursor: pointer; text-decoration: none; }
-.btn-back { background: transparent; border: 1px solid #333; color: #999; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px; text-decoration: none; }
+header { background: #111; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; }
+.logo { font-size: 20px; font-weight: 700; color: #ffb84d; text-decoration: none; }
+.btn-back { background: transparent; border: 1px solid #444; color: #999; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px; text-decoration: none; }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-
-.profile-header { background: linear-gradient(145deg, #2a2a2a, #1e1e1e); border-radius: 16px; padding: 30px; margin-bottom: 25px; border: 1px solid #2a2a2a; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
-
-.profile-top { display: flex; align-items: center; gap: 25px; flex-wrap: wrap; margin-bottom: 25px; }
-
-.big-avatar { width: 120px; height: 120px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: 700; flex-shrink: 0; overflow: hidden; box-shadow: 0 4px 12px rgba(255,107,53,0.4); }
+.profile-header { background: #1a1a1a; border-radius: 16px; padding: 30px; margin-bottom: 25px; border: 1px solid #333; }
+.profile-top { display: flex; align-items: center; gap: 25px; flex-wrap: wrap; margin-bottom: 25px; position: relative; }
+.big-avatar { width: 120px; height: 120px; border-radius: 50%; background: #ffb84d; display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: 700; flex-shrink: 0; overflow: hidden; color: #000; }
 .big-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
 .profile-name-block { flex: 1; min-width: 200px; }
 .profile-name { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
-.profile-category { color: #ff6b35; font-size: 16px; margin-bottom: 8px; }
+.profile-category { color: #ffb84d; font-size: 16px; margin-bottom: 8px; }
 .profile-rating { color: #ffb84d; font-size: 20px; font-weight: 600; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
-.stat-box { background: #1a1a1a; border-radius: 12px; padding: 18px; text-align: center; border: 1px solid #2a2a2a; }
-.stat-box .num { font-size: 28px; font-weight: 700; color: #ff6b35; }
+.stat-box { background: #111; border-radius: 12px; padding: 18px; text-align: center; border: 1px solid #222; }
+.stat-box .num { font-size: 28px; font-weight: 700; color: #ffb84d; }
 .stat-box .lbl { font-size: 12px; color: #999; margin-top: 5px; }
 
 .info-section { margin-bottom: 25px; }
-.info-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #2a2a2a; font-size: 15px; }
+.info-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #222; font-size: 15px; }
 .info-row span:first-child { color: #999; }
 .info-row span:last-child { font-weight: 600; text-align: right; }
 
 .contact-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-.btn-contact { padding: 14px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; border: none; cursor: pointer; font-family: inherit; }
-.btn-phone { background: #ff6b35; color: #fff; }
+.btn-contact { padding: 14px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; font-family: inherit; }
+.btn-phone { background: #ffb84d; color: #000; }
 .btn-fb { background: #1877f2; color: #fff; }
-.btn-web { background: #2a2a2a; color: #fff; border: 1px solid #ff6b35; }
-.btn-contact:hover { transform: translateY(-2px); opacity: 0.9; }
+.btn-web { background: #222; color: #fff; border: 1px solid #ffb84d; }
 
-.section { background: #1a1a1a; border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 1px solid #2a2a2a; }
-.section h2 { color: #ff6b35; font-size: 22px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.section { background: #1a1a1a; border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 1px solid #333; }
+.section h2 { color: #ffb84d; font-size: 22px; margin-bottom: 20px; }
 
 .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-.media-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: #252525; cursor: pointer; }
-.media-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-.media-item:hover img { transform: scale(1.05); }
+.media-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: #222; cursor: pointer; }
+.media-item img { width: 100%; height: 100%; object-fit: cover; }
 
-.video-list { display: flex; flex-direction: column; gap: 10px; }
-.video-item { padding: 15px; background: #252525; border-radius: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s; }
-.video-item:hover { background: #2f2f2f; border-left: 3px solid #ff6b35; }
-.video-item .icon { color: #ff6b35; font-size: 20px; }
-.video-item .title { flex: 1; font-size: 14px; }
-
-.forum-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-.forum-msg { padding: 15px; background: #252525; border-radius: 10px; border-left: 3px solid #4da6ff; }
-.forum-msg .author { font-weight: 600; color: #4da6ff; font-size: 13px; margin-bottom: 5px; }
-.forum-msg .text { color: #ddd; font-size: 14px; line-height: 1.6; }
-.forum-msg .date { color: #666; font-size: 11px; margin-top: 8px; }
-
-.forum-form textarea { width: 100%; padding: 12px; background: #252525; border: 1px solid #333; border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; resize: vertical; min-height: 80px; margin-bottom: 10px; }
-.forum-form textarea:focus { outline: none; border-color: #ff6b35; }
-.forum-form button { background: #ff6b35; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 14px; }
-.forum-form button:hover { opacity: 0.9; }
-
-.partners-section { margin-top: 40px; text-align: center; }
-.partners-section h3 { color: #ff6b35; font-size: 20px; margin-bottom: 20px; }
-.partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
-.partner-card { display: flex; align-items: center; gap: 12px; background: linear-gradient(145deg, #2a2a2a, #1e1e1e); border-radius: 10px; padding: 15px; text-decoration: none; border: 1px solid #2a2a2a; transition: all 0.3s; }
-.partner-card:hover { border-color: #ff6b35; transform: translateY(-3px); }
-.partner-card img { width: 50px; height: 50px; border-radius: 8px; object-fit: contain; background: #fff; padding: 3px; }
-.partner-card .info { flex: 1; min-width: 0; text-align: left; }
-.partner-card .name { font-size: 14px; color: #ff6b35; font-weight: 700; margin-bottom: 3px; }
-.partner-card .desc { font-size: 11px; color: #999; }
+/* 10 празни полиња за качување */
+.upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.upload-slot { aspect-ratio: 1; border: 2px dashed #444; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: #666; transition: 0.2s; background: #111; }
+.upload-slot:hover { border-color: #ffb84d; color: #ffb84d; }
+.upload-slot span { font-size: 30px; margin-bottom: 5px; }
 
 .loading { text-align: center; color: #999; padding: 60px 20px; font-size: 16px; }
 .error-box { text-align: center; color: #ff6b6b; padding: 60px 20px; }
-.error-box h2 { color: #ff6b6b; font-size: 24px; margin-bottom: 15px; }
 
-.video-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1001; align-items: center; justify-content: center; padding: 20px; }
-.video-modal.open { display: flex; }
-.video-modal-content { max-width: 900px; width: 100%; }
-.video-modal iframe { width: 100%; aspect-ratio: 16/9; border-radius: 12px; border: none; }
-.video-close { position: absolute; top: 20px; right: 20px; background: #ff6b35; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
-  
-/* ===== SHARE BUTTON ===== */
-.profile-top { position: relative; }
-.share-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: transparent;
-  border: 1px solid #ff6b35;
-  color: #ff6b35;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
-  z-index: 10;
-}
-.share-btn:hover { background: #ff6b35; color: #fff; }
-.share-menu {
-  display: none;
-  position: absolute;
-  top: 48px;
-  right: 0;
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  border-radius: 12px;
-  padding: 8px;
-  min-width: 210px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-  z-index: 20;
-}
-.share-menu.open { display: block; }
-.share-menu a, .share-menu button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px 12px;
-  background: transparent;
-  border: none;
-  color: #fff;
-  text-decoration: none;
-  font-family: inherit;
-  font-size: 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: left;
-  box-sizing: border-box;
-}
-.share-menu a:hover, .share-menu button:hover { background: #2a2a2a; }
+.share-btn { position: absolute; top: 0; right: 0; background: transparent; border: 1px solid #ffb84d; color: #ffb84d; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
 @media (max-width: 768px) {
-    .share-btn { padding: 8px 12px; font-size: 13px; }
-  .share-menu { min-width: 180px; }
   .profile-top { flex-direction: column; text-align: center; }
-  .profile-name { font-size: 24px; }
-  .big-avatar { width: 100px; height: 100px; font-size: 40px; }
+  .share-btn { position: static; margin-top: 15px; width: 100%; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .media-grid { grid-template-columns: repeat(2, 1fr); }
-  .contact-buttons { justify-content: center; }
 }
 </style>
 </head>
@@ -190,57 +76,34 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <div class="loading">Вчитувам профил...</div>
 </div>
 
-<div class="video-modal" id="videoModal">
-  <button class="video-close" onclick="closeVideo()">✕</button>
-  <div class="video-modal-content">
-    <iframe id="videoFrame" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
 <script>
-const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  // Помошна функција за автоматско намалување на сликите
-function getOptimizedUrl(originalUrl, width = 400, quality = 75) {
-  if (!originalUrl) return '';
-  if (!originalUrl.includes('supabase.co') || originalUrl.includes('/render/image/')) return originalUrl;
-  const renderUrl = originalUrl.replace('/object/public/', '/render/image/public/');
-  return `${renderUrl}?width=${width}&quality=${quality}`;
-}
-
 const CAT_NAMES = {
   elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
   popravki: "🔧 Поправки", finalni: "🎨 Финални работи", plockari: "🔲 Плочкари",
   gipsari: "🧱 Гипсари и Молери", stolari: "🚪 Столари", klima: "❄️ Клима",
   greenje: "🔥 Греење", krov: "🏠 Кров", sanitarii: "🚿 Санитарии",
   pvc: "🪟 ПВЦ прозори и врати", dvorovi: "🌳 Уредување дворови", cistenje: "🧹 Чистење",
-    opti: "🔨 Општи работници", bravari: "🔨 Браварски услуги", belatehnika: "🔌 Бела техника",
+  opti: "🔨 Општи работници", bravari: "🔨 Браварски услуги", belatehnika: "🔌 Бела техника",
   videonadzor: "📹 Видео надзор", bazeni: "🏊 Базени", fasadi: "🎨 Фасади", iskop: "🚜 Ископ",
   hidroizolacija: "💧 Хидро изолација", otpad: "🗑️ Фрлање отпад"
 };
 
 let majstorId = null;
 let majstorData = null;
-let partners = [];
+let currentUser = null;
 
 async function init() {
   const urlParams = new URLSearchParams(window.location.search);
   majstorId = urlParams.get('id');
 
   if (!majstorId) {
-    showError('Не е пронајден мајстор', 'Не е специфициран ID на мајстор во URL-то.');
+    showError('Не е пронајден мајстор', 'Не е специфициран ID на мајстор.');
     return;
   }
 
   await loadMajstor();
-  await trackView();
   await loadMedia();
   await loadRatings();
-  await loadForum();
-  await loadPartners();
 }
 
 function showError(title, msg) {
@@ -248,21 +111,9 @@ function showError(title, msg) {
     <div class="error-box">
       <h2>❌ ${title}</h2>
       <p>${msg}</p>
-      <p style="margin-top:20px;"><a href="/" style="color:#ff6b35;">← Назад кон сајтот</a></p>
+      <p style="margin-top:20px;"><a href="/" style="color:#ffb84d;">← Назад кон сајтот</a></p>
     </div>`;
 }
-
-// async function trackView() {
-//   if (!majstorId) return;
-//   await supabaseClient.from('majstor_stats').insert({
-//     majstor_id: parseInt(majstorId),
-//     event_type: 'view'
-//   });
-//   const { data } = await supabaseClient.from('majstor_profiles').select('profile_views').eq('id', majstorId).single();
-//   if (data) {
-//     await supabaseClient.from('majstor_profiles').update({ profile_views: (data.profile_views || 0) + 1 }).eq('id', majstorId);
-//   }
-// }
 
 async function loadMajstor() {
   try {
@@ -271,7 +122,7 @@ async function loadMajstor() {
     const majstor = data.find(m => m.id == majstorId);
 
     if (!majstor) {
-      showError('Мајстор не е најден', 'Овој мајстор не постои или е избришан.');
+      showError('Мајстор не е најден', 'Овој мајстор не постои.');
       return;
     }
     
@@ -287,62 +138,32 @@ async function loadMajstor() {
     const avgRating = totalCount > 0 ? ((baseSum + newSum) / totalCount).toFixed(1) : 0;
 
     const catText = CAT_NAMES[majstor.category] || majstor.category;
-    const cityText = majstor.city || 'Македонија';
-    const nameText = majstor.name || 'Мајстор';
-    
-    const seoTitle = `${catText} во ${cityText} – ${nameText} | Majsto.mk`;
-    const seoDesc = `Потребен ви е ${catText.toLowerCase()} во ${cityText}? Погледнете го профилот на ${nameText}, описот на услугите и достапните контакт-информации на Majsto.mk.`;
-    
-    document.getElementById('page-title').textContent = seoTitle;
-    document.getElementById('page-description').setAttribute('content', seoDesc);
+    const avatar = majstor.photo_url ? `<img src="${majstor.photo_url}" alt="${majstor.name}">` : (majstor.name || '?').charAt(0).toUpperCase();
 
-    document.querySelector('meta[property="og:title"]').setAttribute('content', seoTitle);
-    document.querySelector('meta[property="og:description"]').setAttribute('content', seoDesc);
-    document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
-    if (majstor.photo_url) {
-      document.querySelector('meta[property="og:image"]').setAttribute('content', majstor.photo_url);
-    }
-
-    const avatar = majstor.photo_url ? `<img src="${getOptimizedUrl(majstor.photo_url, 200, 80)}" alt="${majstor.name}">` : (majstor.name || '?').charAt(0).toUpperCase();
+    document.getElementById('page-title').textContent = `${majstor.name} - ${catText} | Majsto.mk`;
 
     document.getElementById('content').innerHTML = `
-      <div class="profile-header" style="${majstor.is_premium ? 'border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);' : ''}">
-        ${majstor.cover_url ? `<div style="width: 100%; height: 200px; background: #000 url('${getOptimizedUrl(majstor.cover_url, 1000, 75)}') center/contain no-repeat; border-radius: 16px 16px 0 0; margin-bottom: 20px;"></div>` : ''}
-        
-        <div class="profile-top" style="margin-top: 0 !important;">
+      <div class="profile-header">
+        <div class="profile-top">
           <div class="big-avatar">${avatar}</div>
           <div class="profile-name-block">
-            <div class="profile-name">${majstor.name || 'Majstor'} ${majstor.is_premium ? '<span style="background: linear-gradient(45deg, #ffd700, #ff8c00); color: #000; font-size: 12px; padding: 3px 10px; border-radius: 12px; margin-left: 8px; font-weight: 700;">👑 ПРЕМИУМ</span>' : ''}</div>
-            <div class="profile-category">${CAT_NAMES[majstor.category] || majstor.category}</div>
+            <div class="profile-name">${majstor.name || 'Majstor'} ${majstor.is_premium ? '👑' : ''}</div>
+            <div class="profile-category">${catText}</div>
             <div class="profile-rating">⭐ ${avgRating} (${totalCount} оценки)</div>
           </div>
-          
-          <button class="share-btn" onclick="toggleShareMenu(event)">📤 Сподели</button>
-          <div class="share-menu" id="shareMenu" onclick="event.stopPropagation()">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" rel="noopener">📘 Facebook</a>
-            <a href="https://wa.me/?text=${encodeURIComponent((majstor.name || 'Мајстор') + ' - Majsto.mk ' + window.location.href)}" target="_blank" rel="noopener">💬 WhatsApp</a>
-            <a href="viber://forward?text=${encodeURIComponent((majstor.name || 'Мајстор') + ' - Majsto.mk ' + window.location.href)}">📱 Viber</a>
-            <button onclick="copyShareLink()">🔗 Копирај линк</button>
-          </div>
-        </div>
-        
-        <div class="stats-grid">
-          <div class="stat-box"><div class="num">${majstor.profile_views || 0}</div><div class="lbl">👁️ Прегледи</div></div>
-          <div class="stat-box"><div class="num">${majstor.phone_clicks || 0}</div><div class="lbl">📞 Кликови</div></div>
-          <div class="stat-box"><div class="num">${majstor.fb_clicks || 0}</div><div class="lbl">📘 Facebook</div></div>
-          <div class="stat-box"><div class="num">${majstor.web_clicks || 0}</div><div class="lbl">🌐 Веб</div></div>
+          <button class="share-btn" onclick="alert('Линкот е копиран!')">📤 Сподели</button>
         </div>
 
         <div class="info-section">
-          <div class="info-row"><span>📂 Категорија</span><span>${CAT_NAMES[majstor.category] || majstor.category}</span></div>
+          <div class="info-row"><span>📂 Категорија</span><span>${catText}</span></div>
           <div class="info-row"><span>🏙️ Град</span><span>${majstor.city || '-'}</span></div>
           ${majstor.description ? `<div class="info-row"><span>📝 Опис</span><span>${majstor.description}</span></div>` : ''}
         </div>
 
         <div class="contact-buttons">
-          ${majstor.phone ? `<a href="tel:${majstor.phone}" onclick="trackPhone()" class="btn-contact btn-phone">📞 ${majstor.phone}</a>` : ''}
-          ${majstor.facebook_url ? `<a href="${majstor.facebook_url}" target="_blank" onclick="trackFb()" class="btn-contact btn-fb">📘 Facebook профил</a>` : ''}
-          ${majstor.website_url ? `<a href="${majstor.website_url}" target="_blank" onclick="trackWeb()" class="btn-contact btn-web">🌐 Веб-сајт</a>` : ''} 
+          ${majstor.phone ? `<a href="tel:${majstor.phone}" class="btn-contact btn-phone">📞 ${majstor.phone}</a>` : ''}
+          ${majstor.facebook_url ? `<a href="${majstor.facebook_url}" target="_blank" class="btn-contact btn-fb">📘 Facebook</a>` : ''}
+          ${majstor.website_url ? `<a href="${majstor.website_url}" target="_blank" class="btn-contact btn-web">🌐 Веб-сајт</a>` : ''} 
         </div>
       </div>
 
@@ -353,11 +174,17 @@ async function loadMajstor() {
         </div>
       </div>
 
-      <div class="section">
-        <h2>📹 Видеа</h2>
-        <div class="video-list" id="videosList">
-          <div class="loading">Вчитувам видеа...</div>
+      <div class="section" id="uploadSection" style="display: none;">
+        <h2>📤 Додај слика</h2>
+        <p style="color:#999; margin-bottom: 15px; font-size: 14px;">Кликни на полето за да качиш слика (автоматски се зачувува).</p>
+        <div class="upload-grid">
+          <!-- Овде ќе бидат 10-те полиња -->
+          <div class="upload-slot" onclick="document.getElementById('fileInput').click()">
+            <span>+</span>
+            <p>Додај слика</p>
+          </div>
         </div>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="uploadImage(this)">
       </div>
 
       <div class="section">
@@ -367,59 +194,31 @@ async function loadMajstor() {
         </div>
       </div>
     `;
+    
+    // Прикажи го делот за качување (за сега секогаш, подоцна ќе го врземе со Clerk)
+    document.getElementById('uploadSection').style.display = 'block';
+
   } catch (error) {
     console.error("Грешка:", error);
-    showError('Грешка', 'Настана проблем при вчитување на податоците.');
+    showError('Грешка', 'Настана проблем при вчитување.');
   }
 }
 
-async function trackPhone() {
-  await supabaseClient.from('majstor_stats').insert({
-    majstor_id: parseInt(majstorId),
-    event_type: 'phone_click'
-  });
-}
-
-async function trackFb() {
-  await supabaseClient.from('majstor_stats').insert({
-    majstor_id: parseInt(majstorId),
-    event_type: 'fb_click'
-  });
-}
-  
-async function trackWeb() {
-  await supabaseClient.from('majstor_stats').insert({
-    majstor_id: parseInt(majstorId),
-    event_type: 'web_click'
-  });
-}
 async function loadMedia() {
   try {
     const resMedia = await fetch('/api/media');
     const mediaData = await resMedia.json();
     
     const images = mediaData.filter(m => m.type === 'image' && m.majstor_id == majstorId);
-    const vids = mediaData.filter(m => m.type === 'video' && m.majstor_id == majstorId);
 
     const imgGrid = document.getElementById('imagesGrid');
     if (images && images.length > 0) {
       imgGrid.innerHTML = images.map(img => `
         <div class="media-item" onclick="window.open('${img.url}', '_blank')">
-          <img loading="lazy" src="${getOptimizedUrl(img.url, 400, 80)}" alt="">
+          <img loading="lazy" src="${img.url}" alt="Слика">
         </div>`).join('');
     } else {
-      imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема слики сè уште</p>';
-    }
-
-    const vidList = document.getElementById('videosList');
-    if (vids && vids.length > 0) {
-      vidList.innerHTML = vids.map(v => `
-        <div class="video-item" onclick="openVideo('${v.url}')">
-          <div class="icon">▶️</div>
-          <div class="title">${v.title || 'Видео'}</div>
-        </div>`).join('');
-    } else {
-      vidList.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема видеа сè уште</p>';
+      imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px; grid-column: 1/-1;">Нема слики сè уште</p>';
     }
   } catch (error) {
     console.error("Грешка при медиуми:", error);
@@ -452,163 +251,38 @@ async function loadRatings() {
   }
 }
 
-  content.innerHTML = data.map(r => {
-    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-    const date = new Date(r.created_at).toLocaleDateString('mk-MK');
-    return `<div style="padding:15px; background:#252525; border-radius:10px; margin-bottom:10px;">
-      <div style="color:#ffb84d; font-size:18px; margin-bottom:8px;">${stars}</div>
-      ${r.comment ? `<div style="color:#ddd; font-size:14px; margin-bottom:8px;">${r.comment}</div>` : ''}
-      <div style="color:#666; font-size:11px;">${date}</div>
-    </div>`;
-  }).join('');
-}
+// Функција за качување на слика преку ImgBB
+async function uploadImage(input) {
+  const file = input.files[0];
+  if (!file) return;
 
-async function loadForum() {
-  const { data } = await supabaseClient.from('majstor_forum').select('user_name, message, created_at').eq('majstor_id', majstorId).eq('status', 'approved').order('created_at', { ascending: true });
-  const list = document.getElementById('forumList');
+  alert("Почнувам качување...");
 
-  if (!data || data.length === 0) {
-    list.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема разговори сè уште. Биди прв!</p>';
-    return;
-  }
-
-  list.innerHTML = data.map(m => {
-    const date = new Date(m.created_at).toLocaleDateString('mk-MK');
-    return `<div class="forum-msg">
-      <div class="author">👤 ${m.user_name || 'Анонимен'}</div>
-      <div class="text">${m.message}</div>
-      <div class="date">${date}</div>
-    </div>`;
-  }).join('');
-}
-
-async function submitForum() {
-  const msg = document.getElementById('forumMessage').value.trim();
-  const msgBox = document.getElementById('forumMsg');
-  if (!msg) {
-    msgBox.style.display = 'block';
-    msgBox.style.background = '#3a1a1a';
-    msgBox.style.color = '#ff6b6b';
-    msgBox.textContent = 'Напиши порака';
-    return;
-  }
-
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  const userName = user ? (user.email.split('@')[0]) : 'Анонимен';
-
-  const { error } = await supabaseClient.from('majstor_forum').insert({
-    majstor_id: parseInt(majstorId),
-    user_id: user ? user.id : null,
-    user_name: userName,
-    message: msg,
-    status: 'pending'
-  });
-
-  if (error) {
-    msgBox.style.display = 'block';
-    msgBox.style.background = '#3a1a1a';
-    msgBox.style.color = '#ff6b6b';
-    msgBox.textContent = 'Грешка: ' + error.message;
-    return;
-  }
-
-  msgBox.style.display = 'block';
-  msgBox.style.background = '#1a3a1a';
-  msgBox.style.color = '#6bff6b';
-  msgBox.textContent = '✅ Пораката е испратена! Ќе биде видлива откако ќе ја одобри администраторот.';
-  document.getElementById('forumMessage').value = '';
-  setTimeout(() => msgBox.style.display = 'none', 4000);
-}
-
-async function loadPartners() {
-  const { data } = await supabaseClient.from('partners').select('name, description, website_url, logo_url').order('display_order', { ascending: true });
-  if (!data || data.length === 0) return;
-
-  document.getElementById('partnersSection').style.display = 'block';
-  document.getElementById('partnersGrid').innerHTML = data.map(p => `
-    <a href="${p.website_url}" target="_blank" rel="noopener" class="partner-card">
-      ${p.logo_url ? `<img src="${getOptimizedUrl(p.logo_url, 100, 80)}" alt="${p.name}">` : ''}
-      <div class="info">
-        <div class="name">${p.name}</div>
-        ${p.description ? `<div class="desc">${p.description}</div>` : ''}
-      </div>
-    </a>
-  `).join('');
-}
-/* ===== SHARE ===== */
-function toggleShareMenu(e) {
-  e.stopPropagation();
-  const menu = document.getElementById('shareMenu');
-  if (!menu) return;
-
-  // Додај уникатен параметар за да нема кеш
-  const baseUrl = window.location.origin + window.location.pathname + '?id=' + majstorId;
-  const shareUrl = baseUrl + '&s=' + Date.now();
-
-  // На мобилен – користи нативно споделување
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  if (isMobile && navigator.share) {
-    const name = (majstorData && majstorData.name) ? majstorData.name : 'Мајстор';
-    navigator.share({
-      title: name + ' - Majsto.mk',
-      text: '👷 ' + name + ' на Majsto.mk',
-      url: shareUrl
-    }).catch(() => {});
-    return;
-  }
-
-  // На компјутер – отвори dropdown и ажурирај линкови
-  const fbLink = menu.querySelector('a[href*="facebook"]');
-  const waLink = menu.querySelector('a[href*="wa.me"]');
-  const viberLink = menu.querySelector('a[href*="viber"]');
-
-  if (fbLink) fbLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-  if (waLink) waLink.href = `https://wa.me/?text=${encodeURIComponent((majstorData && majstorData.name ? majstorData.name : 'Мајстор') + ' - Majsto.mk ' + shareUrl)}`;
-  if (viberLink) viberLink.href = `viber://forward?text=${encodeURIComponent((majstorData && majstorData.name ? majstorData.name : 'Мајстор') + ' - Majsto.mk ' + shareUrl)}`;
-
-  menu.dataset.shareUrl = shareUrl;
-
-  menu.classList.toggle('open');
-}
-
-async function copyShareLink() {
-  const menu = document.getElementById('shareMenu');
-  const urlToCopy = (menu && menu.dataset.shareUrl) ? menu.dataset.shareUrl : window.location.href;
+  const formData = new FormData();
+  formData.append('file', file);
 
   try {
-    await navigator.clipboard.writeText(urlToCopy);
-    alert('✅ Линкот е копиран!');
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await res.json();
+    
+    if (data.secure_url) {
+      alert("✅ Сликата е качена успешно! Линк: " + data.secure_url);
+      // Тука подоцна ќе додадеме код за зачувување на линкот во базата (Neon)
+      // За сега, само освежи ја страницата за да видиш дека е качена
+      window.location.reload();
+    } else {
+      alert("❌ Грешка при качување: " + JSON.stringify(data));
+    }
   } catch (err) {
-    const input = document.createElement('input');
-    input.value = urlToCopy;
-    document.body.appendChild(input);
-    input.select();
-    document.execCommand('copy');
-    document.body.removeChild(input);
-    alert('✅ Линкот е копиран!');
+    alert("❌ Грешка во мрежата: " + err.message);
   }
-  if (menu) menu.classList.remove('open');
-}
-
-// Затвори менито кога ќе кликнеш надвор
-document.addEventListener('click', () => {
-  const menu = document.getElementById('shareMenu');
-  if (menu) menu.classList.remove('open');
-});
-
-
-  function openVideo(youtubeId) {
-  document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
-  document.getElementById('videoModal').classList.add('open');
-}
-
-function closeVideo() {
-  document.getElementById('videoFrame').src = '';
-  document.getElementById('videoModal').classList.remove('open');
 }
 
 init();
 </script>
-
 </body>
 </html>
