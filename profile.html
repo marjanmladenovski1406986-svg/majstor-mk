@@ -407,11 +407,12 @@ async function uploadImage(input) {
         })
       });
 
-      if (saveRes.ok) {
+            if (saveRes.ok) {
         alert("✅ Сликата е качена и зачувана!");
         window.location.reload(); 
       } else {
-        alert("Сликата е качена, но не е зачувана во базата.");
+        const errorData = await saveRes.json(); 
+        alert("Грешка од базата: " + JSON.stringify(errorData));
       }
     } else {
       alert("❌ Грешка при качување: " + JSON.stringify(data));
