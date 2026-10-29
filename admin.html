@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админ — Мајстор.мк</title>
+    <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA"
+    src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; }
@@ -326,12 +333,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-const SUPABASE_URL = 'https://brxdimqgujhemgpfujcq.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGRpbXFndWpoZW1ncGZ1amNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMTgxMjYsImV4cCI6MjEwNDc5NDEyNn0.gh0vekUMPmzg5EbkGvaRFLfBL8SWsjGUvB1BY4H5T5Y';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const ADMIN_EMAIL = 'marjanmladenovski1406986@gmail.com';
 
@@ -356,17 +358,20 @@ let allClicks = [];
 let editingVideoId = null;
 let editingMajstorId = null;
 
-async function checkAdminAuth() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (user && user.email === ADMIN_EMAIL) {
-    showAdminPanel(user.email);
-  } else if (user && user.email !== ADMIN_EMAIL) {
-    document.getElementById('loginBox').classList.add('hidden');
-    document.getElementById('noAccess').classList.remove('hidden');
-  }
-}
 
-function showAdminPanel(email) {
+
+async function checkAdminAuth() {
+  if (window.Clerk) {
+    await window.Clerk.load();
+    if (window.Clerk.user && window.Clerk.user.primaryEmailAddress.emailAddress === ADMIN_EMAIL) {
+      showAdminPanel(window.Clerk.user.primaryEmailAddress.emailAddress);
+      return;
+    }
+  }
+  document.getElementById('loginBox').classList.add('hidden');
+  document.getElementById('noAccess').classList.remove('hidden');
+}
+  function showAdminPanel(email) {
   document.getElementById('loginBox').classList.add('hidden');
   document.getElementById('noAccess').classList.add('hidden');
   document.getElementById('adminPanel').classList.add('active');
