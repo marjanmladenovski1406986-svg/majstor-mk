@@ -650,10 +650,14 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     </div>
     <div id="modal-msg" class="modal-msg"></div>
     <div id="modal-form-login">
-      <input type="email" id="login-email" placeholder="Е-пошта">
-      <input type="password" id="login-password" placeholder="Лозинка">
-    <button onclick="closeModal(); window.Clerk.openSignIn();" id="btn-modal-login">Најави се</button>
-            <button onclick="openForgotPassword()" id="btn-forgot-pwd" style="background:transparent; border:none; color:#ff6b35; font-size:13px; cursor:pointer; width:100%; padding:8px; text-decoration:underline; font-family:inherit;">🔐 Заборавена лозинка?</button>
+      <!-- НОВ КОД ЗА НАЈАВА ПРЕКУ CLERK -->
+<div style="text-align: center; padding: 20px 0;">
+    <p style="margin-bottom: 15px; color: #aaa;">Најавете се безбедно преку вашата сметка:</p>
+    <button onclick="closeModal(); window.Clerk.openSignIn();" style="background-color: #ff6b00; color: white; padding: 12px 20px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s;">
+        Најави се
+    </button>
+</div>
+
     </div>
     <div id="modal-form-register" class="hidden">
       <div class="type-choice">
