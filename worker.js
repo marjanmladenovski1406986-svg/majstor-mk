@@ -147,8 +147,8 @@ export default {
           const founderNumber = isFounder ? total + 1 : null;
 
           const result = await sql`
-            INSERT INTO majstori (user_id, email, name, phone, city, category, description, facebook_url, website_url, is_founder, founder_number, is_premium, paid_until, agreed_to_terms, created_at, rating, rating_count, views, phone_clicks)
-            VALUES (${body.clerk_id}, ${body.email}, ${body.name}, ${body.phone}, ${body.city}, ${body.category}, ${body.description||''}, ${body.facebook_url||''}, ${body.website_url||''}, ${isFounder}, ${founderNumber}, true, ${isFounder ? null : sql`NOW() + INTERVAL '1 year'`}, true, NOW(), 0, 0, 0, 0)
+            INSERT INTO majstori (user_id, clerk_id, email, name, phone, city, category, description, facebook_url, website_url, is_founder, founder_number, is_premium, paid_until, agreed_to_terms, created_at, rating, rating_count, views, phone_clicks)
+            VALUES (${body.clerk_id}, ${body.clerk_id}, ${body.email}, ${body.name}, ${body.phone}, ${body.city}, ${body.category}, ${body.description||''}, ${body.facebook_url||''}, ${body.website_url||''}, ${isFounder}, ${founderNumber}, true, ${isFounder ? null : sql`NOW() + INTERVAL '1 year'`}, true, NOW(), 0, 0, 0, 0)
             ON CONFLICT (email) DO UPDATE SET user_id=${body.clerk_id}, name=${body.name}, phone=${body.phone}, city=${body.city}, category=${body.category}, description=${body.description||''}, facebook_url=${body.facebook_url||''}, website_url=${body.website_url||''}, updated_at=NOW()
             RETURNING *;
           `;
@@ -300,8 +300,8 @@ export default {
           
           const name = email ? email.split('@')[0] : 'Мајстор';
           const newMajstor = await sql`
-            INSERT INTO majstori (name, email, clerk_id, city, category, is_founder, founder_number, is_premium, rating, rating_count, views, phone_clicks, verified, created_at, updated_at)
-            VALUES (${name}, ${email}, ${clerk_id}, 'Скопје', 'elektrika', ${isFounder}, ${founderNumber}, ${true}, 0, 0, 0, 0, false, NOW(), NOW())
+            INSERT INTO majstori (user_id, name, email, clerk_id, city, category, is_founder, founder_number, is_premium, rating, rating_count, views, phone_clicks, verified, created_at, updated_at)
+            VALUES (${clerk_id}, ${name}, ${email}, ${clerk_id}, 'Скопје', 'elektrika', ${isFounder}, ${founderNumber}, ${true}, 0, 0, 0, 0, false, NOW(), NOW())
             RETURNING *
           `;
           return new Response(JSON.stringify(newMajstor[0]), {headers:apiHeaders});
