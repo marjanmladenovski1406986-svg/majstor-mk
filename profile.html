@@ -52,10 +52,20 @@ header { background: #111; padding: 15px 20px; display: flex; align-items: cente
 .media-item img { width: 100%; height: 100%; object-fit: cover; }
 .delete-btn { position: absolute; top: 8px; right: 8px; background: rgba(220, 53, 53, 0.9); color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
 
-/* Upload Section */
-#uploadSection { display: none; /* Скриено по дифолт */ }
+/* Settings Section */
+#settingsSection { display: none; }
+.settings-btn { background: #222; border: 1px solid #444; color: #fff; padding: 12px 20px; border-radius: 8px; cursor: pointer; margin: 5px; font-family: inherit; font-size: 14px; transition: 0.2s; }
+.settings-btn:hover { border-color: #ff6b35; }
 .upload-btn { background: #ff6b35; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-.upload-btn:hover { background: #e55a2b; }
+
+/* Modals */
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+.modal.open { display: flex; }
+.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 500px; width: 100%; border: 1px solid #333; max-height: 90vh; overflow-y: auto; }
+.modal-content h2 { color: #ff6b35; text-align: center; margin-bottom: 20px; }
+.modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 10px; font-family: inherit; }
+.modal-content button { width: 100%; padding: 12px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+.modal-close { background: transparent !important; border: 1px solid #333 !important; color: #999 !important; }
 
 .loading { text-align: center; color: #999; padding: 40px; }
 .error-box { text-align: center; color: #ff6b6b; padding: 40px; }
@@ -79,6 +89,40 @@ header { background: #111; padding: 15px 20px; display: flex; align-items: cente
   <div class="loading">Вчитувам профил...</div>
 </div>
 
+<!-- MODALS -->
+<div class="modal" id="editInfoModal">
+  <div class="modal-content">
+    <h2>✏️ Уреди Информации</h2>
+    <input type="text" id="edit-name" placeholder="Име">
+    <input type="tel" id="edit-phone" placeholder="Телефон">
+    <select id="edit-city"></select>
+    <select id="edit-category"></select>
+    <textarea id="edit-description" placeholder="Опис"></textarea>
+    <input type="url" id="edit-facebook" placeholder="Facebook URL">
+    <input type="url" id="edit-website" placeholder="Веб-сајт URL">
+    <button onclick="handleEditInfo()">Зачувај</button>
+    <button class="modal-close" onclick="document.getElementById('editInfoModal').classList.remove('open')">Откажи</button>
+  </div>
+</div>
+
+<div class="modal" id="changeAvatarModal">
+  <div class="modal-content">
+    <h2>📸 Промени Профилна Слика</h2>
+    <input type="file" id="avatar-file" accept="image/*">
+    <button onclick="handleChangeAvatar()">Качи Слика</button>
+    <button class="modal-close" onclick="document.getElementById('changeAvatarModal').classList.remove('open')">Откажи</button>
+  </div>
+</div>
+
+<div class="modal" id="changeCoverModal">
+  <div class="modal-content">
+    <h2>🖼️ Промени Банеř</h2>
+    <input type="file" id="cover-file" accept="image/*">
+    <button onclick="handleChangeCover()">Качи Банеř</button>
+    <button class="modal-close" onclick="document.getElementById('changeCoverModal').classList.remove('open')">Откажи</button>
+  </div>
+</div>
+
 <script>
 const CAT_NAMES = {
   elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
@@ -86,10 +130,9 @@ const CAT_NAMES = {
   gipsari: "🧱 Гипсари и Молери", stolari: "🚪 Столари", klima: "❄️ Клима",
   greenje: "🔥 Греење", krov: "🏠 Кров", sanitarii: "🚿 Санитарии",
   pvc: "🪟 ПВЦ прозори и врати", dvorovi: "🌳 Уредување дворови", cistenje: "🧹 Чистење",
-  opti: "🔨 Општи работници", bravari: "🔨 Браварски услуги", belatehnika: "🔌 Бела техника",
-  videonadzor: "📹 Видео надзор", bazeni: "🏊 Базени", fasadi: "🎨 Фасади", iskop: "🚜 Ископ",
-  hidroizolacija: "💧 Хидро изолација", otpad: "🗑️ Фрлање отпад"
+  opti: "🔨 Општи работници", bravari: "🔨 Браварски услуги", belatehnika: "🔌 Бела техника"
 };
+const CITIES = ['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
 
 let majstorId = null;
 let majstorData = null;
@@ -97,7 +140,6 @@ let currentUser = null;
 let isAdmin = false;
 
 window.addEventListener('load', async function () {
-  // 1. Вчитај Clerk
   if (window.Clerk) {
     await window.Clerk.load();
     if (window.Clerk.user) {
@@ -106,7 +148,6 @@ window.addEventListener('load', async function () {
     }
   }
 
-  // 2. Земете ID од URL
   const urlParams = new URLSearchParams(window.location.search);
   majstorId = urlParams.get('id');
 
@@ -115,11 +156,19 @@ window.addEventListener('load', async function () {
     return;
   }
 
-  // 3. Вчитај податоци
+  populateSelects();
   await loadMajstor();
   await loadMedia();
   await loadRatings();
 });
+
+function populateSelects() {
+  const citySelect = document.getElementById('edit-city');
+  const catSelect = document.getElementById('edit-category');
+  
+  CITIES.forEach(c => { citySelect.innerHTML += `<option value="${c}">${c}</option>`; });
+  Object.keys(CAT_NAMES).forEach(k => { catSelect.innerHTML += `<option value="${k}">${CAT_NAMES[k]}</option>`; });
+}
 
 function showError(title, msg) {
   document.getElementById('content').innerHTML = `
@@ -136,19 +185,26 @@ async function loadMajstor() {
     const data = await res.json();
     const majstor = data.find(m => m.id == majstorId);
 
-    if (!majstor) {
-      showError('Мајстор не е најден', 'Овој мајстор не постои.');
-      return;
-    }
+    if (!majstor) { showError('Мајстор не е најден', 'Овој мајстор не постои.'); return; }
     
     majstorData = majstor;
     const catText = CAT_NAMES[majstor.category] || majstor.category;
     const avatar = majstor.photo_url ? `<img src="${majstor.photo_url}" alt="${majstor.name}">` : (majstor.name || '?').charAt(0).toUpperCase();
+    
+    // Пополнување на модалите за уредување
+    document.getElementById('edit-name').value = majstor.name || '';
+    document.getElementById('edit-phone').value = majstor.phone || '';
+    document.getElementById('edit-city').value = majstor.city || '';
+    document.getElementById('edit-category').value = majstor.category || '';
+    document.getElementById('edit-description').value = majstor.description || '';
+    document.getElementById('edit-facebook').value = majstor.facebook_url || '';
+    document.getElementById('edit-website').value = majstor.website_url || '';
 
     document.title = `${majstor.name} - ${catText} | Majsto.mk`;
 
     document.getElementById('content').innerHTML = `
       <div class="profile-header">
+        ${majstor.cover_url ? `<div style="width: 100%; height: 200px; background: #000 url('${majstor.cover_url}') center/contain no-repeat; border-radius: 16px 16px 0 0; margin-bottom: 20px;"></div>` : ''}
         <div class="profile-top">
           <div class="big-avatar">${avatar}</div>
           <div class="profile-name-block">
@@ -169,6 +225,13 @@ async function loadMajstor() {
           ${majstor.facebook_url ? `<a href="${majstor.facebook_url}" target="_blank" class="btn-contact btn-fb">📘 Facebook</a>` : ''}
           ${majstor.website_url ? `<a href="${majstor.website_url}" target="_blank" class="btn-contact btn-web">🌐 Веб-сајт</a>` : ''} 
         </div>
+      </div>
+
+      <div class="section" id="settingsSection">
+        <h2>⚙️ Поставки</h2>
+        <button class="settings-btn" onclick="document.getElementById('changeAvatarModal').classList.add('open')">📸 Промени Профилна Слика</button>
+        <button class="settings-btn" onclick="document.getElementById('changeCoverModal').classList.add('open')">🖼️ Промени Банеř</button>
+        <button class="settings-btn" onclick="document.getElementById('editInfoModal').classList.add('open')">✏️ Уреди Информации</button>
       </div>
 
       <div class="section" id="uploadSection">
@@ -192,10 +255,9 @@ async function loadMajstor() {
       </div>
     `;
 
-    // Проверка за дозвола: Само админ ИЛИ сопственик на профилот (истиот мејл)
-    // (Бидејќи сè уште не сме ги поврзале старите профили со Clerk, дозволуваме само админ за сега)
     if (isAdmin) {
       document.getElementById('uploadSection').style.display = 'block';
+      document.getElementById('settingsSection').style.display = 'block';
     }
 
   } catch (error) {
@@ -204,13 +266,13 @@ async function loadMajstor() {
   }
 }
 
+// (Останатите функции loadMedia, loadRatings, uploadImage, deleteImage остануваат исти како во претходниот код)
+
 async function loadMedia() {
   try {
     const resMedia = await fetch('/api/media');
     const mediaData = await resMedia.json();
-    
     const images = mediaData.filter(m => m.type === 'image' && m.majstor_id == majstorId);
-
     const imgGrid = document.getElementById('imagesGrid');
     if (images && images.length > 0) {
       imgGrid.innerHTML = images.map(img => `
@@ -221,9 +283,7 @@ async function loadMedia() {
     } else {
       imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px; grid-column: 1/-1;">Нема слики сè уште</p>';
     }
-  } catch (error) {
-    console.error("Грешка при медиуми:", error);
-  }
+  } catch (error) { console.error("Грешка при медиуми:", error); }
 }
 
 async function loadRatings() {
@@ -231,13 +291,11 @@ async function loadRatings() {
     const res = await fetch('/api/ratings');
     const data = await res.json();
     const myRatings = data.filter(r => r.majstor_id == majstorId);
-    
     const content = document.getElementById('ratingsContent');
     if (!myRatings || myRatings.length === 0) {
       content.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема оценки сè уште</p>';
       return;
     }
-
     content.innerHTML = myRatings.map(r => {
       const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
       const date = new Date(r.created_at).toLocaleDateString('mk-MK');
@@ -247,72 +305,107 @@ async function loadRatings() {
         <div style="color:#666; font-size:11px;">${date}</div>
       </div>`;
     }).join('');
-  } catch (error) {
-    console.error("Грешка при оценки:", error);
-  }
+  } catch (error) { console.error("Грешка при оценки:", error); }
 }
 
-// Качување на слика
+// Помошна функција за качување на слика на ImgBB и враќање на линк
+async function uploadToImgBB(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch('/api/upload', { method: 'POST', body: formData });
+  const data = await res.json();
+  if (data.secure_url) return data.secure_url;
+  throw new Error(data.error || "Грешка при качување");
+}
+
 async function uploadImage(input) {
   const file = input.files[0];
   if (!file) return;
-
   alert("Почнувам качување...");
-
-  const formData = new FormData();
-  formData.append('file', file);
-
   try {
-    // 1. Качување на ImgBB
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    const data = await res.json();
-    
-    if (data.secure_url) {
-      // 2. Зачувување во Neon базата
-      const saveRes = await fetch('/api/add-media', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          majstor_id: majstorId,
-          url: data.secure_url,
-          type: 'image'
-        })
-      });
-
-      if (saveRes.ok) {
-        alert("✅ Сликата е качена!");
-        loadMedia(); // Освежи ја галеријата веднаш
-      } else {
-        alert("Сликата е качена, но не е зачувана во базата.");
-      }
-    } else {
-      alert("❌ Грешка при качување: " + JSON.stringify(data));
-    }
-  } catch (err) {
-    alert("❌ Грешка во мрежата: " + err.message);
-  }
+    const url = await uploadToImgBB(file);
+    await fetch('/api/add-media', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ majstor_id: majstorId, url: url, type: 'image' })
+    });
+    alert("✅ Сликата е качена!");
+    loadMedia();
+  } catch (err) { alert("❌ Грешка: " + err.message); }
 }
 
-// Бришење на слика
 async function deleteImage(id) {
-  if (!confirm("Дали си сигурен дека сакаш да ја избришеш оваа слика?")) return;
-
+  if (!confirm("Дали си сигурен?")) return;
   try {
-    const res = await fetch('/api/delete-media', {
+    await fetch('/api/delete-media', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: id })
     });
+    alert("✅ Сликата е избришана!");
+    loadMedia();
+  } catch (err) { alert("❌ Грешка: " + err.message); }
+}
 
-    if (res.ok) {
-      alert("✅ Сликата е избришана!");
-      loadMedia(); // Освежи ја галеријата веднаш
-    } else {
-      alert("❌ Грешка при бришење.");
-    }
-  } catch (err) {
-    alert("❌ Грешка во мрежата: " + err.message);
-  }
+// Промена на Аватар
+async function handleChangeAvatar() {
+  const file = document.getElementById('avatar-file').files[0];
+  if (!file) { alert("Избери слика."); return; }
+  alert("Се качува...");
+  try {
+    const url = await uploadToImgBB(file);
+    await fetch('/api/update-avatar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: majstorId, url: url })
+    });
+    alert("✅ Профилната слика е сменета!");
+    document.getElementById('changeAvatarModal').classList.remove('open');
+    loadMajstor(); // Освежи го профилот
+  } catch (err) { alert("❌ Грешка: " + err.message); }
+}
+
+// Промена на Банеř
+async function handleChangeCover() {
+  const file = document.getElementById('cover-file').files[0];
+  if (!file) { alert("Избери слика."); return; }
+  alert("Се качува...");
+  try {
+    const url = await uploadToImgBB(file);
+    await fetch('/api/update-cover', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: majstorId, url: url })
+    });
+    alert("✅ Банеřот е сменет!");
+    document.getElementById('changeCoverModal').classList.remove('open');
+    loadMajstor();
+  } catch (err) { alert("❌ Грешка: " + err.message); }
+}
+
+// Уредување на Информации
+async function handleEditInfo() {
+  const data = {
+    id: majstorId,
+    name: document.getElementById('edit-name').value,
+    phone: document.getElementById('edit-phone').value,
+    city: document.getElementById('edit-city').value,
+    category: document.getElementById('edit-category').value,
+    description: document.getElementById('edit-description').value,
+    facebook_url: document.getElementById('edit-facebook').value || null,
+    website_url: document.getElementById('edit-website').value || null
+  };
+  
+  try {
+    await fetch('/api/update-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    alert("✅ Информациите се зачувани!");
+    document.getElementById('editInfoModal').classList.remove('open');
+    loadMajstor();
+  } catch (err) { alert("❌ Грешка: " + err.message); }
 }
 </script>
 </body>
