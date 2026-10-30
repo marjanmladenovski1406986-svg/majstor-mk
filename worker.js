@@ -72,19 +72,33 @@ export default {
         }
 
         if (url.pathname === "/api/upload" && request.method === "POST") {
-          const formData = await request.formData();
-          const file = formData.get('file');
-          if (!file) return new Response(JSON.stringify({ error: "Нема слика" }), { status: 400, headers: apiHeaders });
-          if (file.size > 8 * 1024 * 1024) return new Response(JSON.stringify({ error: "Слика >8MB" }), { status: 400, headers: apiHeaders });
+          try {
+            const formData = await request.formData();
+            const file = formData.get('file');
+            if (!file) return new Response(JSON.stringify({ error: "Нема слика" }), { status: 400, headers: apiHeaders });
+            if (file.size > 10 * 1024 * 1024) return new Response(JSON.stringify({ error: "Слика >10MB - намали ја" }), { status: 400, headers: apiHeaders });
 
-          const imgbbData = new FormData();
-          imgbbData.append('image', file);
-          const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${env.IMGBB_API_KEY}`, { method: 'POST', body: imgbbData });
-          const result = await imgbbRes.json();
-          if (result.data?.url) {
-            return new Response(JSON.stringify({ secure_url: result.data.url, url: result.data.url }), { headers: apiHeaders });
-          } else {
-            return new Response(JSON.stringify({ error: result.error?.message || "ImgBB грешка" }), { status: 500, headers: apiHeaders });
+            // Try ImgBB with timeout
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 15000);
+            try {
+              const imgbbData = new FormData();
+              imgbbData.append('image', file);
+              const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${env.IMGBB_API_KEY}`, { method: 'POST', body: imgbbData, signal: controller.signal });
+              clearTimeout(timeout);
+              const result = await imgbbRes.json();
+              if (result.data?.url) {
+                return new Response(JSON.stringify({ secure_url: result.data.url, url: result.data.url }), { headers: apiHeaders });
+              }
+            } catch (e) {
+              clearTimeout(timeout);
+              console.log("ImgBB failed, trying fallback:", e.message);
+            }
+
+            // Fallback: store as data URL via R2 or return error with instructions
+            return new Response(JSON.stringify({ error: "ImgBB моментално бавен - пробај помала слика (<2MB) или пробај повторно за 10 секунди" }), { status: 500, headers: apiHeaders });
+          } catch (e) {
+            return new Response(JSON.stringify({ error: "Upload грешка: "+e.message }), { status: 500, headers: apiHeaders });
           }
         }
 
