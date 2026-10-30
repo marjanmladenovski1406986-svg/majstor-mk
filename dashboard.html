@@ -108,14 +108,30 @@ window.addEventListener('load', async function(){
 });
 async function loadMe(){
   try{
-    var url = '/api/me?clerk_id='+encodeURIComponent(currentUser.id)+'&email='+encodeURIComponent(currentUser.primaryEmailAddress.emailAddress);
+    // Check if admin wants to edit another profile
+    var urlParams = new URLSearchParams(window.location.search);
+    var editId = urlParams.get('edit_id');
+    var isAdminEdit = !!editId;
+    
+    var url;
+    if(isAdminEdit){
+      url = '/api/majstori?id='+encodeURIComponent(editId);
+    } else {
+      url = '/api/me?clerk_id='+encodeURIComponent(currentUser.id)+'&email='+encodeURIComponent(currentUser.primaryEmailAddress.emailAddress);
+    }
     var res=await fetch(url);
     var data=await res.json();
     if(data.error){ document.getElementById('loading').textContent='Greska: '+data.error; return; }
-    myProfile=data;
+    // /api/majstori?id= returns object, /api/me returns object, but sometimes array
+    if(Array.isArray(data)){ myProfile=data[0]; } else { myProfile=data; }
+    if(!myProfile){ document.getElementById('loading').textContent='Грешка: Профилот не постои'; return; }
     document.getElementById('loading').style.display='none';
     document.getElementById('dashboard').style.display='block';
     document.getElementById('welcome').textContent='Zdravo, '+(myProfile.name||currentUser.firstName||'Majstore')+'!';
+    if(isAdminEdit){
+      document.getElementById('welcome').innerHTML += ' <span style="background:#ff6b35;color:#000;padding:4px 8px;border-radius:10px;font-size:12px;margin-left:8px">ADMIN EDIT MODE - уредуваш како '+myProfile.name+'</span>';
+      document.getElementById('founderBadge').innerHTML = '<span style="background:#ff6b35;color:#000;padding:6px 12px;border-radius:20px;font-weight:900">🛠️ АДМИН - уредуваш туѓ профил ID:'+myProfile.id+'</span> <a href="/admin.html" style="color:#ff6b35;margin-left:10px">← Назад во Админ</a>';
+    }
     if(myProfile.is_founder){
       document.getElementById('founderBadge').innerHTML='<span style="background:#4caf50;color:#000;padding:6px 12px;border-radius:20px;font-weight:900">FOUNDER #'+myProfile.founder_number+' — besplatno zasekogas</span>';
     } else if(myProfile.is_premium){
