@@ -2447,7 +2447,13 @@ window.addEventListener('load', async function () {
   const clerkHeader = document.getElementById('clerk-header');
   if (!clerkHeader) return;
 
-    async function updateClerkUI() {
+  let isRendering = false;
+
+  async function updateClerkUI() {
+    // Ако веќе се рендерира, прескокни за да не се дуплира
+    if (isRendering) return;
+    isRendering = true;
+    
     clerkHeader.innerHTML = ''; 
     
     if (window.Clerk.user) {
@@ -2462,6 +2468,9 @@ window.addEventListener('load', async function () {
       } catch (e) {
         console.error("Грешка при барање на профил:", e);
       }
+
+      // Исчисти го повторно по чекањето (за секој случај)
+      clerkHeader.innerHTML = ''; 
 
       const profileBtn = document.createElement('a');
       if (myProfileId) {
@@ -2491,16 +2500,15 @@ window.addEventListener('load', async function () {
       loginBtn.onclick = () => window.Clerk.openSignIn(); 
       clerkHeader.appendChild(loginBtn);
     }
+    
+    isRendering = false;
   }
 
-  updateClerkUI();
-
+  // Само слушаме за промени (Clerk автоматски ќе ја повика функцијата кога ќе се вчита)
   window.Clerk.addListener(({ user }) => {
     updateClerkUI();
   });
 });
-
 </script>
-
 </body>
 </html>
