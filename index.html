@@ -2051,21 +2051,7 @@ function closeModal() { document.getElementById('modal').classList.remove('open'
 
 
 
-function resetRegisterForm() {
-  selectedType = null;
-  document.getElementById('type-majstor').classList.remove('active');
-  document.getElementById('type-baram').classList.remove('active');
-  document.getElementById('form-majstor').classList.add('hidden');
-  document.getElementById('form-baram').classList.add('hidden');
-}
 
-function selectType(type) {
-  selectedType = type;
-  document.getElementById('type-majstor').classList.toggle('active', type === 'majstor');
-  document.getElementById('type-baram').classList.toggle('active', type === 'baram');
-  document.getElementById('form-majstor').classList.toggle('hidden', type !== 'majstor');
-  document.getElementById('form-baram').classList.toggle('hidden', type !== 'baram');
-}
 
 function showModalMsg(text, type) {
   const msg = document.getElementById('modal-msg');
