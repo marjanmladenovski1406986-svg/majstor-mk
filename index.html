@@ -2474,7 +2474,7 @@ window.addEventListener('load', async function () {
       loginBtn.className = 'btn-auth'; 
       loginBtn.style.marginLeft = '10px';
       loginBtn.textContent = 'Најава';
-      loginBtn.onclick = () => window.Clerk.redirectToSignIn();; 
+      loginBtn.onclick = () => window.Clerk.openSignIn();; 
       clerkHeader.appendChild(loginBtn);
     }
   }
