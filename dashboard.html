@@ -54,8 +54,12 @@ input,select,textarea{width:100%;padding:10px;background:#1a1a1a;border:1px soli
 <textarea id="pDesc" rows="3" placeholder="Opis..."></textarea>
 <input id="pFb" placeholder="Facebook link">
 <input id="pWeb" placeholder="Vebsajt">
+<label style="color:#ff6b35;font-size:13px;font-weight:700;margin-bottom:4px;display:block">📷 Профилна слика</label>
 <input id="pPhoto" placeholder="URL na profilna slika">
-<input type="file" id="photoFile" accept="image/*" style="margin-bottom:8px">
+<input type="file" id="photoFile" accept="image/*" style="margin-bottom:12px">
+<label style="color:#ff6b35;font-size:13px;font-weight:700;margin-bottom:4px;display:block">🖼️ Банер / Cover слика (заднина на профил)</label>
+<input id="pCover" placeholder="URL na cover/baner slika">
+<input type="file" id="coverFile" accept="image/*" style="margin-bottom:8px">
 <button class="btn btn-orange" style="width:100%" onclick="saveProfile()">Zacuvaj profil</button>
 <div id="pMsg" style="margin-top:8px;font-size:13px"></div>
 </div>
@@ -104,6 +108,7 @@ window.addEventListener('load', async function(){
   document.getElementById('headerAuth').innerHTML='<span style="color:#888;font-size:12px">'+currentUser.primaryEmailAddress.emailAddress+'</span> <button class="btn" onclick="Clerk.signOut().then(function(){location.reload()})">Odjava</button> <a href="/" class="btn">Pocetna</a>';
   loadMe();
   document.getElementById('photoFile').addEventListener('change', function(){ uploadAvatar(this); });
+  document.getElementById('coverFile').addEventListener('change', function(){ uploadCover(this); });
   document.getElementById('galleryFile').addEventListener('change', function(){ uploadGallery(this); });
 });
 async function loadMe(){
@@ -148,6 +153,7 @@ async function loadMe(){
     document.getElementById('pFb').value=myProfile.facebook_url||'';
     document.getElementById('pWeb').value=myProfile.website_url||'';
     document.getElementById('pPhoto').value=myProfile.photo_url||'';
+    if(document.getElementById('pCover')) document.getElementById('pCover').value=myProfile.cover_url||'';
     loadMedia(); loadStats(); loadPayment();
   }catch(e){ document.getElementById('loading').textContent='Greska: '+e.message; }
 }
@@ -174,7 +180,7 @@ function loadPayment(){
   }
 }
 async function saveProfile(){
-  var body={id:myProfile.id, name:document.getElementById('pName').value, phone:document.getElementById('pPhone').value, city:document.getElementById('pCity').value, category:document.getElementById('pCategory').value, description:document.getElementById('pDesc').value, facebook_url:document.getElementById('pFb').value, website_url:document.getElementById('pWeb').value, photo_url:document.getElementById('pPhoto').value, clerk_id:currentUser.id, email:currentUser.primaryEmailAddress.emailAddress};
+  var body={id:myProfile.id, name:document.getElementById('pName').value, phone:document.getElementById('pPhone').value, city:document.getElementById('pCity').value, category:document.getElementById('pCategory').value, description:document.getElementById('pDesc').value, facebook_url:document.getElementById('pFb').value, website_url:document.getElementById('pWeb').value, photo_url:document.getElementById('pPhoto').value, cover_url:document.getElementById('pCover').value, clerk_id:currentUser.id, email:currentUser.primaryEmailAddress.emailAddress};
   var res=await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   var data=await res.json();
   document.getElementById('pMsg').textContent=data.success?'Zacuvano!':'Greska: '+(data.error||'');
