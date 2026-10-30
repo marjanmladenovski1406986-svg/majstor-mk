@@ -2447,14 +2447,34 @@ window.addEventListener('load', async function () {
   const clerkHeader = document.getElementById('clerk-header');
   if (!clerkHeader) return;
 
-  function updateClerkUI() {
+   async function updateClerkUI() {
     clerkHeader.innerHTML = ''; 
     
-       if (window.Clerk.user) {
+    if (window.Clerk.user) {
+      const loggedInEmail = window.Clerk.user.primaryEmailAddress.emailAddress;
+      
+      // Бараме во базата (Neon) кое ID му припаѓа на овој мејл
+      let myProfileId = null;
+      try {
+        const res = await fetch('/api/majstori');
+        const allMajstori = await res.json();
+        const myProfile = allMajstori.find(m => m.email === loggedInEmail);
+        if (myProfile) myProfileId = myProfile.id;
+      } catch (e) {
+        console.error("Грешка при барање на профил:", e);
+      }
+
       // 1. Креирање на копчето "Мој Профил"
       const profileBtn = document.createElement('a');
-      // За сега користиме ID 35 (Дарко) за тест, подоцна ќе го направиме динамично
-      profileBtn.href = '/profile.html?id=35'; 
+      
+      // Ако најде профил, носи го таму. Ако не, прикажи порака.
+      if (myProfileId) {
+        profileBtn.href = `/profile.html?id=${myProfileId}`; 
+      } else {
+        profileBtn.href = '#';
+        profileBtn.onclick = (e) => { e.preventDefault(); alert("Вашиот профил сè уште не е поврзан. Контактирајте го администраторот."); };
+      }
+
       profileBtn.className = 'btn-profile';
       profileBtn.style.marginRight = '10px';
       profileBtn.style.textDecoration = 'none';
@@ -2474,7 +2494,7 @@ window.addEventListener('load', async function () {
       loginBtn.className = 'btn-auth'; 
       loginBtn.style.marginLeft = '10px';
       loginBtn.textContent = 'Најава';
-      loginBtn.onclick = () => window.Clerk.openSignIn();; 
+      loginBtn.onclick = () => window.Clerk.openSignIn(); 
       clerkHeader.appendChild(loginBtn);
     }
   }
