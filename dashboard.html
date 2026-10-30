@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дашборд — Majsto.mk</title>
+<link rel="icon" href="/icon-192.png"><meta name="theme-color" content="#ff6b35">
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
+header{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid #222;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;font-size:20px;color:#ff6b35;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:20px;display:grid;grid-template-columns:220px 1fr;gap:20px}
+@media(max-width:800px){.container{grid-template-columns:1fr}}
+.sidebar{background:#141414;border:1px solid #262626;border-radius:16px;padding:12px;height:fit-content;position:sticky;top:80px}
+.tab{padding:12px 14px;border-radius:10px;cursor:pointer;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.tab.active{background:#ff6b35;color:#000}
+.tab span.count{background:#222;color:#fff;padding:2px 8px;border-radius:20px;font-size:12px}
+.tab.active span.count{background:#000;color:#fff}
+.main{}
+.card{background:#141414;border:1px solid #262626;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:18px;font-weight:800;color:#ff6b35;margin-bottom:16px;display:flex;justify-content:space-between}
+.banner{border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.banner-founder{background:linear-gradient(90deg,#1a2e0a,#2a3a0a);border:1px solid #4caf50}
+.banner-premium{background:linear-gradient(90deg,#2a1a0a,#3a2510);border:1px solid #ff6b35}
+.banner-free{background:linear-gradient(90deg,#2a1a0a,#3a1a0a);border:1px solid #ff4444}
+.progress{height:10px;background:#222;border-radius:20px;overflow:hidden;margin-top:10px}
+.progress-fill{height:100%;background:#ff6b35;transition:.5s}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+.input{width:100%;padding:12px;background:#222;border:1px solid #333;border-radius:10px;color:#fff;margin-bottom:10px;font-family:inherit}
+textarea.input{resize:vertical}
+.btn{padding:12px 18px;border-radius:10px;font-weight:800;border:none;cursor:pointer}
+.btn-orange{background:#ff6b35;color:#fff;width:100%}
+.btn-ghost{background:#222;color:#fff;border:1px solid #333}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.media-item{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#222;border:2px solid transparent}
+.media-item.founder-week{border-color:#ffbd00;box-shadow:0 0 20px rgba(255,189,0,.3)}
+.media-item img{width:100%;height:100%;object-fit:cover}
+.media-actions{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent);display:flex;align-items:flex-end;justify-content:space-between;padding:8px;opacity:0;transition:.2s}
+.media-item:hover .media-actions{opacity:1}
+.icon-btn{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px}
+.dropzone{border:2px dashed #333;border-radius:16px;padding:30px;text-align:center;cursor:pointer;transition:.2s;background:#161616}
+.dropzone:hover{border-color:#ff6b35;background:#1a1a1a}
+.dropzone.dragover{border-color:#ff6b35;background:#1f1f1f}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:16px;text-align:center}
+.stat b{font-size:24px;display:block}
+.stat span{color:#888;font-size:12px}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:20px}
+.bar{flex:1;background:#222;border-radius:6px 6px 0 0;position:relative;transition:.3s}
+.bar.active{background:#ff6b35}
+.bar span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:#aaa}
+.rating{padding:12px;background:#1e1e1e;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between;gap:12px}
+.toast{position:fixed;bottom:20px;right:20px;background:#222;border:1px solid #333;padding:14px 18px;border-radius:12px;z-index:100;transform:translateY(100px);opacity:0;transition:.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.loading{color:#666;text-align:center;padding:40px}
+</style>
+</head>
+<body>
+<header><a href="/" class="logo">🔨 Majsto.mk</a><div><span id="userName" style="color:#888;margin-right:10px"></span><a href="/" class="logo" style="font-size:14px;border:1px solid #333;padding:6px 12px;border-radius:8px">← Сајт</a></div></header>
+<div class="container">
+<div class="sidebar">
+<div class="tab active" data-tab="info" onclick="switchTab('info')">📝 Основни <span class="count">•</span></div>
+<div class="tab" data-tab="gallery" onclick="switchTab('gallery')">🖼️ Галерија <span class="count" id="galCount">0/50</span></div>
+<div class="tab" data-tab="stats" onclick="switchTab('stats')">📊 Статистика</div>
+<div style="margin-top:20px;padding-top:20px;border-top:1px solid #222">
+<div style="font-size:12px;color:#666">Статус</div>
+<div id="statusBadge" style="margin-top:6px"></div>
+</div>
+</div>
+<div class="main" id="main">
+<div class="loading">Вчитувам дашборд...</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ",dvorovi:"🌳 Дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи",bravari:"🔨 Бравари",belatehnika:"🔌 Бела техника"};
+const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
+let majstor=null, currentUser=null, media=[], ratings=[], totalMajstori=0;
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelector(`[data-tab="${t}"]`).classList.add('active');
+  if(t==='info') renderInfo();
+  if(t==='gallery') renderGallery();
+  if(t==='stats') renderStats();
+}
+window.addEventListener('load', async()=>{
+  if(!window.Clerk){document.getElementById('main').innerHTML='Clerk не е вчитан';return}
+  await Clerk.load();
+  if(!Clerk.user){Clerk.openSignIn({afterSignInUrl:'/dashboard.html'}); return}
+  currentUser=Clerk.user.primaryEmailAddress.emailAddress;
+  document.getElementById('userName').textContent=currentUser;
+  // Check total count for founder banner
+  const allRes=await fetch('/api/majstori'); const all=await allRes.json(); totalMajstori=all.length;
+  // Find my profile
+  const myRes=await fetch('/api/majstori?email='+encodeURIComponent(currentUser));
+  const myData=await myRes.json();
+  if(!myData || !myData.id){
+    // Not registered - show register form
+    renderRegister();
+  } else {
+    majstor=myData;
+    // Load media and ratings
+    const [mRes,rRes]=await Promise.all([fetch('/api/media?majstor_id='+majstor.id), fetch('/api/ratings?majstor_id='+majstor.id)]);
+    media=await mRes.json(); ratings=await rRes.json();
+    document.getElementById('galCount').textContent=`${media.length}/50`;
+    renderInfo();
+  }
+});
+function renderRegister(){
+  document.getElementById('main').innerHTML=`
+    <div class="banner ${totalMajstori<50?'banner-founder':'banner-premium'}">
+      <div><b>${totalMajstori<50?`🎉 Уште ${50-totalMajstori} бесплатни места!`:'💳 1000 ден / годишно'}</b><br><span style="font-size:13px;color:#aaa">${totalMajstori<50?'Стани FOUNDER засекогаш бесплатно':'Првите 50 се пополнети - сега премиум'}</span></div>
+      <div style="font-weight:900">${totalMajstori}/50</div>
+    </div>
+    <div class="card"><h2>🚀 Регистрација - Стани мајстор</h2>
+      <div class="grid-2"><input id="r-name" class="input" placeholder="Име и презиме"><input id="r-phone" class="input" placeholder="Телефон 070..."></div>
+      <div class="grid-2"><select id="r-city" class="input">${CITIES.map(c=>`<option value="${c}">${c}</option>`).join('')}</select><select id="r-cat" class="input">${Object.entries(CAT_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+      <textarea id="r-desc" class="input" rows="4" placeholder="Опис - што работиш, искуство..."></textarea>
+      <div class="grid-2"><input id="r-fb" class="input" placeholder="Facebook URL (опционално)"><input id="r-web" class="input" placeholder="Вебсајт (опционално)"></div>
+      <label style="display:flex;gap:8px;align-items:center;margin:10px 0;font-size:13px;color:#aaa"><input type="checkbox" id="r-terms"> Се согласувам со условите</label>
+      <button class="btn btn-orange" onclick="doRegister()">Регистрирај се ${totalMajstori<50?'бесплатно':'за 1000 ден/год'}</button>
+    </div>`;
+}
+async function doRegister(){
+  const body={
+    clerk_id:Clerk.user.id,
+    email:currentUser,
+    name:document.getElementById('r-name').value,
+    phone:document.getElementById('r-phone').value,
+    city:document.getElementById('r-city').value,
+    category:document.getElementById('r-cat').value,
+    description:document.getElementById('r-desc').value,
+    facebook_url:document.getElementById('r-fb').value||'',
+    website_url:document.getElementById('r-web').value||'',
+  };
+  if(!body.name||!body.phone){toast('Пополни име и телефон');return}
+  if(!document.getElementById('r-terms').checked){toast('Прифати услови');return}
+  const res=await fetch('/api/register-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await res.json();
+  if(j.success){toast('✅ Успешна регистрација!'); setTimeout(()=>location.reload(),1000);}
+  else toast('Грешка: '+(j.error||''));
+}
+function renderInfo(){
+  const isFounder=majstor.is_founder;
+  const banner=isFounder?`<div class="banner banner-founder"><div><b>🚀 FOUNDER #${majstor.founder_number||''}</b><br><span style="font-size:13px">Ти си меѓу првите 50 - имаш бесплатно засекогаш + топ позиција</span></div><span style="background:#4caf50;color:#000;padding:4px 10px;border-radius:20px;font-weight:800;font-size:12px">БЕСПЛАТНО</span></div>`
+    : (majstor.is_premium?`<div class="banner banner-premium"><b>👑 PREMIUM</b> - Активен до ${majstor.paid_until||'неограничено'}<span style="background:#ff6b35;color:#000;padding:4px 10px;border-radius:20px;font-weight:800;font-size:12px">1000 ден/год</span></div>`
+    : `<div class="banner banner-free"><b>⚠️ Профилот не е активен</b> - Плати 1000 ден за да бидеш видлив<button class="btn btn-orange" style="width:auto;padding:6px 12px;font-size:12px" onclick="alert('Плаќање наскоро')">Плати</button></div>`);
+  
+  document.getElementById('main').innerHTML=`
+    ${banner}
+    <div id="statusBadge"></div>
+    <div class="card"><h2>📝 Основни информации</h2>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px">
+        <div style="text-align:center"><div style="width:80px;height:80px;border-radius:50%;background:#ff6b35;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;overflow:hidden">${majstor.photo_url?`<img src="${majstor.photo_url}" style="width:100%;height:100%;object-fit:cover">`:majstor.name.charAt(0)}</div><button class="btn btn-ghost" style="margin-top:8px;font-size:12px" onclick="document.getElementById('avatarInput').click()">Смени аватар</button><input type="file" id="avatarInput" hidden accept="image/*" onchange="uploadAvatar(this)"></div>
+        <div style="text-align:center"><div style="width:240px;height:80px;background:#222;border-radius:10px;overflow:hidden;background-image:url('${majstor.cover_url||''}');background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#666">${majstor.cover_url?'':'Нема банер'}</div><button class="btn btn-ghost" style="margin-top:8px;font-size:12px" onclick="document.getElementById('coverInput').click()">Смени банер</button><input type="file" id="coverInput" hidden accept="image/*" onchange="uploadCover(this)"></div>
+      </div>
+      <div class="grid-2"><input id="e-name" class="input" value="${majstor.name||''}" placeholder="Име"><input id="e-phone" class="input" value="${majstor.phone||''}" placeholder="Телефон"></div>
+      <div class="grid-2"><select id="e-city" class="input">${CITIES.map(c=>`<option value="${c}" ${c===majstor.city?'selected':''}>${c}</option>`).join('')}</select><select id="e-cat" class="input">${Object.entries(CAT_NAMES).map(([k,v])=>`<option value="${k}" ${k===majstor.category?'selected':''}>${v}</option>`).join('')}</select></div>
+      <textarea id="e-desc" class="input" rows="4" placeholder="Опис">${majstor.description||''}</textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:12px;color:#666">Опис</span><span style="font-size:12px;color:#888" id="charCount">${(majstor.description||'').length}/500</span></div>
+      <div class="grid-2"><input id="e-fb" class="input" value="${majstor.facebook_url||''}" placeholder="Facebook URL"><input id="e-web" class="input" value="${majstor.website_url||''}" placeholder="Вебсајт"></div>
+      <button class="btn btn-orange" onclick="saveInfo()">💾 Зачувај промени</button>
+      <div style="margin-top:12px;text-align:center"><a href="/profile.html?id=${majstor.id}" target="_blank" style="color:#ff6b35;font-size:13px">👁️ Види јавен профил →</a></div>
+    </div>`;
+  document.getElementById('e-desc').addEventListener('input',e=>{document.getElementById('charCount').textContent=e.target.value.length+'/500'});
+  document.getElementById('statusBadge').innerHTML=majstor.is_founder?'<span class="badge" style="background:#4caf50;color:#000;padding:4px 10px;border-radius:20px;font-size:11px">🚀 FOUNDER</span>':(majstor.is_premium?'<span class="badge" style="background:#ff6b35;color:#000;padding:4px 10px;border-radius:20px;font-size:11px">👑 PREMIUM</span>':'');
+}
+async function saveInfo(){
+  const body={id:majstor.id,name:document.getElementById('e-name').value,phone:document.getElementById('e-phone').value,city:document.getElementById('e-city').value,category:document.getElementById('e-cat').value,description:document.getElementById('e-desc').value,facebook_url:document.getElementById('e-fb').value,website_url:document.getElementById('e-web').value};
+  const res=await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  toast(res.ok?'✅ Зачувано':'Грешка');
+}
+function renderGallery(){
+  const maxTop=media.reduce((max,m)=> (m.views||0)> (max.views||0)?m:max, media[0]||{});
+  document.getElementById('main').innerHTML=`
+    <div class="card"><h2>🖼️ Галерија <span style="color:#888;font-weight:400">${media.length}/50</span></h2>
+      <div class="progress"><div class="progress-fill" style="width:${media.length/50*100}%"></div></div>
+      <p style="color:#888;font-size:13px;margin:10px 0">${media.length>=50?'Достигнат лимит - избриши некоја слика':`Можеш да додадеш уште ${50-media.length} слики`}</p>
+      <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()" ondrop="handleDrop(event)" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')">
+        <div style="font-size:24px">📤</div><b>Влечи слики тука или кликни</b><br><span style="color:#666;font-size:12px">Можеш да селектираш повеќе слики одеднаш - до 50 вкупно</span>
+        <input type="file" id="fileInput" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
+      </div>
+    </div>
+    <div class="card"><div class="media-grid">${media.map(m=>`<div class="media-item ${m.id===maxTop.id?'founder-week':''}"><img src="${m.url}"><div class="media-actions"><span style="font-size:11px;color:#fff">👁️ ${m.views||0} ${m.id===maxTop.id?'⭐ Недела'</span><div style="display:flex;gap:4px"><button class="icon-btn" onclick="deleteImg(${m.id})">🗑️</button></div></div></div>`).join('') || '<p style="color:#666;text-align:center">Нема слики уште</p>'}</div></div>
+  `;
+}
+async function handleFiles(files){
+  const toUpload=Array.from(files).slice(0,50-media.length);
+  if(!toUpload.length){toast('Достигнат лимит 50');return}
+  for(const file of toUpload){
+    toast(`Се качува ${file.name}...`);
+    try{
+      const fd=new FormData(); fd.append('file',file);
+      const up=await fetch('/api/upload',{method:'POST',body:fd}); const j=await up.json();
+      if(!j.secure_url) throw new Error(j.error);
+      await fetch('/api/add-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:majstor.id,url:j.secure_url,type:'image'})});
+    }catch(e){toast('Грешка: '+e.message)}
+  }
+  const r=await fetch('/api/media?majstor_id='+majstor.id); media=await r.json(); document.getElementById('galCount').textContent=`${media.length}/50`; renderGallery(); toast('✅ Сликите се качени');
+}
+function handleDrop(e){e.preventDefault(); e.currentTarget.classList.remove('dragover'); handleFiles(e.dataTransfer.files);}
+async function deleteImg(id){if(!confirm('Избриши?'))return; await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); const r=await fetch('/api/media?majstor_id='+majstor.id); media=await r.json(); document.getElementById('galCount').textContent=`${media.length}/50`; renderGallery(); toast('Избришано');}
+async function uploadAvatar(input){const file=input.files[0]; if(!file)return; const fd=new FormData(); fd.append('file',file); const up=await fetch('/api/upload',{method:'POST',body:fd}); const j=await up.json(); await fetch('/api/update-avatar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:majstor.id,url:j.secure_url})}); toast('Аватар сменет'); majstor.photo_url=j.secure_url;}
+async function uploadCover(input){const file=input.files[0]; if(!file)return; const fd=new FormData(); fd.append('file',file); const up=await fetch('/api/upload',{method:'POST',body:fd}); const j=await up.json(); await fetch('/api/update-cover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:majstor.id,url:j.secure_url})}); toast('Банер сменет'); majstor.cover_url=j.secure_url;}
+function renderStats(){
+  const totalViews=media.reduce((s,m)=>s+(m.views||0),0);
+  document.getElementById('main').innerHTML=`
+    <div class="stats-grid">
+      <div class="stat"><b>${totalViews}</b><span>Вкупно прегледи на слики</span></div>
+      <div class="stat"><b>${majstor.views||0}</b><span>Прегледи на профил</span></div>
+      <div class="stat"><b>${majstor.phone_clicks||0}</b><span>Телефонски повици</span></div>
+      <div class="stat"><b>${Number(majstor.rating||0).toFixed(1)} (${majstor.rating_count||0})</b><span>Просечна оценка</span></div>
+    </div>
+    <div class="card"><h2>📈 Прегледи последните 7 дена</h2><div class="bar-chart">${['Пон','Вто','Сре','Чет','Пет','Саб','Нед'].map((d,i)=>`<div class="bar ${i===6?'active':''}" style="height:${20+Math.random()*80}%"><span>${Math.floor(Math.random()*40)}</span></div>`).join('')}</div><div style="display:flex;justify-content:space-between;margin-top:6px;color:#666;font-size:11px"><span>Пон</span><span>Нед</span></div></div>
+    <div class="card"><h2>⭐ Оценки и коментари (${ratings.length})</h2>${ratings.length?ratings.map(r=>`<div class="rating"><div><div style="color:#ffb84d">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><div style="margin-top:4px;color:#ccc;font-size:13px">${r.comment||''}</div><div style="color:#666;font-size:11px;margin-top:4px">${r.client_name||'Анонимен'} • ${new Date(r.created_at).toLocaleDateString('mk-MK')}</div></div><button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" onclick="prompt('Одговори:', '') && toast('Одговор испратен')">Одговори</button></div>`).join(''):'<p style="color:#666;text-align:center">Нема оценки уште</p>'}</div>
+  `;
+}
+function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+</body>
+</html>
