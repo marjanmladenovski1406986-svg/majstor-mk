@@ -656,8 +656,16 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
           <span class="label" id="label-baram">Барам мајстор</span>
         </button>
       </div>
-      <div id="form-majstor" class="hidden">
-        <input type="text" id="m-name" placeholder="Име">
+                 <div style="text-align: center; margin-top: 20px; margin-bottom: 10px; border-top: 1px solid #333; padding-top: 15px;">
+                <p style="color: #aaa; margin-bottom: 10px;">Веќе имате сметка?</p>
+                <button onclick="closeModal(); window.Clerk.openSignIn();" style="background: transparent; border: 1px solid #ff6b00; color: #ff6b00; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;">
+                    Најави се тука
+                </button>
+            </div>
+     
+    
+                   <div id="form-majstor" class="hidden">
+                    <input type="text" id="m-name" placeholder="Име"> 
         <input type="text" id="m-surname" placeholder="Презиме">
         <input type="tel" id="m-phone" placeholder="Телефон">
         <select id="m-city">
