@@ -92,7 +92,37 @@ export default {
           await sql`DELETE FROM majstor_media WHERE id = ${body.id}`;
           return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
         }
+        // ===== АЖУРИРАЊЕ НА ПРОФИЛНИ ПОДАТОЦИ =====
+        if (url.pathname === "/api/update-profile" && request.method === "POST") {
+          const body = await request.json();
+          await sql`
+            UPDATE majstori 
+            SET name = ${body.name}, 
+                phone = ${body.phone}, 
+                city = ${body.city}, 
+                category = ${body.category}, 
+                description = ${body.description}, 
+                facebook_url = ${body.facebook_url}, 
+                website_url = ${body.website_url} 
+            WHERE id = ${body.id}
+          `;
+          return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
+        }
 
+        // ===== АЖУРИРАЊЕ НА АВАТАР (Профилна слика) =====
+        if (url.pathname === "/api/update-avatar" && request.method === "POST") {
+          const body = await request.json();
+          await sql`UPDATE majstori SET photo_url = ${body.url} WHERE id = ${body.id}`;
+          return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
+        }
+
+        // ===== АЖУРИРАЊЕ НА БАНЕР (Cover) =====
+        if (url.pathname === "/api/update-cover" && request.method === "POST") {
+          const body = await request.json();
+          await sql`UPDATE majstori SET cover_url = ${body.url} WHERE id = ${body.id}`;
+          return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
+        }
+        
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
       } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
