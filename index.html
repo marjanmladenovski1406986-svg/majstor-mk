@@ -898,46 +898,64 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
 
 <script>
- function handleMajstorRegister() {
-  const name = document.getElementById('m-name').value.trim();
-  const surname = document.getElementById('m-surname').value.trim();
-  const phone = document.getElementById('m-phone').value.trim();
-  const city = document.getElementById('m-city').value;
-  const category = document.getElementById('m-category').value;
-  const description = document.getElementById('m-description').value.trim();
-  const facebook = document.getElementById('m-facebook').value.trim();
-  const website = document.getElementById('m-website').value.trim();
+         // --- ПОЧЕТОК НА НОВ СИСТЕМ ЗА МОДАЛ ---
 
-  if (!name || !phone || !city || !category) {
-    alert("Пополни ги задолжителните полиња (Име, Телефон, Град, Категорија)!");
-    return;
-  }
+        function switchModalTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('section-login').style.display = 'block';
+                document.getElementById('section-register').style.display = 'none';
+                document.getElementById('tab-btn-login').style.background = '#ff6b00';
+                document.getElementById('tab-btn-register').style.background = '#333';
+            } else {
+                document.getElementById('section-login').style.display = 'none';
+                document.getElementById('section-register').style.display = 'block';
+                document.getElementById('tab-btn-login').style.background = '#333';
+                document.getElementById('tab-btn-register').style.background = '#ff6b00';
+            }
+        }
 
-  // Зачувуваме во браузерот за подоцна да ги запишеме во базата
-  const majstorData = { name: name + ' ' + surname, phone, city, category, description, facebook_url: facebook, website_url: website };
-  localStorage.setItem('pending_majstor_data', JSON.stringify(majstorData));
-  localStorage.setItem('pending_user_type', 'majstor');
+        function selectType(type) {
+            if (type === 'majstor') {
+                document.getElementById('form-majstor').style.display = 'flex';
+                document.getElementById('form-baram').style.display = 'none';
+                document.getElementById('type-majstor').style.border = '2px solid #ff6b00';
+                document.getElementById('type-baram').style.border = '1px solid #333';
+            } else {
+                document.getElementById('form-majstor').style.display = 'none';
+                document.getElementById('form-baram').style.display = 'flex';
+                document.getElementById('type-baram').style.border = '2px solid #ff6b00';
+                document.getElementById('type-majstor').style.border = '1px solid #333';
+            }
+        }
 
-  closeModal(); // Затвори го твојот модал
-  window.Clerk.redirectToSignUp(); // Отвори Clerk
-}
+        function handleMajstorRegister() {
+            const name = document.getElementById('m-name').value.trim();
+            const surname = document.getElementById('m-surname').value.trim();
+            const phone = document.getElementById('m-phone').value.trim();
+            const city = document.getElementById('m-city').value;
+            const category = document.getElementById('m-category').value;
+            const description = document.getElementById('m-description') ? document.getElementById('m-description').value.trim() : '';
 
-function handleClientRegister() {
-  localStorage.setItem('pending_user_type', 'baram');
-  closeModal();
-  window.Clerk.redirectToSignUp();
-}
+            if (!name || !phone || !city || !category) {
+                alert("Пополни ги задолжителните полиња (Име, Телефон, Град, Категорија)!");
+                return;
+            }
 
- // Помошна функција за автоматско намалување на сликите (Supabase Image Transformation)
-function getOptimizedUrl(originalUrl, width = 400, quality = 75) {
-  if (!originalUrl) return '';
-  // Ако линкот не е од Supabase (или веќе е оптимизиран), врати го како што е
-  if (!originalUrl.includes('supabase.co') || originalUrl.includes('/render/image/')) return originalUrl;
-  
-  // Замени го патот за да користи Supabase рендерер на слики
-  const renderUrl = originalUrl.replace('/object/public/', '/render/image/public/');
-  return `${renderUrl}?width=${width}&quality=${quality}`;
-} 
+            const majstorData = { name: name + ' ' + surname, phone, city, category, description: description };
+            localStorage.setItem('pending_majstor_data', JSON.stringify(majstorData));
+            localStorage.setItem('pending_user_type', 'majstor');
+
+            closeModal(); 
+            window.Clerk.redirectToSignUp(); 
+        }
+
+        function handleClientRegister() {
+            localStorage.setItem('pending_user_type', 'baram');
+            closeModal();
+            window.Clerk.redirectToSignUp();
+        }
+
+        // --- КРАЈ НА НОВ СИСТЕМ ЗА МОДАЛ ---
 
 const CITIES = ['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
 
