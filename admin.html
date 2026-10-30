@@ -124,6 +124,7 @@ header{background:#111;border-bottom:1px solid #222;padding:14px 20px;display:fl
 
 <script>
 const ADMIN_EMAILS=['marjanmladenovski1406986@gmail.com','majsto.info@gmail.com'];
+const ADMIN_BASE='marjanmladenovski1406986';
 const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
 const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ",dvorovi:"🌳 Дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи",bravari:"🔨 Бравари",belatehnika:"🔌 Бела техника"};
 
@@ -139,7 +140,9 @@ function showTab(e,tab){
 window.addEventListener('load', async()=>{
   if(!window.Clerk){document.getElementById('loginBox').innerHTML='Clerk не се вчита';return}
   await Clerk.load();
-  if(!Clerk.user || !ADMIN_EMAILS.includes(Clerk.user.primaryEmailAddress.emailAddress)){
+  const email = Clerk.user ? Clerk.user.primaryEmailAddress.emailAddress : '';
+  const isAdmin = email && (ADMIN_EMAILS.includes(email) || email.includes(ADMIN_BASE) || email==='majsto.info@gmail.com');
+  if(!Clerk.user || !isAdmin){
     document.getElementById('loginBox').style.display='none';
     document.getElementById('noAccess').style.display='block';
     return;
