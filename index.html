@@ -2487,7 +2487,45 @@ window.addEventListener('load', async function () {
     
     if (window.Clerk.user) {
       const loggedInEmail = window.Clerk.user.primaryEmailAddress.emailAddress;
-      
+              // --- ПОЧЕТОК НА КОД ЗА ЗАЧУВУВАЊЕ НА НОВ МАЈСТОР ВО NEON ---
+        const pendingDataStr = localStorage.getItem('pending_majstor_data');
+        const pendingType = localStorage.getItem('pending_user_type');
+
+        if (pendingDataStr && pendingType === 'majstor') {
+            try {
+                const pendingData = JSON.parse(pendingDataStr);
+                const clerkUserId = window.Clerk.user.id;
+
+                const response = await fetch('/api/register-user', { // Ова мора да се совпаѓа со рутата во worker.js
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        clerk_id: clerkUserId,
+                        email: loggedInEmail,
+                        name: pendingData.name,
+                        phone: pendingData.phone,
+                        city: pendingData.city,
+                        category: pendingData.category,
+                        description: pendingData.description || "",
+                        facebook_url: pendingData.facebook_url || "",
+                        website_url: pendingData.website_url || ""
+                    })
+                });
+
+                if (response.ok) {
+                    // Откако успешно ќе се зачува во базата, ги бришеме привремените податоци
+                    localStorage.removeItem('pending_majstor_data');
+                    localStorage.removeItem('pending_user_type');
+                    alert("✅ Успешно се регистриравте! Вашиот профил е креиран.");
+                    window.location.reload(); // Освежи за да се вчита профилот
+                } else {
+                    console.error("Грешка при зачувување во базата:", await response.text());
+                }
+            } catch (error) {
+                console.error("Грешка при процесирање на податоците:", error);
+            }
+        }
+        // --- КРАЈ НА КОД ЗА ЗАЧУВУВАЊЕ НА МАЈСТОР ---
       let myProfileId = null;
       try {
         const res = await fetch('/api/majstori');
