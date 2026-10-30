@@ -169,7 +169,7 @@ async function uploadAvatar(input){
   var fd=new FormData(); fd.append('file',file);
   var res=await fetch('/api/upload',{method:'POST',body:fd});
   var data=await res.json();
-  if(data.url){ document.getElementById('pPhoto').value=data.url; }
+  if(data.url){ document.getElementById('pPhoto').value=data.url; document.getElementById('pMsg').textContent='✅ Профилна слика качена - кликни Зачувај профил'; }
 }
 async function uploadGallery(input){
   var file=input.files[0]; if(!file) return;
@@ -177,7 +177,7 @@ async function uploadGallery(input){
   var fd=new FormData(); fd.append('file',file); fd.append('majstor_id',myProfile.id);
   var res=await fetch('/api/upload',{method:'POST',body:fd});
   var data=await res.json();
-  if(data.url){ await fetch('/api/media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:myProfile.id, url:data.url})}); loadMedia(); }
+  if(data.url){ await fetch('/api/add-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:myProfile.id, url:data.url})}); loadMedia(); }
   else alert('Greska: '+(data.error||''));
 }
 async function deleteMedia(id){
