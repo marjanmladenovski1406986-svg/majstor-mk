@@ -1,421 +1,252 @@
-<!DOCTYPE html>
+<!PROFILE.html>
 <html lang="mk">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Мајстор — Majsto.mk</title>
-<link rel="icon" type="image/png" href="/icon-192.png">
-<meta name="theme-color" content="#ff6b35">
-
-<!-- Clerk Authentication -->
-<script
-  async
-  crossorigin="anonymous"
-  data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA"
-  src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
-  type="text/javascript"
-></script>
-
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
-header { background: #111; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; }
-.logo { font-size: 20px; font-weight: 700; color: #ff6b35; text-decoration: none; }
-.btn-back { background: transparent; border: 1px solid #444; color: #999; padding: 8px 15px; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 13px; }
-
-.container { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
-.profile-header { background: #1a1a1a; border-radius: 16px; padding: 30px; margin-bottom: 25px; border: 1px solid #333; }
-.profile-top { display: flex; align-items: center; gap: 25px; flex-wrap: wrap; margin-bottom: 25px; position: relative; }
-.big-avatar { width: 120px; height: 120px; border-radius: 50%; background: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: 700; flex-shrink: 0; overflow: hidden; color: #000; }
-.big-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.profile-name-block { flex: 1; min-width: 200px; }
-.profile-name { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
-.profile-category { color: #ff6b35; font-size: 16px; margin-bottom: 8px; }
-.profile-rating { color: #ffb84d; font-size: 20px; font-weight: 600; }
-
-.info-section { margin-bottom: 25px; }
-.info-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #222; font-size: 15px; }
-.info-row span:first-child { color: #999; }
-.info-row span:last-child { font-weight: 600; text-align: right; }
-
-.contact-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-.btn-contact { padding: 14px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; }
-.btn-phone { background: #ff6b35; color: #fff; }
-.btn-fb { background: #1877f2; color: #fff; }
-.btn-web { background: #222; color: #fff; border: 1px solid #ff6b35; }
-
-.section { background: #1a1a1a; border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 1px solid #333; }
-.section h2 { color: #ff6b35; font-size: 22px; margin-bottom: 20px; }
-
-.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-.media-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: #222; }
-.media-item img { width: 100%; height: 100%; object-fit: cover; }
-.delete-btn { position: absolute; top: 8px; right: 8px; background: rgba(220, 53, 53, 0.9); color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-
-/* Settings Section */
-#settingsSection { display: none; }
-.settings-btn { background: #222; border: 1px solid #444; color: #fff; padding: 12px 20px; border-radius: 8px; cursor: pointer; margin: 5px; font-family: inherit; font-size: 14px; transition: 0.2s; }
-.settings-btn:hover { border-color: #ff6b35; }
-.upload-btn { background: #ff6b35; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-
-/* Modals */
-.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
-.modal.open { display: flex; }
-.modal-content { background: #1a1a1a; padding: 30px; border-radius: 16px; max-width: 500px; width: 100%; border: 1px solid #333; max-height: 90vh; overflow-y: auto; }
-.modal-content h2 { color: #ff6b35; text-align: center; margin-bottom: 20px; }
-.modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 10px; font-family: inherit; }
-.modal-content button { width: 100%; padding: 12px; background: #ff6b35; border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
-.modal-close { background: transparent !important; border: 1px solid #333 !important; color: #999 !important; }
-
-.loading { text-align: center; color: #999; padding: 40px; }
-.error-box { text-align: center; color: #ff6b6b; padding: 40px; }
-
-.share-btn { position: absolute; top: 0; right: 0; background: transparent; border: 1px solid #ff6b35; color: #ff6b35; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-
-@media (max-width: 768px) {
-  .profile-top { flex-direction: column; text-align: center; }
-  .share-btn { position: static; margin-top: 15px; width: 100%; }
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Мајстор — Majsto.mk</title>
+<meta property="og:title" content="Мајстор — Majsto.mk">
+<meta property="og:description" content="Најдобрите мајстори во Македонија - 50 слики од реална работа">
+<meta property="og:image" content="https://majsto.mk/og-image.jpg">
+<meta property="og:url" content="https://majsto.mk">
+<meta property="og:type" content="profile">
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:Inter,system-ui;line-height:1.5}
+a{color:#ff6b35;text-decoration:none}
+.container{max-width:1000px;margin:0 auto;padding:0 16px 80px}
+header{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.9);backdrop-filter:blur(12px);border-bottom:1px solid #222;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;color:#ff6b35;font-size:20px}
+.btn{padding:10px 16px;border-radius:10px;border:1px solid #333;background:transparent;color:#ccc;cursor:pointer;font-weight:600;font-size:14px}
+.btn-orange{background:#ff6b35;border-color:#ff6b35;color:#fff;font-weight:800}
+.btn-ghost{background:#1a1a1a}
+.hero{position:relative;border-radius:20px;overflow:hidden;margin-top:16px;background:#141414;border:1px solid #222;min-height:260px}
+.banner{width:100%;height:180px;object-fit:cover;background:#1a1a1a}
+.avatar-wrap{position:absolute;left:20px;bottom:20px;display:flex;gap:16px;align-items:flex-end}
+.avatar{width:100px;height:100px;border-radius:50%;border:4px solid #0a0a0a;background:#ff6b35;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;color:#000}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.hero-info h1{font-size:24px;font-weight:900}
+.hero-info p{color:#aaa;font-size:13px}
+.badges{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.badge{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:800}
+.badge-founder{background:linear-gradient(90deg,#4caf50,#8bc34a);color:#000}
+.badge-premium{background:#ff6b35;color:#000}
+.badge-verified{background:#4db8ff;color:#000}
+.grid{display:grid;grid-template-columns:1fr 320px;gap:16px;margin-top:16px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.card{background:#141414;border:1px solid #222;border-radius:16px;padding:16px;margin-bottom:16px}
+.card h3{color:#ff6b35;margin-bottom:12px;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#1a1a1a;border:1px solid #222;border-radius:10px;padding:10px;text-align:center}
+.stat .num{font-size:18px;font-weight:800;color:#ff6b35}
+.stat .lbl{font-size:10px;color:#888;margin-top:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions .btn{flex:1;min-width:120px;text-align:center}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;border:1px solid #222;cursor:pointer;transition:transform .2s}
+.gallery img:hover{transform:scale(1.03)}
+.rating-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.stars{color:#ffb400}
+.comment{background:#1a1a1a;border:1px solid #222;border-radius:10px;padding:10px;margin-bottom:8px}
+.comment b{color:#fff}
+.comment p{color:#ccc;font-size:13px;margin-top:4px}
+.share-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;padding:20px}
+.share-modal.open{display:flex}
+.share-box{background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:20px;max-width:400px;width:100%}
+.share-box h3{color:#ff6b35;margin-bottom:12px}
+.share-btn{width:100%;padding:12px;border-radius:10px;border:1px solid #333;background:#222;color:#fff;font-weight:600;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:10px;justify-content:center}
+.share-btn.fb{background:#1877f2;border-color:#1877f2}
+.share-btn.viber{background:#7360f2;border-color:#7360f2}
+.share-btn.wa{background:#25d366;border-color:#25d366;color:#000}
+.share-btn.copy{background:#333}
+.owner-bar{background:#1a2a1a;border:1px solid #4caf50;border-radius:12px;padding:12px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 </style>
 </head>
 <body>
+<header><a href="/" class="logo">🔨 Majsto.mk</a><div id="headerAuth"><span style="font-size:12px;color:#888">Се вчитува...</span></div></header>
+<div class="container" id="app"><p style="text-align:center;padding:40px;color:#888">Вчитувам профил...</p></div>
 
-<header>
-  <a href="/" class="logo">🔨 Majsto.mk</a>
-  <a href="/" class="btn-back">← Назад кон сајтот</a>
-</header>
-
-<div class="container" id="content">
-  <div class="loading">Вчитувам профил...</div>
+<div class="share-modal" id="shareModal" onclick="if(event.target===this)closeShare()">
+<div class="share-box">
+<h3>🔗 Сподели профил</h3>
+<p style="color:#888;font-size:13px;margin-bottom:12px" id="shareText"></p>
+<button class="share-btn fb" onclick="shareFB()">📘 Сподели на Facebook</button>
+<button class="share-btn viber" onclick="shareViber()">💜 Сподели на Viber</button>
+<button class="share-btn wa" onclick="shareWhatsApp()">💚 Сподели на WhatsApp</button>
+<button class="share-btn copy" onclick="copyLink()">📋 Копирај линк</button>
+<button class="btn" style="width:100%;margin-top:8px" onclick="closeShare()">Затвори</button>
 </div>
-
-<!-- MODALS -->
-<div class="modal" id="editInfoModal">
-  <div class="modal-content">
-    <h2>✏️ Уреди Информации</h2>
-    <input type="text" id="edit-name" placeholder="Име">
-    <input type="tel" id="edit-phone" placeholder="Телефон">
-    <select id="edit-city"></select>
-    <select id="edit-category"></select>
-    <textarea id="edit-description" placeholder="Опис"></textarea>
-    <input type="url" id="edit-facebook" placeholder="Facebook URL">
-    <input type="url" id="edit-website" placeholder="Веб-сајт URL">
-    <button onclick="handleEditInfo()">Зачувај</button>
-    <button class="modal-close" onclick="document.getElementById('editInfoModal').classList.remove('open')">Откажи</button>
-  </div>
-</div>
-
-<div class="modal" id="changeAvatarModal">
-  <div class="modal-content">
-    <h2>📸 Промени Профилна Слика</h2>
-    <input type="file" id="avatar-file" accept="image/*">
-    <button onclick="handleChangeAvatar()">Качи Слика</button>
-    <button class="modal-close" onclick="document.getElementById('changeAvatarModal').classList.remove('open')">Откажи</button>
-  </div>
-</div>
-
-<div class="modal" id="changeCoverModal">
-  <div class="modal-content">
-    <h2>🖼️ Промени Банеř</h2>
-    <input type="file" id="cover-file" accept="image/*">
-    <button onclick="handleChangeCover()">Качи Банеř</button>
-    <button class="modal-close" onclick="document.getElementById('changeCoverModal').classList.remove('open')">Откажи</button>
-  </div>
 </div>
 
 <script>
-const CAT_NAMES = {
-  elektrika: "⚡ Електрика", vodovod: "💧 Водовод", gradeznistvo: "🏗️ Градежништво",
-  popravki: "🔧 Поправки", finalni: "🎨 Финални работи", plockari: "🔲 Плочкари",
-  gipsari: "🧱 Гипсари и Молери", stolari: "🚪 Столари", klima: "❄️ Клима",
-  greenje: "🔥 Греење", krov: "🏠 Кров", sanitarii: "🚿 Санитарии",
-  pvc: "🪟 ПВЦ прозори и врати", dvorovi: "🌳 Уредување дворови", cistenje: "🧹 Чистење",
-  opti: "🔨 Општи работници", bravari: "🔨 Браварски услуги", belatehnika: "🔌 Бела техника"
-};
-const CITIES = ['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
+const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари и Молери",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ прозори и врати",dvorovi:"🌳 Уредување дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи работници",bravari:"🔨 Браварски услуги",belatehnika:"🔌 Бела техника",videonadzor:"📹 Видео надзор",bazeni:"🏊 Базени",fasadi:"🎨 Фасади",iskop:"🚜 Ископ",hidroizolacija:"💧 Хидро изолација",otpad:"🗑️ Фрлање отпад"};
 
-let majstorId = null;
-let majstorData = null;
-let currentUser = null;
-let isAdmin = false;
+let majstor=null, allMedia=[], allRatings=[], currentUser=null, isOwner=false;
+let shareUrl="", shareTitle="";
 
-window.addEventListener('load', async function () {
-  if (window.Clerk) {
-    await window.Clerk.load();
-    if (window.Clerk.user) {
-      currentUser = window.Clerk.user.primaryEmailAddress.emailAddress;
-      isAdmin = (currentUser === 'majsto.info@gmail.com' || currentUser === 'marjanmladenovski1406986@gmail.com');
-    }
-  }
+function getId(){ const p=new URLSearchParams(location.search); return p.get('id'); }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  majstorId = urlParams.get('id');
-
-  if (!majstorId) {
-    showError('Не е пронајден мајстор', 'Не е специфициран ID на мајстор.');
-    return;
-  }
-
-  populateSelects();
-  await loadMajstor();
-  await loadMedia();
-  await loadRatings();
+window.addEventListener('load', async()=>{
+  if(window.Clerk){ await Clerk.load(); currentUser=Clerk.user; }
+  const id=getId(); if(!id){ document.getElementById('app').innerHTML='<p>Нема ID</p>'; return; }
+  loadProfile(id);
 });
 
-function populateSelects() {
-  const citySelect = document.getElementById('edit-city');
-  const catSelect = document.getElementById('edit-category');
-  
-  CITIES.forEach(c => { citySelect.innerHTML += `<option value="${c}">${c}</option>`; });
-  Object.keys(CAT_NAMES).forEach(k => { catSelect.innerHTML += `<option value="${k}">${CAT_NAMES[k]}</option>`; });
-}
-
-function showError(title, msg) {
-  document.getElementById('content').innerHTML = `
-    <div class="error-box">
-      <h2>❌ ${title}</h2>
-      <p>${msg}</p>
-      <p style="margin-top:20px;"><a href="/" style="color:#ffb84d;">← Назад кон сајтот</a></p>
-    </div>`;
-}
-
-async function loadMajstor() {
-  try {
-    const res = await fetch('/api/majstori');
-    const data = await res.json();
-    const majstor = data.find(m => m.id == majstorId);
-
-    if (!majstor) { showError('Мајстор не е најден', 'Овој мајстор не постои.'); return; }
+async function loadProfile(id){
+  try{
+    const [mRes, mediaRes, ratingsRes] = await Promise.all([
+      fetch(`/api/majstor?id=${id}`),
+      fetch(`/api/media?majstor_id=${id}`),
+      fetch(`/api/ratings?majstor_id=${id}`)
+    ]);
+    majstor = await mRes.json();
+    allMedia = await mediaRes.json(); if(!Array.isArray(allMedia)) allMedia=[];
+    allRatings = await ratingsRes.json(); if(!Array.isArray(allRatings)) allRatings=[];
     
-    majstorData = majstor;
-    const catText = CAT_NAMES[majstor.category] || majstor.category;
-    const avatar = majstor.photo_url ? `<img src="${majstor.photo_url}" alt="${majstor.name}">` : (majstor.name || '?').charAt(0).toUpperCase();
-    
-    // Пополнување на модалите за уредување
-    document.getElementById('edit-name').value = majstor.name || '';
-    document.getElementById('edit-phone').value = majstor.phone || '';
-    document.getElementById('edit-city').value = majstor.city || '';
-    document.getElementById('edit-category').value = majstor.category || '';
-    document.getElementById('edit-description').value = majstor.description || '';
-    document.getElementById('edit-facebook').value = majstor.facebook_url || '';
-    document.getElementById('edit-website').value = majstor.website_url || '';
+    // Track view
+    fetch(`/api/track`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:id, type:'view'})}).catch(()=>{});
 
-    document.title = `${majstor.name} - ${catText} | Majsto.mk`;
+    isOwner = currentUser && (majstor.clerk_id===currentUser.id || majstor.email===currentUser.primaryEmailAddress?.emailAddress);
 
-    document.getElementById('content').innerHTML = `
-      <div class="profile-header">
-        ${majstor.cover_url ? `<div style="width: 100%; height: 200px; background: #000 url('${majstor.cover_url}') center/contain no-repeat; border-radius: 16px 16px 0 0; margin-bottom: 20px;"></div>` : ''}
-        <div class="profile-top">
-          <div class="big-avatar">${avatar}</div>
-          <div class="profile-name-block">
-            <div class="profile-name">${majstor.name || 'Majstor'} ${majstor.is_premium ? '👑' : ''}</div>
-            <div class="profile-category">${catText}</div>
-            <div class="profile-rating">⭐ ${majstor.rating || 0} (${majstor.rating_count || 0} оценки)</div>
-          </div>
-          <button class="share-btn" onclick="alert('Линкот е копиран!')">📤 Сподели</button>
+    shareUrl = `https://majsto.mk/majstor/${majstor.id}-${(majstor.name||'majstor').toLowerCase().replace(/\s+/g,'-')}`;
+    shareTitle = `${majstor.name} - ${CAT_NAMES[majstor.category]||majstor.category} во ${majstor.city} | Majsto.mk`;
+
+    document.title = shareTitle;
+    document.getElementById('pageTitle').textContent = shareTitle;
+    render();
+  }catch(e){ document.getElementById('app').innerHTML=`<p style="color:#ff6b6b">Грешка: ${e.message}</p>`; }
+}
+
+function render(){
+  const app=document.getElementById('app');
+  const avatarContent=majstor.photo_url?`<img src="${majstor.photo_url}">`:majstor.name.charAt(0).toUpperCase();
+  const badgeFounder=majstor.is_founder?`<span class="badge badge-founder">🚀 FOUNDER #${majstor.founder_number||''}</span>`:'';
+  const badgePremium=majstor.is_premium?`<span class="badge badge-premium">👑 PREMIUM</span>`:'';
+  const badgeVerified=majstor.verified?`<span class="badge badge-verified">✅ Верификуван</span>`:'';
+  const bannerUrl=majstor.banner_url||'';
+
+  app.innerHTML=`
+  <div class="hero">
+    ${bannerUrl?`<img class="banner" src="${bannerUrl}">`:`<div class="banner"></div>`}
+    <div class="avatar-wrap">
+      <div class="avatar">${avatarContent}</div>
+      <div class="hero-info">
+        <h1>${majstor.name}</h1>
+        <p>${CAT_NAMES[majstor.category]||majstor.category} • ${majstor.city} • ⭐ ${Number(majstor.rating||0).toFixed(1)} (${majstor.rating_count||0})</p>
+        <div class="badges">${badgeFounder}${badgePremium}${badgeVerified}</div>
+      </div>
+    </div>
+  </div>
+
+  ${isOwner?`<div class="owner-bar"><span style="color:#4caf50;font-weight:700">👋 Ова е твој профил</span><a href="/dashboard.html" class="btn btn-orange" style="padding:6px 12px">Уреди профил</a><span style="color:#888;font-size:12px">${allMedia.length}/50 слики</span></div>`:''}
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h3>🖼️ Галерија (${allMedia.length}/50)</h3>
+        ${allMedia.length?`<div class="gallery">${allMedia.map(m=>`<img src="${m.url}" loading="lazy" onclick="window.open('${m.url}','_blank')" alt="${m.title||''}">`).join('')}</div>`:`<p style="color:#666">Нема слики уште</p>`}
+      </div>
+
+      <div class="card">
+        <h3>⭐ Оценки и коментари (${allRatings.filter(r=>r.status==='approved'||!r.status).length})</h3>
+        <div id="ratingsList">${renderRatings()}</div>
+        <div style="margin-top:12px;border-top:1px solid #222;padding-top:12px">
+          <h4 style="color:#ccc;font-size:14px;margin-bottom:8px">Остави оценка:</h4>
+          <select id="rateStars" style="width:100%;padding:8px;background:#222;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:8px"><option value="5">★★★★★ 5 - Одличен</option><option value="4">★★★★ 4 - Добар</option><option value="3">★★★ 3 - Просечен</option><option value="2">★★ 2 - Слаб</option><option value="1">★ 1 - Лош</option></select>
+          <textarea id="rateComment" placeholder="Коментар (опционо)..." style="width:100%;padding:8px;background:#222;border:1px solid #333;border-radius:8px;color:#fff;min-height:60px;margin-bottom:8px"></textarea>
+          <button class="btn btn-orange" onclick="submitRating()" style="width:100%">Испрати оценка</button>
         </div>
+      </div>
+    </div>
 
-        <div class="info-section">
-          <div class="info-row"><span>🏙️ Град</span><span>${majstor.city || '-'}</span></div>
-          <div class="info-row"><span>📝 Опис</span><span>${majstor.description || '-'}</span></div>
+    <div>
+      <div class="card">
+        <h3>📊 Статистика</h3>
+        <div class="stats">
+          <div class="stat"><div class="num">${majstor.views||0}</div><div class="lbl">👁️ Прегледи</div></div>
+          <div class="stat"><div class="num">${majstor.phone_clicks||0}</div><div class="lbl">📞 Телефон</div></div>
+          <div class="stat"><div class="num">${allMedia.length}</div><div class="lbl">🖼️ Слики</div></div>
         </div>
-
-        <div class="contact-buttons">
-          ${majstor.phone ? `<a href="tel:${majstor.phone}" class="btn-contact btn-phone">📞 ${majstor.phone}</a>` : ''}
-          ${majstor.facebook_url ? `<a href="${majstor.facebook_url}" target="_blank" class="btn-contact btn-fb">📘 Facebook</a>` : ''}
-          ${majstor.website_url ? `<a href="${majstor.website_url}" target="_blank" class="btn-contact btn-web">🌐 Веб-сајт</a>` : ''} 
+        <div class="actions">
+          <a class="btn btn-orange" href="tel:${majstor.phone}" onclick="trackPhone()">${majstor.phone?`📞 ${majstor.phone}`:'📞 Повикај'}</a>
+          <button class="btn" onclick="openShare()">🔗 Сподели</button>
+        </div>
+        ${majstor.description?`<p style="color:#ccc;font-size:14px;margin-top:12px;white-space:pre-wrap">${majstor.description}</p>`:''}
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+          ${majstor.facebook_url?`<a class="btn btn-ghost" href="${majstor.facebook_url}" target="_blank">📘 Facebook</a>`:''}
+          ${majstor.website_url?`<a class="btn btn-ghost" href="${majstor.website_url}" target="_blank">🌐 Вебсајт</a>`:''}
+          <button class="btn btn-ghost" onclick="openShare()">🔗 Сподели на FB / Viber / WhatsApp</button>
         </div>
       </div>
 
-      <div class="section" id="settingsSection">
-        <h2>⚙️ Поставки</h2>
-        <button class="settings-btn" onclick="document.getElementById('changeAvatarModal').classList.add('open')">📸 Промени Профилна Слика</button>
-        <button class="settings-btn" onclick="document.getElementById('changeCoverModal').classList.add('open')">🖼️ Промени Банеř</button>
-        <button class="settings-btn" onclick="document.getElementById('editInfoModal').classList.add('open')">✏️ Уреди Информации</button>
+      <div class="card">
+        <h3>📍 Инфо</h3>
+        <p style="color:#aaa;font-size:13px">Категорија: <b style="color:#fff">${CAT_NAMES[majstor.category]||majstor.category}</b></p>
+        <p style="color:#aaa;font-size:13px">Град: <b style="color:#fff">${majstor.city}</b></p>
+        <p style="color:#aaa;font-size:13px">Оценка: <b style="color:#ffb400">★ ${Number(majstor.rating||0).toFixed(1)}</b> од ${majstor.rating_count||0} оценки</p>
+        ${majstor.is_premium?`<p style="color:#ff6b35;font-size:12px;margin-top:8px">👑 Premium мајстор - 50 слики</p>`:''}
       </div>
+    </div>
+  </div>
+  `;
 
-      <div class="section" id="uploadSection">
-        <h2>📤 Управувај со слики</h2>
-        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">+ Додај нова слика</button>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="uploadImage(this)">
-      </div>
-
-      <div class="section">
-        <h2>📸 Слики од работата</h2>
-        <div class="media-grid" id="imagesGrid">
-          <div class="loading">Вчитувам слики...</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>⭐ Оценки и коментари</h2>
-        <div id="ratingsContent">
-          <div class="loading">Вчитувам оценки...</div>
-        </div>
-      </div>
-    `;
-
-       const isOwner = (currentUser && majstor.email && currentUser === majstor.email);
-       // Ако не е сопственик, скриј ги деловите за уредување и качување слики
-    if (!isOwner) {
-        const settingsSection = document.getElementById('settingsSection');
-        const uploadSection = document.getElementById('uploadSection');
-        if (settingsSection) settingsSection.style.display = 'none';
-        if (uploadSection) uploadSection.style.display = 'none';
-    } 
-    
-    if (isAdmin || isOwner) {
-      document.getElementById('uploadSection').style.display = 'block';
-      document.getElementById('settingsSection').style.display = 'block';
-    }
-
-  } catch (error) {
-    console.error("Грешка:", error);
-    showError('Грешка', 'Настана проблем при вчитување.');
-  }
+  document.getElementById('headerAuth').innerHTML = currentUser ? `<span style="color:#888;font-size:12px">${currentUser.primaryEmailAddress.emailAddress}</span> <a href="/dashboard.html" class="btn" style="padding:6px 10px">Dashboard</a>` : `<a href="/dashboard.html" class="btn btn-orange" style="padding:6px 12px">Најави се</a>`;
 }
 
-// (Останатите функции loadMedia, loadRatings, uploadImage, deleteImage остануваат исти како во претходниот код)
-
-async function loadMedia() {
-  try {
-    const resMedia = await fetch('/api/media');
-    const mediaData = await resMedia.json();
-    const images = mediaData.filter(m => m.type === 'image' && m.majstor_id == majstorId);
-    const imgGrid = document.getElementById('imagesGrid');
-    if (images && images.length > 0) {
-      imgGrid.innerHTML = images.map(img => `
-        <div class="media-item">
-          <img loading="lazy" src="${img.url}" alt="Слика" onclick="window.open('${img.url}', '_blank')">
-          ${(isAdmin) ? `<button class="delete-btn" onclick="deleteImage(${img.id})">🗑️</button>` : ''}
-        </div>`).join('');
-    } else {
-      imgGrid.innerHTML = '<p style="color:#666; text-align:center; padding:20px; grid-column: 1/-1;">Нема слики сè уште</p>';
-    }
-  } catch (error) { console.error("Грешка при медиуми:", error); }
+function renderRatings(){
+  const approved = allRatings.filter(r=>r.status==='approved' || !r.status);
+  if(!approved.length) return '<p style="color:#666;font-size:13px">Нема оценки уште - биди прв!</p>';
+  return approved.map(r=>{
+    const stars='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+    return `<div class="comment"><div class="rating-row"><span class="stars">${stars}</span><b>${r.user_name||'Анонимен'}</b><span style="color:#666;font-size:11px">${new Date(r.created_at).toLocaleDateString('mk-MK')}</span></div><p>${r.comment||''}</p></div>`;
+  }).join('');
 }
 
-async function loadRatings() {
-  try {
-    const res = await fetch('/api/ratings');
-    const data = await res.json();
-    const myRatings = data.filter(r => r.majstor_id == majstorId);
-    const content = document.getElementById('ratingsContent');
-    if (!myRatings || myRatings.length === 0) {
-      content.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Нема оценки сè уште</p>';
-      return;
-    }
-    content.innerHTML = myRatings.map(r => {
-      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-      const date = new Date(r.created_at).toLocaleDateString('mk-MK');
-      return `<div style="padding:15px; background:#252525; border-radius:10px; margin-bottom:10px;">
-        <div style="color:#ffb84d; font-size:18px; margin-bottom:8px;">${stars}</div>
-        ${r.comment ? `<div style="color:#ddd; font-size:14px; margin-bottom:8px;">${r.comment}</div>` : ''}
-        <div style="color:#666; font-size:11px;">${date}</div>
-      </div>`;
-    }).join('');
-  } catch (error) { console.error("Грешка при оценки:", error); }
+async function trackPhone(){
+  const id=getId();
+  fetch(`/api/track`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:id, type:'phone_click'})}).catch(()=>{});
 }
 
-// Помошна функција за качување на слика на ImgBB и враќање на линк
-async function uploadToImgBB(file) {
-  const formData = new FormData();
-  formData.append('file', file);
-  const res = await fetch('/api/upload', { method: 'POST', body: formData });
-  const data = await res.json();
-  if (data.secure_url) return data.secure_url;
-  throw new Error(data.error || "Грешка при качување");
+async function submitRating(){
+  const id=getId();
+  const rating=parseInt(document.getElementById('rateStars').value);
+  const comment=document.getElementById('rateComment').value;
+  const res=await fetch('/api/ratings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:id, rating, comment})});
+  const data=await res.json();
+  if(data.success){ alert('✅ Благодариме! Оценката ќе биде одобрена наскоро.'); document.getElementById('rateComment').value=''; loadProfile(id); }
+  else alert('Грешка: '+(data.error||''));
 }
 
-async function uploadImage(input) {
-  const file = input.files[0];
-  if (!file) return;
-  alert("Почнувам качување...");
-  try {
-    const url = await uploadToImgBB(file);
-    await fetch('/api/add-media', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ majstor_id: majstorId, url: url, type: 'image' })
-    });
-    alert("✅ Сликата е качена!");
-    loadMedia();
-  } catch (err) { alert("❌ Грешка: " + err.message); }
+function openShare(){
+  document.getElementById('shareText').textContent=shareTitle;
+  document.getElementById('shareModal').classList.add('open');
 }
-
-async function deleteImage(id) {
-  if (!confirm("Дали си сигурен?")) return;
-  try {
-    await fetch('/api/delete-media', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: id })
-    });
-    alert("✅ Сликата е избришана!");
-    loadMedia();
-  } catch (err) { alert("❌ Грешка: " + err.message); }
-}
-
-// Промена на Аватар
-async function handleChangeAvatar() {
-  const file = document.getElementById('avatar-file').files[0];
-  if (!file) { alert("Избери слика."); return; }
-  alert("Се качува...");
-  try {
-    const url = await uploadToImgBB(file);
-    await fetch('/api/update-avatar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: majstorId, url: url })
-    });
-    alert("✅ Профилната слика е сменета!");
-    document.getElementById('changeAvatarModal').classList.remove('open');
-    loadMajstor(); // Освежи го профилот
-  } catch (err) { alert("❌ Грешка: " + err.message); }
-}
-
-// Промена на Банеř
-async function handleChangeCover() {
-  const file = document.getElementById('cover-file').files[0];
-  if (!file) { alert("Избери слика."); return; }
-  alert("Се качува...");
-  try {
-    const url = await uploadToImgBB(file);
-    await fetch('/api/update-cover', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: majstorId, url: url })
-    });
-    alert("✅ Банеřот е сменет!");
-    document.getElementById('changeCoverModal').classList.remove('open');
-    loadMajstor();
-  } catch (err) { alert("❌ Грешка: " + err.message); }
-}
-
-// Уредување на Информации
-async function handleEditInfo() {
-  const data = {
-    id: majstorId,
-    name: document.getElementById('edit-name').value,
-    phone: document.getElementById('edit-phone').value,
-    city: document.getElementById('edit-city').value,
-    category: document.getElementById('edit-category').value,
-    description: document.getElementById('edit-description').value,
-    facebook_url: document.getElementById('edit-facebook').value || null,
-    website_url: document.getElementById('edit-website').value || null
-  };
-  
-  try {
-    await fetch('/api/update-profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    alert("✅ Информациите се зачувани!");
-    document.getElementById('editInfoModal').classList.remove('open');
-    loadMajstor();
-  } catch (err) { alert("❌ Грешка: " + err.message); }
-}
+function closeShare(){ document.getElementById('shareModal').classList.remove('open'); }
+function shareFB(){ window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank'); trackShare('facebook'); }
+function shareViber(){ window.open(`viber://forward?text=${encodeURIComponent(shareTitle+' '+shareUrl)}`, '_blank'); setTimeout(()=>{ window.open(`https://3p3x.adj.st/?adjust_t=u783g1_kw9yml&adjust_fallback=https%3A%2F%2Fwww.viber.com%2F%3Futm_source%3DPartner%26utm_medium%3DSharebutton%26utm_campaign%3DDefualt&adjust_campaign=Defualt&adjust_deeplink=viber%3A%2F%2Fforward%3Ftext%3D${encodeURIComponent(shareTitle+' '+shareUrl)}`, '_blank'); },500); trackShare('viber'); }
+function shareWhatsApp(){ window.open(`https://wa.me/?text=${encodeURIComponent(shareTitle+' '+shareUrl)}`, '_blank'); trackShare('whatsapp'); }
+function copyLink(){ navigator.clipboard.writeText(shareUrl).then(()=>{ alert('✅ Линкот е копиран: '+shareUrl); closeShare(); }); trackShare('copy'); }
+function trackShare(platform){ fetch(`/api/track`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:getId(), type:'share_'+platform})}).catch(()=>{}); }
 </script>
-</body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
