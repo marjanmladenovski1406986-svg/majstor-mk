@@ -1,10 +1,9 @@
 name = "majstor-mk"
 main = "worker.js"
 compatibility_date = "2026-10-25"
-compatibility_flags = [ "nodejs_compat" ]
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
-DATABASE_URL = "postgresql://neondb_owner:npg_3ju5WySKVTQb@ep-holy-hall-b5hg9op2-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require"
 IMGBB_API_KEY = "41508b0597b071cd08326840d503800"
 
 [assets]
