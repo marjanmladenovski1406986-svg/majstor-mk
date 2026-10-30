@@ -2447,13 +2447,12 @@ window.addEventListener('load', async function () {
   const clerkHeader = document.getElementById('clerk-header');
   if (!clerkHeader) return;
 
-   async function updateClerkUI() {
+    async function updateClerkUI() {
     clerkHeader.innerHTML = ''; 
     
     if (window.Clerk.user) {
       const loggedInEmail = window.Clerk.user.primaryEmailAddress.emailAddress;
       
-      // Бараме во базата (Neon) кое ID му припаѓа на овој мејл
       let myProfileId = null;
       try {
         const res = await fetch('/api/majstori');
@@ -2464,15 +2463,12 @@ window.addEventListener('load', async function () {
         console.error("Грешка при барање на профил:", e);
       }
 
-      // 1. Креирање на копчето "Мој Профил"
       const profileBtn = document.createElement('a');
-      
-      // Ако најде профил, носи го таму. Ако не, прикажи порака.
       if (myProfileId) {
         profileBtn.href = `/profile.html?id=${myProfileId}`; 
       } else {
         profileBtn.href = '#';
-        profileBtn.onclick = (e) => { e.preventDefault(); alert("Вашиот профил сè уште не е поврзан. Контактирајте го администраторот."); };
+        profileBtn.onclick = (e) => { e.preventDefault(); alert("Вашиот профил сè уште не е поврзан."); };
       }
 
       profileBtn.className = 'btn-profile';
@@ -2484,12 +2480,10 @@ window.addEventListener('load', async function () {
       
       clerkHeader.appendChild(profileBtn);
 
-      // 2. Додавање на официјалното Clerk копче (за слика и одјава)
       window.Clerk.mountUserButton(clerkHeader, {
         afterSignOutUrl: '/'
       });
     } else {
-      // Ако не е најавен, креирај копче
       const loginBtn = document.createElement('button');
       loginBtn.className = 'btn-auth'; 
       loginBtn.style.marginLeft = '10px';
@@ -2505,7 +2499,8 @@ window.addEventListener('load', async function () {
     updateClerkUI();
   });
 });
+
 </script>
 
 </body>
-  </html>
+</html>
