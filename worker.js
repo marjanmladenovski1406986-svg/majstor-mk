@@ -266,6 +266,102 @@ export default {
           return new Response(JSON.stringify(majstori), {headers:apiHeaders});
         }
 
+
+        // ME - after Clerk login, get or create profile
+        if (url.pathname === "/api/me") {
+          const clerk_id = url.searchParams.get('clerk_id');
+          const email = url.searchParams.get('email');
+          if(!clerk_id) return new Response(JSON.stringify({error:"Missing clerk_id"}), {status:400, headers:apiHeaders});
+          
+          // Try find existing
+          let existing = await sql`SELECT * FROM majstori WHERE clerk_id=${clerk_id} LIMIT 1`;
+          if(existing.length===0 && email){
+            existing = await sql`SELECT * FROM majstori WHERE email=${email} LIMIT 1`;
+            if(existing.length>0){
+              // Link clerk_id to existing
+              await sql`UPDATE majstori SET clerk_id=${clerk_id}, updated_at=NOW() WHERE id=${existing[0].id}`;
+              existing = await sql`SELECT * FROM majstori WHERE id=${existing[0].id} LIMIT 1`;
+            }
+          }
+          
+          if(existing.length>0){
+            return new Response(JSON.stringify(existing[0]), {headers:apiHeaders});
+          }
+          
+          // Create new - check founder count
+          const founderCountRes = await sql`SELECT COUNT(*) as c FROM majstori WHERE is_founder=true`;
+          const founderCount = Number(founderCountRes[0].c);
+          const isFounder = founderCount < 50;
+          let founderNumber = null;
+          if(isFounder){
+            const maxRes = await sql`SELECT COALESCE(MAX(founder_number),0) as m FROM majstori`;
+            founderNumber = Number(maxRes[0].m) + 1;
+          }
+          
+          const name = email ? email.split('@')[0] : 'Мајстор';
+          const newMajstor = await sql`
+            INSERT INTO majstori (name, email, clerk_id, city, category, is_founder, founder_number, is_premium, rating, rating_count, views, phone_clicks, verified, created_at, updated_at)
+            VALUES (${name}, ${email}, ${clerk_id}, 'Скопје', 'elektrika', ${isFounder}, ${founderNumber}, ${true}, 0, 0, 0, 0, false, NOW(), NOW())
+            RETURNING *
+          `;
+          return new Response(JSON.stringify(newMajstor[0]), {headers:apiHeaders});
+        }
+
+        if (url.pathname === "/api/update-profile" && request.method === "POST") {
+          const body = await request.json();
+          const id = body.id;
+          if(!id) return new Response(JSON.stringify({error:"Missing id"}), {status:400, headers:apiHeaders});
+          await sql`
+            UPDATE majstori SET 
+              name=${body.name||''},
+              phone=${body.phone||''},
+              city=${body.city||'Скопје'},
+              category=${body.category||'elektrika'},
+              description=${body.description||''},
+              facebook_url=${body.facebook_url||''},
+              website_url=${body.website_url||''},
+              photo_url=${body.photo_url||''},
+              updated_at=NOW()
+            WHERE id=${id}
+          `;
+          const updated = await sql`SELECT * FROM majstori WHERE id=${id} LIMIT 1`;
+          return new Response(JSON.stringify({success:true, majstor:updated[0]}), {headers:apiHeaders});
+        }
+
+        if (url.pathname === "/api/upload" && request.method === "POST") {
+          try{
+            const formData = await request.formData();
+            const file = formData.get('file');
+            if(!file) return new Response(JSON.stringify({error:"No file"}), {status:400, headers:apiHeaders});
+            const arrayBuffer = await file.arrayBuffer();
+            const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+            const imgbbForm = new FormData();
+            imgbbForm.append('image', base64);
+            const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${env.IMGBB_KEY}`, {method:'POST', body:imgbbForm});
+            const imgbbData = await imgbbRes.json();
+            const urlStr = imgbbData?.data?.url || '';
+            return new Response(JSON.stringify({url:urlStr}), {headers:apiHeaders});
+          }catch(e){ return new Response(JSON.stringify({error:e.message}), {status:500, headers:apiHeaders}); }
+        }
+
+        if (url.pathname === "/api/track" && request.method === "POST") {
+          try{
+            const body = await request.json();
+            const majstor_id = body.majstor_id;
+            const type = body.type;
+            if(type==='view'){
+              await sql`UPDATE majstori SET views=COALESCE(views,0)+1 WHERE id=${majstor_id}`;
+            } else if(type==='phone_click'){
+              await sql`UPDATE majstori SET phone_clicks=COALESCE(phone_clicks,0)+1 WHERE id=${majstor_id}`;
+            }
+            // Also log to stats table if exists
+            try{
+              await sql`INSERT INTO majstor_stats (majstor_id, event_type, created_at) VALUES (${majstor_id}, ${type}, NOW())`;
+            }catch{}
+            return new Response(JSON.stringify({success:true}), {headers:apiHeaders});
+          }catch(e){ return new Response(JSON.stringify({success:true}), {headers:apiHeaders}); }
+        }
+
         // PAYMENT: upload proof (multipart)
         if (url.pathname === "/api/upload-proof" && request.method === "POST") {
           try{
@@ -387,4 +483,3 @@ export default {
     return env.ASSETS.fetch(request);
   },
 };
-
