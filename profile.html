@@ -256,6 +256,13 @@ async function loadMajstor() {
     `;
 
        const isOwner = (currentUser && majstor.email && currentUser === majstor.email);
+       // Ако не е сопственик, скриј ги деловите за уредување и качување слики
+    if (!isOwner) {
+        const settingsSection = document.getElementById('settingsSection');
+        const uploadSection = document.getElementById('uploadSection');
+        if (settingsSection) settingsSection.style.display = 'none';
+        if (uploadSection) uploadSection.style.display = 'none';
+    } 
     
     if (isAdmin || isOwner) {
       document.getElementById('uploadSection').style.display = 'block';
