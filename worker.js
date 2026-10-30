@@ -123,31 +123,33 @@ export default {
           return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
         }
                 // ===== РЕГИСТРАЦИЈА НА НОВ МАЈСТОР (Од Clerk) =====
-        if (url.pathname === "/api/register-user" && request.method === "POST") {
-          const body = await request.json();
-          
-          const result = await sql`
-            INSERT INTO majstori (
-              clerk_id, email, name, phone, city, category, description, facebook_url, website_url
-            ) VALUES (
-              ${body.clerk_id}, ${body.email}, ${body.name}, ${body.phone}, 
-              ${body.city}, ${body.category}, ${body.description || ''}, 
-              ${body.facebook_url || ''}, ${body.website_url || ''}
-            )
-            ON CONFLICT (email) DO UPDATE SET
-              clerk_id = ${body.clerk_id},
-              name = ${body.name},
-              phone = ${body.phone},
-              city = ${body.city},
-              category = ${body.category},
-              description = ${body.description || ''},
-              facebook_url = ${body.facebook_url || ''},
-              website_url = ${body.website_url || ''}
-            RETURNING *;
-          `;
-          
-          return new Response(JSON.stringify({ success: true, majstor: result[0] }), { headers: apiHeaders });
-        }
+if (url.pathname === "/api/register-user" && request.method === "POST") {
+  const body = await request.json();
+  
+  const result = await sql`
+    INSERT INTO majstori (
+      user_id, email, name, phone, city, category, description, 
+      facebook_url, website_url, agreed_to_terms, created_at
+    ) VALUES (
+      ${body.clerk_id}, ${body.email}, ${body.name}, ${body.phone}, 
+      ${body.city}, ${body.category}, ${body.description || ''}, 
+      ${body.facebook_url || ''}, ${body.website_url || ''},
+      true, ${new Date().toISOString()}
+    )
+    ON CONFLICT (email) DO UPDATE SET
+      user_id = ${body.clerk_id},
+      name = ${body.name},
+      phone = ${body.phone},
+      city = ${body.city},
+      category = ${body.category},
+      description = ${body.description || ''},
+      facebook_url = ${body.facebook_url || ''},
+      website_url = ${body.website_url || ''}
+    RETURNING *;
+  `;
+  
+  return new Response(JSON.stringify({ success: true, majstor: result[0] }), { headers: apiHeaders });
+  }
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
       } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
