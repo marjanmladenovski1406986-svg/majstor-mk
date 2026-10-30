@@ -652,7 +652,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
     <div id="modal-form-login">
       <input type="email" id="login-email" placeholder="Е-пошта">
       <input type="password" id="login-password" placeholder="Лозинка">
-      <button onclick="handleLogin()" id="btn-modal-login">Најави се</button>
+    <button onclick="closeModal(); window.Clerk.openSignIn();" id="btn-modal-login">Најави се</button>
             <button onclick="openForgotPassword()" id="btn-forgot-pwd" style="background:transparent; border:none; color:#ff6b35; font-size:13px; cursor:pointer; width:100%; padding:8px; text-decoration:underline; font-family:inherit;">🔐 Заборавена лозинка?</button>
     </div>
     <div id="modal-form-register" class="hidden">
@@ -722,7 +722,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
                         <span data-ph="phTerms">Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
           </label>
         </div>
-        <button onclick="window.Clerk.redirectToSignUp()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
+       <button onclick="handleMajstorRegister()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
       <div id="form-baram" class="hidden">
         <input type="text" id="b-name" placeholder="Име">
@@ -734,7 +734,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
             <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
           </label>
         </div>
-        <button onclick="window.Clerk.redirectToSignUp()" id="btn-reg-baram">Регистрирај се</button>
+       <button onclick="handleClientRegister()" id="btn-reg-baram">Регистрирај се</button>
       </div>
     </div>
     <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;" id="btn-close-modal">Затвори</button>
@@ -947,6 +947,35 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 
 
 <script>
+ function handleMajstorRegister() {
+  const name = document.getElementById('m-name').value.trim();
+  const surname = document.getElementById('m-surname').value.trim();
+  const phone = document.getElementById('m-phone').value.trim();
+  const city = document.getElementById('m-city').value;
+  const category = document.getElementById('m-category').value;
+  const description = document.getElementById('m-description').value.trim();
+  const facebook = document.getElementById('m-facebook').value.trim();
+  const website = document.getElementById('m-website').value.trim();
+
+  if (!name || !phone || !city || !category) {
+    alert("Пополни ги задолжителните полиња (Име, Телефон, Град, Категорија)!");
+    return;
+  }
+
+  // Зачувуваме во браузерот за подоцна да ги запишеме во базата
+  const majstorData = { name: name + ' ' + surname, phone, city, category, description, facebook_url: facebook, website_url: website };
+  localStorage.setItem('pending_majstor_data', JSON.stringify(majstorData));
+  localStorage.setItem('pending_user_type', 'majstor');
+
+  closeModal(); // Затвори го твојот модал
+  window.Clerk.redirectToSignUp(); // Отвори Clerk
+}
+
+function handleClientRegister() {
+  localStorage.setItem('pending_user_type', 'baram');
+  closeModal();
+  window.Clerk.redirectToSignUp();
+}
 
  // Помошна функција за автоматско намалување на сликите (Supabase Image Transformation)
 function getOptimizedUrl(originalUrl, width = 400, quality = 75) {
@@ -2493,11 +2522,11 @@ window.addEventListener('load', async function () {
         afterSignOutUrl: '/'
       });
     } else {
-      const loginBtn = document.createElement('button');
+           const loginBtn = document.createElement('button');
       loginBtn.className = 'btn-auth'; 
       loginBtn.style.marginLeft = '10px';
       loginBtn.textContent = 'Најава';
-      loginBtn.onclick = () => window.Clerk.openSignIn(); 
+      loginBtn.onclick = () => openModal(); // <-- Го отвора твојот модал
       clerkHeader.appendChild(loginBtn);
     }
     
