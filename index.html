@@ -644,22 +644,8 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modal-title">🔨 Мајстор.мк</h2>
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="modal-tab-login" onclick="showModalTab('login')">Најава</button>
-      <button class="modal-tab" id="modal-tab-register" onclick="showModalTab('register')">Регистрација</button>
-    </div>
-    <div id="modal-msg" class="modal-msg"></div>
-    <div id="modal-form-login">
-      <!-- НОВ КОД ЗА НАЈАВА ПРЕКУ CLERK -->
-<div style="text-align: center; padding: 20px 0;">
-    <p style="margin-bottom: 15px; color: #aaa;">Најавете се безбедно преку вашата сметка:</p>
-    <button onclick="closeModal(); window.Clerk.openSignIn();" style="background-color: #ff6b00; color: white; padding: 12px 20px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s;">
-        Најави се
-    </button>
-</div>
-
-    </div>
-    <div id="modal-form-register" class="hidden">
+  
+    <div id="modal-form-register">
       <div class="type-choice">
         <button class="type-btn" id="type-majstor" onclick="selectType('majstor')">
           <span class="icon">👷</span>
@@ -2079,13 +2065,7 @@ function closeCatModal() {
 function openModal() { document.getElementById('modal').classList.add('open'); }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
-function showModalTab(tab) {
-  document.getElementById('modal-tab-login').classList.toggle('active', tab === 'login');
-  document.getElementById('modal-tab-register').classList.toggle('active', tab === 'register');
-  document.getElementById('modal-form-login').classList.toggle('hidden', tab !== 'login');
-  document.getElementById('modal-form-register').classList.toggle('hidden', tab !== 'register');
-  if (tab === 'register') resetRegisterForm();
-}
+
 
 function resetRegisterForm() {
   selectedType = null;
