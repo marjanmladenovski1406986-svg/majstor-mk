@@ -722,7 +722,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
                         <span data-ph="phTerms">Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
           </label>
         </div>
-        <button onclick="prepareRegisterMajstor()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
+        <button onclick="window.Clerk.redirectToSignUp()" id="btn-reg-majstor">Регистрирај се како мајстор</button>
       </div>
       <div id="form-baram" class="hidden">
         <input type="text" id="b-name" placeholder="Име">
@@ -734,7 +734,7 @@ footer { background: #1a1a1a; padding: 30px; text-align: center; color: #666; }
             <span>Се согласувам со <a href="#" onclick="event.preventDefault(); openDoc('termsModal');" style="color: #ff6b35;">Условите за користење</a>, <a href="#" onclick="event.preventDefault(); openDoc('privacyModal');" style="color: #ff6b35;">Политиката за приватност</a> и <a href="#" onclick="event.preventDefault(); openDoc('cookiesDocModal');" style="color: #ff6b35;">Колачињата</a>.</span>
           </label>
         </div>
-        <button onclick="handleRegisterBaram()" id="btn-reg-baram">Регистрирај се</button>
+        <button onclick="window.Clerk.redirectToSignUp()" id="btn-reg-baram">Регистрирај се</button>
       </div>
     </div>
     <button onclick="closeModal()" style="background:transparent; border:1px solid #333; color:#999;" id="btn-close-modal">Затвори</button>
