@@ -9,7 +9,7 @@ export default {
       return fetch(`https://frontend-api.clerk.services${url.pathname}${url.search}`, request);
     }
 
-    // 2. CORS Headers (За дозвола на барања од сајтот)
+    // 2. CORS Headers
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
@@ -92,6 +92,7 @@ export default {
           await sql`DELETE FROM majstor_media WHERE id = ${body.id}`;
           return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
         }
+
         // ===== АЖУРИРАЊЕ НА ПРОФИЛНИ ПОДАТОЦИ =====
         if (url.pathname === "/api/update-profile" && request.method === "POST") {
           const body = await request.json();
@@ -122,20 +123,31 @@ export default {
           await sql`UPDATE majstori SET cover_url = ${body.url} WHERE id = ${body.id}`;
           return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
         }
-                // ===== РЕГИСТРАЦИЈА НА НОВ МАЈСТОР (Од Clerk) =====
+
+        // ===== РЕГИСТРАЦИЈА НА НОВ МАЈСТОР (Поправено за твојата Neon база) =====
         if (url.pathname === "/api/register-user" && request.method === "POST") {
           const body = await request.json();
           
+          // Користиме NOW() наместо new Date() за да нема грешки во Cloudflare
           const result = await sql`
             INSERT INTO majstori (
-              clerk_id, email, name, phone, city, category, description, facebook_url, website_url
+              user_id, email, name, phone, city, category, description, 
+              facebook_url, website_url, agreed_to_terms, created_at
             ) VALUES (
-              ${body.clerk_id}, ${body.email}, ${body.name}, ${body.phone}, 
-              ${body.city}, ${body.category}, ${body.description || ''}, 
-              ${body.facebook_url || ''}, ${body.website_url || ''}
+              ${body.clerk_id}, 
+              ${body.email}, 
+              ${body.name}, 
+              ${body.phone}, 
+              ${body.city}, 
+              ${body.category}, 
+              ${body.description || ''}, 
+              ${body.facebook_url || ''}, 
+              ${body.website_url || ''}, 
+              true, 
+              NOW()
             )
             ON CONFLICT (email) DO UPDATE SET
-              clerk_id = ${body.clerk_id},
+              user_id = ${body.clerk_id},
               name = ${body.name},
               phone = ${body.phone},
               city = ${body.city},
@@ -148,6 +160,7 @@ export default {
           
           return new Response(JSON.stringify({ success: true, majstor: result[0] }), { headers: apiHeaders });
         }
+        
         return new Response("API Not Found", { status: 404, headers: corsHeaders });
       } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
@@ -157,7 +170,7 @@ export default {
       }
     }
 
-    // 4. Ако не е API, отвори ги обичните HTML страници (index.html, profile.html...)
+    // 4. Ако не е API, отвори ги обичните HTML страници
     return env.ASSETS.fetch(request);
   },
 };
