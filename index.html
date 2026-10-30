@@ -2496,7 +2496,8 @@ window.addEventListener('load', async function () {
             }
         }
         // --- КРАЈ НА КОД ЗА ЗАЧУВУВАЊЕ НА МАЈСТОР ---
-      let myProfileId = null;
+         let myProfileId = null;
+
       try {
         const res = await fetch('/api/majstori');
         const allMajstori = await res.json();
@@ -2506,29 +2507,28 @@ window.addEventListener('load', async function () {
         console.error("Грешка при барање на профил:", e);
       }
 
-      // Исчисти го повторно по чекањето (за секој случај)
+      // Исчисти го повторно по чекањето
       clerkHeader.innerHTML = ''; 
 
-      const profileBtn = document.createElement('a');
+      // Прикажи "Мој Профил" САМО ако постои профил (значи е мајстор)
       if (myProfileId) {
-        profileBtn.href = `/profile.html?id=${myProfileId}`; 
-      } else {
-        profileBtn.href = '#';
-        profileBtn.onclick = (e) => { e.preventDefault(); alert("Вашиот профил сè уште не е поврзан."); };
+          const profileBtn = document.createElement('a');
+          profileBtn.href = `/profile.html?id=${myProfileId}`; 
+          profileBtn.className = 'btn-profile';
+          profileBtn.style.marginRight = '10px';
+          profileBtn.style.textDecoration = 'none';
+          profileBtn.style.display = 'inline-flex';
+          profileBtn.style.alignItems = 'center';
+          profileBtn.innerHTML = `<span style="font-size: 16px; margin-right: 5px;">👤</span> <span>Мој Профил</span>`;
+          clerkHeader.appendChild(profileBtn);
       }
-
-      profileBtn.className = 'btn-profile';
-      profileBtn.style.marginRight = '10px';
-      profileBtn.style.textDecoration = 'none';
-      profileBtn.style.display = 'inline-flex';
-      profileBtn.style.alignItems = 'center';
-      profileBtn.innerHTML = `<span style="font-size: 16px; margin-right: 5px;">👤</span> <span>Мој Профил</span>`;
       
-      clerkHeader.appendChild(profileBtn);
-
+      // Clerk копчето (за одјавување) секогаш се прикажува
       window.Clerk.mountUserButton(clerkHeader, {
         afterSignOutUrl: '/'
       });
+
+     
     } else {
            const loginBtn = document.createElement('button');
       loginBtn.className = 'btn-auth'; 
