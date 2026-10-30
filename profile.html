@@ -255,7 +255,9 @@ async function loadMajstor() {
       </div>
     `;
 
-    if (isAdmin) {
+       const isOwner = (currentUser && majstor.email && currentUser === majstor.email);
+    
+    if (isAdmin || isOwner) {
       document.getElementById('uploadSection').style.display = 'block';
       document.getElementById('settingsSection').style.display = 'block';
     }
