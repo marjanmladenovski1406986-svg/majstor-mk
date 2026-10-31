@@ -292,6 +292,13 @@ async function loadPartners(){
       location.href='/dashboard.html';
     }
   }
+    function goToDashboard() {
+    if(window.Clerk && Clerk.user) {
+      location.href = '/dashboard.html';
+    } else {
+      handleRegister();
+    }
+  }
   
 </script>
 </body>
