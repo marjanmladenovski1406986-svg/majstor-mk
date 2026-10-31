@@ -226,7 +226,7 @@ function renderMajstori(list){
   el.innerHTML=list.slice(0,12).map(m=>{
     const isFounder=m.is_founder;
     const badge=isFounder?'<span class="badge badge-founder">🚀 FOUNDER</span>':(m.is_premium?'<span class="badge badge-premium">👑 PREMIUM</span>':'');
-    const avatar=m.photo_url?`<img src="${(m.photo_url && m.photo_url.startsWith('https://')) ? m.photo_url : 'https://i.ibb.co/Gvgdtjh2/icon-192.png'}">`:m.name.charAt(0).toUpperCase();
+   const avatar = (m.photo_url && m.photo_url.startsWith('http')) ? `<img src="${m.photo_url}" onerror="this.style.display='none'; this.parentNode.innerText='${m.name.charAt(0).toUpperCase()}'">` : m.name.charAt(0).toUpperCase();
     const cover=m.cover_url||m.photo_url||'';
     return `<div class="m-card" onclick="location.href='/profile.html?id=${m.id}'">
       <div class="m-cover" style="background-image:url('${cover}')"></div>
