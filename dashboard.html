@@ -32,179 +32,178 @@ input,select,textarea{width:100%;padding:10px;background:#1a1a1a;border:1px soli
 </style>
 </head>
 <body>
-<header><a href="/" class="logo">Majsto.mk</a><div id="headerAuth">Се вчитува...</div></header>
+<header><a href="/" class="logo">🔨 Majsto.mk</a><div id="headerAuth">Се вчитува...</div></header>
 <div class="container">
 <div id="loading">Се вчитува... најави се преку Clerk</div>
+
 <div id="dashboard" style="display:none">
 <h2 id="welcome"></h2>
 <p id="founderBadge" style="margin:8px 0"></p>
+
 <div class="tabs">
-<button class="tab active" onclick="showTab(event,'profile')">Profil</button>
-<button class="tab" onclick="showTab(event,'gallery')">Galerija (<span id="gCount">0</span>/50)</button>
-<button class="tab" onclick="showTab(event,'stats')">Statistika</button>
-<button class="tab" onclick="showTab(event,'payment')">Naplata</button>
+<button class="tab active" onclick="showTab(event,'profile')">👤 Профил</button>
+<button class="tab" onclick="showTab(event,'gallery')">🖼️ Галерија (<span id="gCount">0</span>/50)</button>
+<button class="tab" onclick="showTab(event,'stats')">📊 Статистика</button>
+<button class="tab" onclick="showTab(event,'payment')">💳 Наплата</button>
 </div>
+
 <div class="tab-content active" id="tab-profile">
 <div class="card">
-<h3>Uredi profil</h3>
-<input id="pName" placeholder="Ime i prezime">
-<input id="pPhone" placeholder="Telefon 070...">
+<h3>👤 Уреди профил</h3>
+<input id="pName" placeholder="Име и презиме">
+<input id="pPhone" placeholder="Телефон 070...">
 <select id="pCity"></select>
 <select id="pCategory"></select>
-<textarea id="pDesc" rows="3" placeholder="Opis..."></textarea>
-<input id="pFb" placeholder="Facebook link">
-<input id="pWeb" placeholder="Vebsajt">
-<label style="color:#ff6b35;font-size:13px;font-weight:700;margin-bottom:4px;display:block">📷 Профилна слика</label>
-<input id="pPhoto" placeholder="URL na profilna slika">
-<input type="file" id="photoFile" accept="image/*" style="margin-bottom:12px">
-<label style="color:#ff6b35;font-size:13px;font-weight:700;margin-bottom:4px;display:block">🖼️ Банер / Cover слика (заднина на профил)</label>
-<input id="pCover" placeholder="URL na cover/baner slika">
-<input type="file" id="coverFile" accept="image/*" style="margin-bottom:8px">
-<button class="btn btn-orange" style="width:100%" onclick="saveProfile()">Zacuvaj profil</button>
+<textarea id="pDesc" rows="3" placeholder="Опис - што работиш, искуство..."></textarea>
+<input id="pFb" placeholder="Facebook линк (опционо)">
+<input id="pWeb" placeholder="Вебсајт (опционо)">
+<input id="pPhoto" placeholder="URL на профилна слика (или качи подолу)">
+<input type="file" id="photoFile" accept="image/*" style="margin-bottom:8px" onchange="uploadAvatar(this)">
+<button class="btn btn-orange" style="width:100%" onclick="saveProfile()">💾 Зачувај профил</button>
 <div id="pMsg" style="margin-top:8px;font-size:13px"></div>
 </div>
 </div>
+
 <div class="tab-content" id="tab-gallery">
 <div class="card">
-<h3>Tvoi sliki (max 50)</h3>
+<h3>🖼️ Твои слики (макс 50)</h3>
 <div class="upload-box" onclick="document.getElementById('galleryFile').click()">
-Klikni za kacuvanje slika
-<input type="file" id="galleryFile" accept="image/*" style="display:none">
+📁 Кликни за качување слика
+<input type="file" id="galleryFile" accept="image/*" style="display:none" onchange="uploadGallery(this)">
 </div>
-<p style="color:#888;font-size:12px;margin:8px 0">Mozes do 50 sliki.</p>
+<p style="color:#888;font-size:12px;margin:8px 0">Можеш до 50 слики од твоја работа. Првата е главна.</p>
 <div class="gallery" id="galleryList"></div>
 </div>
 </div>
+
 <div class="tab-content" id="tab-stats">
-<div class="card"><h3>Statistika</h3><div class="stats-grid" id="statsGrid"></div></div>
-<div class="card"><h3>Ocenki</h3><div id="ratingsList"></div></div>
+<div class="card">
+<h3>📊 Статистика</h3>
+<div class="stats-grid" id="statsGrid"></div>
 </div>
+<div class="card">
+<h3>⭐ Оценки</h3>
+<div id="ratingsList"></div>
+</div>
+</div>
+
 <div class="tab-content" id="tab-payment">
 <div class="card" id="paymentCard"></div>
 </div>
 </div>
 </div>
+
 <script>
-const CITIES=['Skopje','Bitola','Kumanovo','Prilep','Tetovo','Veles','Stip','Ohrid','Gostivar','Strumica','Kavadarci','Kocani','Kicevo','Struga','Radovis','Gevgelija','Debar','Kriva Palanka','Sveti Nikole','Negotino','Delcevo','Resen','Probistip','Berovo','Kratovo','Krusevo','Valandovo','Makedonski Brod','Demir Hisar','Demir Kapija','Bogdanci','Dojran','Pehcevo','Vinica'];
-const CAT_NAMES={elektrika:"Elektrika",vodovod:"Vodovod",gradeznistvo:"Gradeznistvo",popravki:"Popravki",finalni:"Finalni raboti",plockari:"Plockari",gipsari:"Gipsari i Moleri",stolari:"Stolari",klima:"Klima",greenje:"Greenje",krov:"Krov",sanitarii:"Sanitarii",pvc:"PVC prozori i vrati",dvorovi:"Ureduvanje dvorovi",cistenje:"Cistenje",opti:"Opsti rabotnici",bravari:"Bravarski uslugi",belatehnika:"Bela tehnika",videonadzor:"Video nadzor",bazeni:"Bazeni",fasadi:"Fasadi",iskop:"Iskop",hidroizolacija:"Hidro izolacija",otpad:"Frlanje otpad"};
+const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
+const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари и Молери",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ прозори и врати",dvorovi:"🌳 Уредување дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи работници",bravari:"🔨 Браварски услуги",belatehnika:"🔌 Бела техника",videonadzor:"📹 Видео надзор",bazeni:"🏊 Базени",fasadi:"🎨 Фасади",iskop:"🚜 Ископ",hidroizolacija:"💧 Хидро изолација",otpad:"🗑️ Фрлање отпад"};
+
 let currentUser=null, myProfile=null, myMedia=[], myRatings=[];
+
 function showTab(e,tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   e.target.classList.add('active');
   document.getElementById('tab-'+tab).classList.add('active');
 }
-window.addEventListener('load', async function(){
-  if(!window.Clerk){ document.getElementById('loading').textContent='Clerk ne se vcital'; return; }
+
+window.addEventListener('load', async()=>{
+  if(!window.Clerk){ document.getElementById('loading').textContent='Clerk не се вчита'; return; }
   await Clerk.load();
   currentUser=Clerk.user;
-  document.getElementById('pCity').innerHTML=CITIES.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
-  document.getElementById('pCategory').innerHTML=Object.entries(CAT_NAMES).map(function(entry){return '<option value="'+entry[0]+'">'+entry[1]+'</option>';}).join('');
+  document.getElementById('pCity').innerHTML=CITIES.map(c=>`<option value="${c}">${c}</option>`).join('');
+  document.getElementById('pCategory').innerHTML=Object.entries(CAT_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
   
   if(!currentUser){
-    document.getElementById('loading').innerHTML='<p>Ne si najaven</p><button class="btn btn-orange" onclick="Clerk.openSignIn()">Najavi se</button>';
+    document.getElementById('loading').innerHTML='<div style="text-align:center;padding:40px"><h2>🔐 Најави се</h2><p style="color:#888;margin:12px 0">Мора да се најавиш за да го уредуваш профилот</p><button class="btn btn-orange" onclick="Clerk.openSignIn()">Најави се / Регистрирај се</button><br><br><a href="/" class="btn">← Кон почетна</a></div>';
+    document.getElementById('headerAuth').innerHTML='<button class="btn btn-orange" onclick="Clerk.openSignIn()">Најава</button>';
     return;
   }
-  document.getElementById('headerAuth').innerHTML='<span style="color:#888;font-size:12px">'+currentUser.primaryEmailAddress.emailAddress+'</span> <button class="btn" onclick="Clerk.signOut().then(function(){location.reload()})">Odjava</button> <a href="/" class="btn">Pocetna</a>';
+  document.getElementById('headerAuth').innerHTML=`<span style="color:#888;font-size:12px">${currentUser.primaryEmailAddress.emailAddress}</span> <button class="btn" onclick="Clerk.signOut().then(()=>location.reload())">Одјава</button> <a href="/" class="btn">Почетна</a>`;
   loadMe();
-  document.getElementById('photoFile').addEventListener('change', function(){ uploadAvatar(this); });
-  document.getElementById('coverFile').addEventListener('change', function(){ uploadCover(this); });
-  document.getElementById('galleryFile').addEventListener('change', function(){ uploadGallery(this); });
 });
+
 async function loadMe(){
   try{
-    // Check if admin wants to edit another profile
-    var urlParams = new URLSearchParams(window.location.search);
-    var editId = urlParams.get('edit_id');
-    var isAdminEdit = !!editId;
-    
-    var url;
-    if(isAdminEdit){
-      url = '/api/majstori?id='+encodeURIComponent(editId);
-    } else {
-      url = '/api/me?clerk_id='+encodeURIComponent(currentUser.id)+'&email='+encodeURIComponent(currentUser.primaryEmailAddress.emailAddress);
-    }
-    var res=await fetch(url);
-    var data=await res.json();
-    if(data.error){ document.getElementById('loading').textContent='Greska: '+data.error; return; }
-    // /api/majstori?id= returns object, /api/me returns object, but sometimes array
-    if(Array.isArray(data)){ myProfile=data[0]; } else { myProfile=data; }
-    if(!myProfile){ document.getElementById('loading').textContent='Грешка: Профилот не постои'; return; }
+    const res=await fetch(`/api/me?clerk_id=${currentUser.id}&email=${encodeURIComponent(currentUser.primaryEmailAddress.emailAddress)}`);
+    const data=await res.json();
+    if(data.error){ document.getElementById('loading').textContent='Грешка: '+data.error; return; }
+    myProfile=data;
     document.getElementById('loading').style.display='none';
     document.getElementById('dashboard').style.display='block';
-    document.getElementById('welcome').textContent='Zdravo, '+(myProfile.name||currentUser.firstName||'Majstore')+'!';
-    if(isAdminEdit){
-      document.getElementById('welcome').innerHTML += ' <span style="background:#ff6b35;color:#000;padding:4px 8px;border-radius:10px;font-size:12px;margin-left:8px">ADMIN EDIT MODE - уредуваш како '+myProfile.name+'</span>';
-      document.getElementById('founderBadge').innerHTML = '<span style="background:#ff6b35;color:#000;padding:6px 12px;border-radius:20px;font-weight:900">🛠️ АДМИН - уредуваш туѓ профил ID:'+myProfile.id+'</span> <a href="/admin.html" style="color:#ff6b35;margin-left:10px">← Назад во Админ</a>';
-    }
+    document.getElementById('welcome').textContent=`Здраво, ${myProfile.name||currentUser.firstName||'Мајсторе'}!`;
     if(myProfile.is_founder){
-      document.getElementById('founderBadge').innerHTML='<span style="background:#4caf50;color:#000;padding:6px 12px;border-radius:20px;font-weight:900">FOUNDER #'+myProfile.founder_number+' — besplatno zasekogas</span>';
+      document.getElementById('founderBadge').innerHTML=`<span style="background:linear-gradient(90deg,#4caf50,#8bc34a);color:#000;padding:6px 12px;border-radius:20px;font-weight:900">🚀 FOUNDER #${myProfile.founder_number} — бесплатно засекогаш</span>`;
     } else if(myProfile.is_premium){
-      var paidUntil = myProfile.paid_until ? new Date(myProfile.paid_until).toLocaleDateString('mk-MK') : 'aktiven';
-      document.getElementById('founderBadge').innerHTML='<span style="background:#ff6b35;color:#000;padding:6px 12px;border-radius:20px;font-weight:900">PREMIUM do '+paidUntil+'</span>';
+      document.getElementById('founderBadge').innerHTML=`<span style="background:#ff6b35;color:#000;padding:6px 12px;border-radius:20px;font-weight:900">👑 PREMIUM до ${myProfile.paid_until?new Date(myProfile.paid_until).toLocaleDateString('mk-MK'):'активен'}</span>`;
     } else {
-      document.getElementById('founderBadge').innerHTML='<span style="background:#333;color:#aaa;padding:6px 12px;border-radius:20px;font-weight:600">Besplaten - <a href="/naplata.html" style="color:#ff6b35">Stani Premium 1000 den/god</a></span>';
+      document.getElementById('founderBadge').innerHTML=`<span style="background:#333;color:#aaa;padding:6px 12px;border-radius:20px;font-weight:600">🆓 Бесплатен - <a href="/naplata.html" style="color:#ff6b35">Стани Premium 1000 ден/год</a></span>`;
     }
     document.getElementById('pName').value=myProfile.name||'';
     document.getElementById('pPhone').value=myProfile.phone||'';
-    document.getElementById('pCity').value=myProfile.city||'Skopje';
+    document.getElementById('pCity').value=myProfile.city||'Скопје';
     document.getElementById('pCategory').value=myProfile.category||'elektrika';
     document.getElementById('pDesc').value=myProfile.description||'';
     document.getElementById('pFb').value=myProfile.facebook_url||'';
     document.getElementById('pWeb').value=myProfile.website_url||'';
     document.getElementById('pPhoto').value=myProfile.photo_url||'';
-    if(document.getElementById('pCover')) document.getElementById('pCover').value=myProfile.cover_url||'';
     loadMedia(); loadStats(); loadPayment();
-  }catch(e){ document.getElementById('loading').textContent='Greska: '+e.message; }
+  }catch(e){ document.getElementById('loading').textContent='Грешка: '+e.message; }
 }
+
 async function loadMedia(){
-  var res=await fetch('/api/media?majstor_id='+myProfile.id);
+  const res=await fetch(`/api/media?majstor_id=${myProfile.id}`);
   myMedia=await res.json(); if(!Array.isArray(myMedia)) myMedia=[];
   document.getElementById('gCount').textContent=myMedia.length;
-  document.getElementById('galleryList').innerHTML=myMedia.map(function(m){return '<div class="img-wrap"><img src="'+m.url+'"><button onclick="deleteMedia('+m.id+')">X</button></div>';}).join('') || '<p style="color:#666">Nema sliki</p>';
+  document.getElementById('galleryList').innerHTML=myMedia.map(m=>`<div class="img-wrap"><img src="${m.url}"><button onclick="deleteMedia(${m.id})">✕</button></div>`).join('') || '<p style="color:#666">Нема слики</p>';
 }
+
 async function loadStats(){
-  document.getElementById('statsGrid').innerHTML='<div class="stat"><div class="num">'+(myProfile.views||0)+'</div><div class="lbl">Pregledi</div></div><div class="stat"><div class="num">'+(myProfile.phone_clicks||0)+'</div><div class="lbl">Telefon</div></div><div class="stat"><div class="num">'+myMedia.length+'</div><div class="lbl">Sliki</div></div><div class="stat"><div class="num">'+(myProfile.rating||0)+'</div><div class="lbl">Ocena</div></div>';
-  var rRes=await fetch('/api/ratings?majstor_id='+myProfile.id);
+  document.getElementById('statsGrid').innerHTML=`<div class="stat"><div class="num">${myProfile.views||0}</div><div class="lbl">👁️ Прегледи</div></div><div class="stat"><div class="num">${myProfile.phone_clicks||0}</div><div class="lbl">📞 Телефон</div></div><div class="stat"><div class="num">${myMedia.length}</div><div class="lbl">🖼️ Слики</div></div><div class="stat"><div class="num">${myProfile.rating||0}</div><div class="lbl">⭐ Оценка</div></div>`;
+  const rRes=await fetch(`/api/ratings?majstor_id=${myProfile.id}`);
   myRatings=await rRes.json(); if(!Array.isArray(myRatings)) myRatings=[];
-  document.getElementById('ratingsList').innerHTML=myRatings.map(function(r){return '<div style="background:#1a1a1a;border:1px solid #222;border-radius:8px;padding:8px;margin-bottom:6px"><b>'+r.rating+' '+ (r.user_name||'Anonimen')+'</b><p style="color:#ccc;font-size:13px">'+(r.comment||'')+'</p></div>';}).join('') || '<p style="color:#666">Nema ocenki</p>';
+  document.getElementById('ratingsList').innerHTML=myRatings.map(r=>`<div style="background:#1a1a1a;border:1px solid #222;border-radius:8px;padding:8px;margin-bottom:6px"><b>${'★'.repeat(r.rating)} ${r.user_name||'Анонимен'}</b><p style="color:#ccc;font-size:13px">${r.comment||''}</p></div>`).join('') || '<p style="color:#666">Нема оценки</p>';
 }
+
 function loadPayment(){
-  var card=document.getElementById('paymentCard');
+  const card=document.getElementById('paymentCard');
   if(myProfile.is_founder){
-    card.innerHTML='<h3>Founder - besplatno zasekogas</h3><p style="color:#ccc">Ti si megju prvite 50 - ne plakas nisto.</p><a href="/profile.html?id='+myProfile.id+'" class="btn btn-orange" style="display:inline-block;margin-top:12px">Vidi moj profil</a>';
+    card.innerHTML='<h3>🚀 Founder - бесплатно засекогаш</h3><p style="color:#ccc">Ти си меѓу првите 50 - не плаќаш ништо, засекогаш.</p><a href="/profile.html?id='+myProfile.id+'" class="btn btn-orange" style="display:inline-block;margin-top:12px">Види мој профил</a>';
   } else if(myProfile.is_premium && myProfile.paid_until && new Date(myProfile.paid_until)>new Date()){
-    card.innerHTML='<h3>Premium aktiven</h3><p style="color:#4caf50;font-weight:800">Aktiven do '+new Date(myProfile.paid_until).toLocaleDateString('mk-MK')+'</p><a href="/profile.html?id='+myProfile.id+'" class="btn btn-orange" style="margin-top:12px;display:inline-block">Vidi profil</a>';
+    card.innerHTML=`<h3>👑 Premium активен</h3><p style="color:#4caf50;font-weight:800">Активен до ${new Date(myProfile.paid_until).toLocaleDateString('mk-MK')}</p><a href="/profile.html?id=${myProfile.id}" class="btn btn-orange" style="margin-top:12px;display:inline-block">Види профил</a>`;
   } else {
-    card.innerHTML='<h3>Stani Premium - 1000 den / godina</h3><p style="color:#ccc">50 sliki, statistika, prioritet.</p><a href="/naplata.html" class="btn btn-orange" style="display:block;text-align:center;margin-top:12px;text-decoration:none">Kon naplata (Stopanska direktno)</a>';
+    card.innerHTML='<h3>💳 Стани Premium - 1000 ден / година</h3><p style="color:#ccc">50 слики, статистика, приоритет во пребарување.</p><a href="/naplata.html" class="btn btn-orange" style="display:block;text-align:center;margin-top:12px;text-decoration:none">→ Кон наплата (Стопанска директно)</a>';
   }
 }
+
 async function saveProfile(){
-  var body={id:myProfile.id, name:document.getElementById('pName').value, phone:document.getElementById('pPhone').value, city:document.getElementById('pCity').value, category:document.getElementById('pCategory').value, description:document.getElementById('pDesc').value, facebook_url:document.getElementById('pFb').value, website_url:document.getElementById('pWeb').value, photo_url:document.getElementById('pPhoto').value, cover_url:document.getElementById('pCover').value, clerk_id:currentUser.id, email:currentUser.primaryEmailAddress.emailAddress};
-  var res=await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  var data=await res.json();
-  document.getElementById('pMsg').textContent=data.success?'Zacuvano!':'Greska: '+(data.error||'');
+  const body={id:myProfile.id, name:document.getElementById('pName').value, phone:document.getElementById('pPhone').value, city:document.getElementById('pCity').value, category:document.getElementById('pCategory').value, description:document.getElementById('pDesc').value, facebook_url:document.getElementById('pFb').value, website_url:document.getElementById('pWeb').value, photo_url:document.getElementById('pPhoto').value, clerk_id:currentUser.id, email:currentUser.primaryEmailAddress.emailAddress};
+  const res=await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const data=await res.json();
+  document.getElementById('pMsg').textContent=data.success?'✅ Зачувано!':'Грешка: '+(data.error||'');
   if(data.success) loadMe();
 }
+
 async function uploadAvatar(input){
-  var file=input.files[0]; if(!file) return;
-  var fd=new FormData(); fd.append('file',file);
-  var res=await fetch('/api/upload',{method:'POST',body:fd});
-  var data=await res.json();
-  if(data.url){ document.getElementById('pPhoto').value=data.url; document.getElementById('pMsg').textContent='✅ Профилна слика качена - кликни Зачувај профил'; }
+  const file=input.files[0]; if(!file) return;
+  const fd=new FormData(); fd.append('file',file);
+  const res=await fetch('/api/upload',{method:'POST',body:fd});
+  const data=await res.json();
+  if(data.url){ document.getElementById('pPhoto').value=data.url; }
 }
+
 async function uploadGallery(input){
-  var file=input.files[0]; if(!file) return;
-  if(myMedia.length>=50){ alert('Maksimum 50 sliki!'); return; }
-  var fd=new FormData(); fd.append('file',file); fd.append('majstor_id',myProfile.id);
-  var res=await fetch('/api/upload',{method:'POST',body:fd});
-  var data=await res.json();
-  if(data.url){ await fetch('/api/add-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:myProfile.id, url:data.url})}); loadMedia(); }
-  else alert('Greska: '+(data.error||''));
+  const file=input.files[0]; if(!file) return;
+  if(myMedia.length>=50){ alert('Максимум 50 слики!'); return; }
+  const fd=new FormData(); fd.append('file',file); fd.append('majstor_id',myProfile.id);
+  const res=await fetch('/api/upload',{method:'POST',body:fd});
+  const data=await res.json();
+  if(data.url){ await fetch('/api/media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:myProfile.id, url:data.url})}); loadMedia(); }
+  else alert('Грешка: '+(data.error||''));
 }
+
 async function deleteMedia(id){
-  if(!confirm('Izbrisi slika?')) return;
-  await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});
+  if(!confirm('Избриши слика?')) return;
+  await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
   loadMedia();
 }
 </script>
