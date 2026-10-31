@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/majstor.html",
-      "destination": "/api/share"
-    }
-  ]
-}
