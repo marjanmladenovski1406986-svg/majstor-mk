@@ -468,6 +468,25 @@ export default {
           return new Response(JSON.stringify({success:true}), {headers:apiHeaders});
         }
 
+
+        if (url.pathname === "/api/partners") {
+          if (request.method === "GET") {
+            const partners = await sql`SELECT * FROM partners WHERE is_active=true ORDER BY id DESC`;
+            return new Response(JSON.stringify(partners), { headers: apiHeaders });
+          }
+          if (request.method === "POST") {
+            const body = await request.json();
+            const result = await sql`INSERT INTO partners (name, description, logo_url, website_url, is_active) VALUES (${body.name}, ${body.description||''}, ${body.logo_url||''}, ${body.website_url||''}, true) RETURNING *`;
+            return new Response(JSON.stringify(result[0]), { headers: apiHeaders });
+          }
+        }
+
+        if (url.pathname === "/api/delete-partner" && request.method === "POST") {
+          const body = await request.json();
+          await sql`DELETE FROM partners WHERE id=${body.id}`;
+          return new Response(JSON.stringify({ success: true }), { headers: apiHeaders });
+        }
+
         return new Response(JSON.stringify({error:"Not Found"}), { status: 404, headers: apiHeaders });
       } catch (error) {
         console.error(error);
