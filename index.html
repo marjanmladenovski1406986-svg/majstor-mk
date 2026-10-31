@@ -73,6 +73,7 @@ footer{border-top:1px solid #222;padding:30px 20px;text-align:center;color:#666;
 </style>
 </head>
 <body>
+<script>window.addEventListener('error', function(e){ if(e.target.tagName==='IMG'){ e.target.src='https://i.ibb.co/Gvgdtjh2/icon-192.png'; } }, true);</script>
 <header>
 <a href="/" class="logo">🔨 Majsto.mk</a>
 <div class="nav">
@@ -225,7 +226,7 @@ function renderMajstori(list){
   el.innerHTML=list.slice(0,12).map(m=>{
     const isFounder=m.is_founder;
     const badge=isFounder?'<span class="badge badge-founder">🚀 FOUNDER</span>':(m.is_premium?'<span class="badge badge-premium">👑 PREMIUM</span>':'');
-    const avatar=m.photo_url?`<img src="${m.photo_url}">`:m.name.charAt(0).toUpperCase();
+    const avatar=m.photo_url?`<img src="${(m.photo_url && m.photo_url.startsWith('https://')) ? m.photo_url : 'https://i.ibb.co/Gvgdtjh2/icon-192.png'}">`:m.name.charAt(0).toUpperCase();
     const cover=m.cover_url||m.photo_url||'';
     return `<div class="m-card" onclick="location.href='/profile.html?id=${m.id}'">
       <div class="m-cover" style="background-image:url('${cover}')"></div>
@@ -258,7 +259,7 @@ async function loadPartners(){
     document.getElementById('partnersSection').style.display='block';
     document.getElementById('partnersGrid').innerHTML=partners.map(p=>`
       <div style="background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:16px;display:flex;gap:12px;align-items:center">
-        <div style="width:60px;height:60px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0"><img src="${p.logo_url}" style="width:90%;height:90%;object-fit:contain" onerror="this.style.display='none'"></div>
+        <div style="width:60px;height:60px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0"><img src="${(p.logo_url && p.logo_url.startsWith('https://')) ? p.logo_url : 'https://i.ibb.co/Gvgdtjh2/icon-192.png'}" style="width:90%;height:90%;object-fit:contain" onerror="this.style.display='none'"></div>
         <div style="flex:1"><div style="font-weight:800;color:#4db8ff">${p.name}</div><div style="font-size:12px;color:#888;margin-top:2px">${p.description||''}</div></div>
         <a href="${p.website_url}" target="_blank" style="background:#1a1a1a;border:1px solid #333;padding:8px 14px;border-radius:20px;font-size:12px;color:#4db8ff;text-decoration:none;white-space:nowrap">Посети →</a>
       </div>
