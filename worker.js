@@ -45,8 +45,9 @@ export default {
             const rows = await sql`SELECT * FROM majstori WHERE id=${id} LIMIT 1`;
             return new Response(JSON.stringify(rows[0] || null), { headers: apiHeaders });
           }
-          const majstori = await sql`SELECT * FROM majstori ORDER BY is_founder DESC, is_premium DESC, rating DESC, id DESC LIMIT 200`;
-          return new Response(JSON.stringify(majstori), { headers: apiHeaders });
+          let majstori = await sql`SELECT * FROM majstori ORDER BY is_founder DESC, is_premium DESC, rating DESC, id DESC LIMIT 200`;
+          majstori = majstori.map(m=>{ if(m.photo_url && !m.photo_url.startsWith('https://')) m.photo_url=null; if(m.cover_url && !m.cover_url.startsWith('https://')) m.cover_url=null; return m; });
+            return new Response(JSON.stringify(majstori), { headers: apiHeaders });
         }
 
         if (url.pathname === "/api/media") {
