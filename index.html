@@ -70,6 +70,20 @@ header{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.8);backdrop-fi
 footer{border-top:1px solid #222;padding:30px 20px;text-align:center;color:#666;margin-top:40px}
 #majstoriList .skeleton{height:200px;background:linear-gradient(90deg,#141414,#1a1a1a,#141414);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:16px}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@media (max-width: 768px) {
+  .hero h1 { font-size: 32px !important; line-height: 1.1 !important; }
+  .hero p { font-size: 15px !important; padding: 0 10px; }
+  .search-bar { flex-direction: column; gap: 8px; padding: 10px; }
+  .search-bar select, .search-bar button { width: 100% !important; flex: none !important; padding: 12px; }
+  .founder-banner { flex-direction: column; text-align: center; gap: 8px; }
+  .founder-banner .bar { width: 100% !important; max-width: none !important; }
+  .cat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+  .cat-card { padding: 12px; }
+  .pricing { grid-template-columns: 1fr !important; gap: 12px; }
+  header { padding: 10px 15px; }
+  .nav { gap: 6px; }
+  .btn { padding: 8px 12px; font-size: 13px; }
+  }  
 </style>
 </head>
 <body>
