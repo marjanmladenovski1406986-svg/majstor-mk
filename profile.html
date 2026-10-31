@@ -139,7 +139,8 @@ async function loadProfile(id){
 
 function render(){
   const app=document.getElementById('app');
-  const avatarContent=majstor.photo_url?`<img src="${majstor.photo_url}">`:majstor.name.charAt(0).toUpperCase();
+  const const majstorName = (majstor && majstor.name) ? majstor.name : 'Мајстор';
+const avatar = (majstor && majstor.photo_url) ? `<img src="${majstor.photo_url}">` : majstorName.charAt(0).toUpperCase();
   const badgeFounder=majstor.is_founder?`<span class="badge badge-founder">🚀 FOUNDER #${majstor.founder_number||''}</span>`:'';
   const badgePremium=majstor.is_premium?`<span class="badge badge-premium">👑 PREMIUM</span>`:'';
   const badgeVerified=majstor.verified?`<span class="badge badge-verified">✅ Верификуван</span>`:'';
