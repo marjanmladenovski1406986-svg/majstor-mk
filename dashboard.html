@@ -10,6 +10,9 @@
 body{font-family:Inter,system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
 header{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid #222;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
 .logo{font-weight:900;font-size:20px;color:#ff6b35;text-decoration:none}
+.header-right{display:flex;align-items:center;gap:10px}
+.btn-logout{background:transparent;border:1px solid #ff6b35;color:#ff6b35;padding:6px 12px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;transition:.2s}
+.btn-logout:hover{background:#ff6b35;color:#fff}
 .container{max-width:1200px;margin:0 auto;padding:20px;display:grid;grid-template-columns:220px 1fr;gap:20px}
 @media(max-width:800px){.container{grid-template-columns:1fr}}
 .sidebar{background:#141414;border:1px solid #262626;border-radius:16px;padding:12px;height:fit-content;position:sticky;top:80px}
@@ -39,7 +42,6 @@ textarea.input{resize:vertical}
 .icon-btn{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px}
 .dropzone{border:2px dashed #333;border-radius:16px;padding:30px;text-align:center;cursor:pointer;transition:.2s;background:#161616}
 .dropzone:hover{border-color:#ff6b35;background:#1a1a1a}
-.dropzone.dragover{border-color:#ff6b35;background:#1f1f1f}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 .stat{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:16px;text-align:center}
 .stat b{font-size:24px;display:block}
@@ -51,7 +53,14 @@ textarea.input{resize:vertical}
 </style>
 </head>
 <body>
-<header><a href="/" class="logo">🔨 Majsto.mk</a><div><span id="userName" style="color:#888;margin-right:10px"></span><a href="/" class="logo" style="font-size:14px;border:1px solid #333;padding:6px 12px;border-radius:8px">← Сајт</a></div></header>
+<header>
+  <a href="/" class="logo">🔨 Majsto.mk</a>
+  <div class="header-right">
+    <span id="userName" style="color:#888;font-size:13px"></span>
+    <a href="/" class="logo" style="font-size:14px;border:1px solid #333;padding:6px 12px;border-radius:8px;text-decoration:none;color:#aaa">← Сајт</a>
+    <button class="btn-logout" onclick="logout()">Одјави се</button>
+  </div>
+</header>
 
 <div class="container">
 <div class="sidebar">
@@ -91,7 +100,6 @@ window.addEventListener('load', async()=>{
   currentUser=Clerk.user.primaryEmailAddress.emailAddress;
   document.getElementById('userName').textContent=currentUser;
   
-  // Бараме профил според мејл
   const myRes=await fetch('/api/majstori?email='+encodeURIComponent(currentUser));
   const myData=await myRes.json();
   
@@ -172,6 +180,14 @@ function renderStats(){
 }
 
 function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);}
+
+function logout() {
+  if(window.Clerk) {
+    Clerk.signOut().then(() => {
+      location.href = '/';
+    });
+  }
+}
 </script>
 </body>
 </html>
