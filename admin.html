@@ -58,6 +58,7 @@ header{background:#111;border-bottom:1px solid #222;padding:14px 20px;display:fl
 <button class="tab" onclick="showTab(event,'ratings')">⭐ Оценки (<span id="ratCount">0</span>)</button>
 <button class="tab" onclick="showTab(event,'stats')">📈 Статистика</button>
 <button class="tab" onclick="showTab(event,'media')">🖼️ Слики (<span id="mediaCount">0</span>)</button>
+<button class="tab" onclick="showTab(event,'partners')">🤝 Партнери</button>
 </div>
 <div class="tab-content active" id="tab-dashboard">
 <h2 style="color:#ff6b35;margin-bottom:16px">📊 Dashboard</h2>
@@ -82,6 +83,19 @@ header{background:#111;border-bottom:1px solid #222;padding:14px 20px;display:fl
 <div class="stats-grid" id="stats2Grid"></div>
 <h3 style="color:#ff6b35;margin:20px 0 12px">🏆 Топ 10 по прегледи</h3>
 <div style="background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:12px" id="topList"></div>
+</div>
+<div class="tab-content" id="tab-partners">
+<h2 style="color:#ff6b35;margin-bottom:12px">🤝 Партнери</h2>
+<div style="background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px">
+<h3 style="color:#ff6b35;margin-bottom:12px">Додај нов партнер</h3>
+<input id="pName" placeholder="Име: OglasiSe.mk">
+<input id="pDesc" placeholder="Опис: Бесплатни огласи...">
+<input id="pLogo" placeholder="Лого URL: https://.../logo.png">
+<input id="pWeb" placeholder="Вебсајт: https://oglasise.mk">
+<button class="btn btn-orange" onclick="addPartner()" style="width:100%;margin-top:8px">➕ Додај партнер</button>
+<div id="pMsg" style="margin-top:8px;font-size:12px;color:#4caf50"></div>
+</div>
+<div class="list" id="partnersList"></div>
 </div>
 <div class="tab-content" id="tab-media">
 <h2 style="color:#ff6b35;margin-bottom:12px">🖼️ Сите слики</h2>
@@ -121,6 +135,7 @@ window.addEventListener('load', async()=>{
   loadAll();
 });
 async function loadAll(){
+  loadPartners();
   try{
     const [mRes, mediaRes, rRes, sRes]=await Promise.all([
       fetch('/api/majstori'),
@@ -244,6 +259,40 @@ async function toggleVerify(id){
 async function deleteMajstor(id){if(!confirm('Избриши мајстор?'))return; await fetch('/api/delete-majstor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadAll();}
 async function deleteMedia(id){if(!confirm('Избриши слика?'))return; await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadAll();}
 async function approveRating(id){await fetch('/api/approve-rating',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,action:'approve'})}); loadAll();}
+async function loadPartners(){
+  try{
+    const res=await fetch('/api/partners');
+    const partners=await res.json();
+    document.getElementById('partnersList').innerHTML=partners.map(p=>`
+      <div class="item">
+        <div class="avatar" style="border-radius:8px;background:#fff"><img src="${p.logo_url}" style="width:100%;height:100%;object-fit:contain"></div>
+        <div class="info"><div class="title">${p.name}</div><div class="meta">${p.description||''} • ${p.website_url||''}</div></div>
+        <div class="actions">
+          <button class="btn-small" onclick="window.open('${p.website_url}','_blank')">👁️</button>
+          <button class="btn-small delete" onclick="deletePartner(${p.id})">🗑️</button>
+        </div>
+      </div>
+    `).join('') || '<p style="color:#666">Нема партнери</p>';
+  }catch(e){console.error(e)}
+}
+async function addPartner(){
+  const body={
+    name:document.getElementById('pName').value,
+    description:document.getElementById('pDesc').value,
+    logo_url:document.getElementById('pLogo').value,
+    website_url:document.getElementById('pWeb').value
+  };
+  if(!body.name || !body.website_url){ alert('Име и вебсајт се задолжителни'); return; }
+  await fetch('/api/partners',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  document.getElementById('pMsg').textContent='✅ Партнер додаден!';
+  document.getElementById('pName').value=''; document.getElementById('pDesc').value=''; document.getElementById('pLogo').value=''; document.getElementById('pWeb').value='';
+  loadPartners();
+}
+async function deletePartner(id){
+  if(!confirm('Избриши партнер?')) return;
+  await fetch('/api/delete-partner',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+  loadPartners();
+}
 async function rejectRating(id){if(!confirm('Одбиј?'))return; await fetch('/api/approve-rating',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,action:'reject'})}); loadAll();}
 </script>
 </body>
