@@ -269,12 +269,28 @@ async function loadPartners(){
     `).join('');
   }catch(e){console.log('partners error',e)}
 }
-function handleRegister(){
-  if(window.Clerk && Clerk.user){location.href='/dashboard.html';}
-  else{
+  async function handleRegister(){
+    if(window.Clerk && Clerk.user){
+      location.href='/dashboard.html';
+      return;
+    }
+    
+    // Чекаме Clerk целосно да се вчита
+    if(window.Clerk && !Clerk.loaded) {
+      try {
+        await Clerk.load();
+      } catch(e) {
+        console.error("Clerk load error:", e);
+      }
+    }
+
     localStorage.setItem('show_register_after_login','1');
-    if(window.Clerk) Clerk.openSignUp({afterSignUpUrl:'/dashboard.html'});
-    else location.href='/dashboard.html';
+    
+    if(window.Clerk && Clerk.loaded) {
+      Clerk.openSignUp({afterSignUpUrl:'/dashboard.html'});
+    } else {
+      location.href='/dashboard.html';
+    }
   }
 }
 </script>
