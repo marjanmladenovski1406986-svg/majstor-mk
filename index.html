@@ -201,7 +201,10 @@ function populateFilters(){
 async function loadMajstori(){
   try{
     const res=await fetch('/api/majstori');
-    if(!res.ok) throw new Error('API '+res.status);
+       if(!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'API ' + res.status);
+    }
     allMajstori=await res.json();
     if(!Array.isArray(allMajstori)) allMajstori = allMajstori ? [allMajstori] : [];
     // Founder logic
