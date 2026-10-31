@@ -158,12 +158,36 @@ async function handleFiles(files){
   for(const file of toUpload){
     toast(`Се качува ${file.name}...`);
     const fd=new FormData(); fd.append('file',file);
-    const up=await fetch('/api/upload',{method:'POST',body:fd}); const j=await up.json();
-    if(j.secure_url){
-      await fetch('/api/add-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:majstor.id,url:j.secure_url,type:'image'})});
+    
+    try {
+      // 1. Качување на ImgBB
+      const up=await fetch('/api/upload',{method:'POST',body:fd});
+      const j=await up.json();
+      
+      if(!j.secure_url){
+         toast('❌ Грешка при качување на ImgBB: ' + (j.error || 'Непозната грешка'));
+         continue;
+      }
+
+      // 2. Зачувување во база
+      const dbRes = await fetch('/api/add-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:majstor.id,url:j.secure_url,type:'image'})});
+      
+      if(!dbRes.ok){
+         const dbErr = await dbRes.json();
+         toast('❌ Грешка во базата: ' + (dbErr.error || 'Непозната'));
+      }
+      
+    } catch(e) {
+       toast('❌ Грешка: ' + e.message);
     }
   }
-  const r=await fetch('/api/media?majstor_id='+majstor.id); media=await r.json(); document.getElementById('galCount').textContent=`${media.length}/50`; renderGallery(); toast('✅ Сликите се качени');
+  
+  // Освежи ја галеријата на крај
+  const r=await fetch('/api/media?majstor_id='+majstor.id); 
+  media=await r.json(); 
+  document.getElementById('galCount').textContent=`${media.length}/50`; 
+  renderGallery(); 
+  toast('✅ Постапката заврши');
 }
 
 async function deleteImg(id){if(!confirm('Избриши?'))return; await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); const r=await fetch('/api/media?majstor_id='+majstor.id); media=await r.json(); document.getElementById('galCount').textContent=`${media.length}/50`; renderGallery(); toast('Избришано');}
