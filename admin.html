@@ -90,7 +90,12 @@ header{background:#111;border-bottom:1px solid #222;padding:14px 20px;display:fl
 <h3 style="color:#ff6b35;margin-bottom:12px">Додај нов партнер</h3>
 <input id="pName" placeholder="Име: OglasiSe.mk">
 <input id="pDesc" placeholder="Опис: Бесплатни огласи...">
-<input id="pLogo" placeholder="Лого URL: https://.../logo.png">
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+<input id="pLogo" placeholder="Лого URL: https://.../logo.png" style="flex:1;margin-bottom:0">
+<input type="file" id="logoFile" accept="image/*" style="display:none">
+<button type="button" class="btn" onclick="document.getElementById('logoFile').click()" style="white-space:nowrap;padding:8px 12px">📁 Качи лого</button>
+</div>
+<div id="logoPreview" style="display:none;margin-bottom:8px"><img id="logoPrevImg" style="max-width:100px;max-height:100px;border-radius:8px;border:1px solid #333"></div>
 <input id="pWeb" placeholder="Вебсајт: https://oglasise.mk">
 <button class="btn btn-orange" onclick="addPartner()" style="width:100%;margin-top:8px">➕ Додај партнер</button>
 <div id="pMsg" style="margin-top:8px;font-size:12px;color:#4caf50"></div>
@@ -135,6 +140,7 @@ window.addEventListener('load', async()=>{
   loadAll();
 });
 async function loadAll(){
+  document.getElementById('logoFile')?.addEventListener('change', function(){ uploadLogo(this); });
   loadPartners();
   try{
     const [mRes, mediaRes, rRes, sRes]=await Promise.all([
@@ -274,6 +280,21 @@ async function loadPartners(){
       </div>
     `).join('') || '<p style="color:#666">Нема партнери</p>';
   }catch(e){console.error(e)}
+}
+async function uploadLogo(input){
+  const file=input.files[0]; if(!file) return;
+  document.getElementById('pMsg').textContent='⏳ Качувам лого...';
+  const fd=new FormData(); fd.append('file',file);
+  const res=await fetch('/api/upload',{method:'POST',body:fd});
+  const data=await res.json();
+  if(data.url){
+    document.getElementById('pLogo').value=data.url;
+    document.getElementById('logoPrevImg').src=data.url;
+    document.getElementById('logoPreview').style.display='block';
+    document.getElementById('pMsg').textContent='✅ Лого качено!';
+  } else {
+    document.getElementById('pMsg').textContent='❌ Грешка: '+(data.error||'неуспешно');
+  }
 }
 async function addPartner(){
   const body={
