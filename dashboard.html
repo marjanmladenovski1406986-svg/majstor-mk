@@ -1,211 +1,211 @@
 <!DOCTYPE html>
-<html lang="mk">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — Majsto.mk</title>
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<html lang="mk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard - Majsto.mk</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#fff;font-family:Inter,system-ui}
-header{position:sticky;top:0;background:#111;border-bottom:1px solid #222;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:10}
-.logo{font-weight:900;color:#ff6b35;font-size:18px;text-decoration:none}
-.btn{padding:10px 16px;border-radius:10px;border:1px solid #333;background:transparent;color:#ccc;cursor:pointer;font-weight:600}
-.btn-orange{background:#ff6b35;border-color:#ff6b35;color:#fff;font-weight:800}
-.container{max-width:1000px;margin:0 auto;padding:16px}
-.tabs{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
-.tab{padding:10px 16px;background:#141414;border:1px solid #222;border-radius:10px;cursor:pointer;color:#888;font-weight:600}
-.tab.active{background:#ff6b35;border-color:#ff6b35;color:#fff}
-.tab-content{display:none}.tab-content.active{display:block}
-.card{background:#141414;border:1px solid #222;border-radius:16px;padding:16px;margin-bottom:16px}
-.card h3{color:#ff6b35;margin-bottom:12px}
-input,select,textarea{width:100%;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:10px}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-.gallery .img-wrap{position:relative;border-radius:10px;overflow:hidden;border:1px solid #222;aspect-ratio:4/3}
-.gallery .img-wrap img{width:100%;height:100%;object-fit:cover}
-.gallery .img-wrap button{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.7);border:none;color:#ff6b6b;border-radius:50%;width:24px;height:24px;cursor:pointer}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.stat{background:#1a1a1a;border:1px solid #222;border-radius:10px;padding:12px;text-align:center}
-.stat .num{font-size:20px;font-weight:800;color:#ff6b35}
-.stat .lbl{font-size:11px;color:#888}
-.upload-box{border:2px dashed #333;border-radius:12px;padding:20px;text-align:center;cursor:pointer}
-.upload-box:hover{border-color:#ff6b35}
+*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0a0a;color:#eee;font-family:Inter,system-ui;padding:12px}
+.header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#141414;border-radius:16px;margin-bottom:16px;border:1px solid #222}
+.logo{font-weight:900;font-size:22px;color:#ff6b35;text-decoration:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tab{padding:10px 18px;border-radius:24px;border:1px solid #2a2a2a;background:#141414;color:#888;cursor:pointer;font-weight:600}
+.tab.active{background:#ff6b35;color:#fff;border-color:#ff6b35}
+.card{background:#141414;border:1px solid #222;border-radius:20px;padding:16px;margin-bottom:16px}
+.input,select,textarea{width:100%;background:#0f0f0f;border:1px solid #333;border-radius:12px;padding:12px;color:#fff;margin-bottom:10px;font-size:14px}
+.btn{background:#ff6b35;color:#fff;border:none;padding:12px 20px;border-radius:12px;font-weight:800;cursor:pointer;width:100%}
+.btn:disabled{opacity:0.5}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gitem{position:relative;border-radius:12px;overflow:hidden;background:#0f0f0f;aspect-ratio:1}
+.gitem img{width:100%;height:100%;object-fit:cover}
+.gdel{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.7);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer}
+.upload-area{border:2px dashed #333;border-radius:16px;padding:20px;text-align:center;margin-bottom:12px;cursor:pointer}
+.upload-area:hover{border-color:#ff6b35}
+.preview{width:100%;max-height:200px;object-fit:cover;border-radius:12px;margin-bottom:10px;display:none}
+.cover-preview{width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:10px;display:none;background:#0f0f0f}
 </style>
-</head>
-<body>
-<header><a href="/" class="logo">🔨 Majsto.mk</a><div id="headerAuth">Се вчитува...</div></header>
-<div class="container">
-<div id="loading">Се вчитува... најави се преку Clerk</div>
-
-<div id="dashboard" style="display:none">
-<h2 id="welcome"></h2>
-<p id="founderBadge" style="margin:8px 0"></p>
-
+</head><body>
+<div class="header"><a class="logo" href="/">🔨 Majsto.mk</a><div style="display:flex;gap:8px"><span id="userEmail" style="font-size:11px;color:#666;align-self:center"></span><a href="/api/logout" style="padding:8px 14px;background:#1a1a1a;border:1px solid #333;border-radius:20px;color:#888;text-decoration:none;font-size:12px">Одјава</a><a href="/" style="padding:8px 14px;background:#1a1a1a;border:1px solid #333;border-radius:20px;color:#ff6b35;text-decoration:none;font-size:12px">Почетна</a></div></div>
+<h2 id="greet" style="font-size:24px;font-weight:800;margin-bottom:8px">Здраво!</h2>
+<div id="founderBadge" style="background:#4caf50;color:#000;padding:8px 16px;border-radius:24px;display:inline-block;font-weight:800;font-size:13px;margin-bottom:16px">FOUNDER</div>
 <div class="tabs">
-<button class="tab active" onclick="showTab(event,'profile')">👤 Профил</button>
-<button class="tab" onclick="showTab(event,'gallery')">🖼️ Галерија (<span id="gCount">0</span>/50)</button>
-<button class="tab" onclick="showTab(event,'stats')">📊 Статистика</button>
-<button class="tab" onclick="showTab(event,'payment')">💳 Наплата</button>
+<button class="tab active" onclick="showTab('profile')">👤 Профил</button>
+<button class="tab" onclick="showTab('gallery')">🖼️ Галерија (<span id="gCount">0/50</span>)</button>
+<button class="tab" onclick="showTab('stats')">📊 Статистика</button>
+<button class="tab" onclick="showTab('billing')">💳 Наплата</button>
 </div>
-
-<div class="tab-content active" id="tab-profile">
-<div class="card">
-<h3>👤 Уреди профил</h3>
-<input id="pName" placeholder="Име и презиме">
-<input id="pPhone" placeholder="Телефон 070...">
-<select id="pCity"></select>
-<select id="pCategory"></select>
-<textarea id="pDesc" rows="3" placeholder="Опис - што работиш, искуство..."></textarea>
-<input id="pFb" placeholder="Facebook линк (опционо)">
-<input id="pWeb" placeholder="Вебсајт (опционо)">
-<input id="pPhoto" placeholder="URL на профилна слика (или качи подолу)">
-<input type="file" id="photoFile" accept="image/*" style="margin-bottom:8px" onchange="uploadAvatar(this)">
-<button class="btn btn-orange" style="width:100%" onclick="saveProfile()">💾 Зачувај профил</button>
-<div id="pMsg" style="margin-top:8px;font-size:13px"></div>
+<div id="tab-profile" class="card">
+<h3 style="color:#ff6b35;margin-bottom:12px">👤 Уреди профил</h3>
+<input id="pName" class="input" placeholder="Име">
+<input id="pPhone" class="input" placeholder="Телефон 07...">
+<select id="pCity" class="input"><option>Скопје</option><option>Битола</option><option>Куманово</option><option>Прилеп</option><option>Тетово</option><option>Велес</option><option>Штип</option><option>Охрид</option><option>Гостивар</option><option>Струмица</option><option>Кавадарци</option><option>Кичево</option><option>Струга</option><option>Кочани</option><option>Гевгелија</option><option>Дебар</option><option>Ресен</option><option>Неготино</option><option>Свети Николе</option><option>Делчево</option></select>
+<select id="pCategory" class="input">
+<option value="vodovod">💧 Водовод</option>
+<option value="elektrika">⚡ Електрика</option>
+<option value="gips">🏠 Гипс</option>
+<option value="molerski">🎨 Молерски</option>
+<option value="plocicki">🧱 Плочки</option>
+<option value="parket">🪵 Паркет</option>
+<option value="stolarija">🪚 Столарија</option>
+<option value="bravarija">🔩 Браварија</option>
+<option value="greene">❄️ Греење/Клима</option>
+<option value="pokriv">🏗️ Покрив</option>
+<option value="fasada">🏢 Фасада</option>
+<option value="gradba">👷 Градба</option>
+<option value="krov">🏠 Кров</option>
+<option value="izolacija">🧱 Изолација</option>
+<option value="beton">🏗️ Бетон</option>
+<option value="armatura">🔩 Арматура</option>
+<option value="celik">🏗️ Челик</option>
+<option value="drvo">🌲 Дрво</option>
+<option value="metal">🔧 Метал</option>
+<option value="staklo">🪟 Стакло</option>
+<option value="keramika">🧱 Керамика</option>
+<option value="mermer">🪨 Мермер</option>
+<option value="osvetluvanje">💡 Осветлување</option>
+<option value="security">🔒 Безбедност</option>
+</select>
+<textarea id="pDesc" class="input" placeholder="Опис - што работиш..." rows="3"></textarea>
+<input id="pFb" class="input" placeholder="Facebook линк (опционално)">
+<input id="pWeb" class="input" placeholder="Вебсајт (опционално)">
+<!-- PROFILE PHOTO -->
+<label style="color:#ff6b35;font-weight:700;margin:12px 0 6px;display:block">📸 Профилна слика</label>
+<img id="profilePreview" class="preview" style="display:none">
+<div style="display:flex;gap:8px;margin-bottom:10px">
+<input id="pPhotoUrl" class="input" placeholder="URL на профилна слика (или качи подолу)" style="flex:1;margin-bottom:0">
 </div>
+<div class="upload-area" onclick="document.getElementById('profileFile').click()">
+<div>📁 Кликни за качување профилна слика</div><div style="font-size:11px;color:#666;margin-top:4px">JPG/PNG до 10MB</div>
 </div>
-
-<div class="tab-content" id="tab-gallery">
-<div class="card">
-<h3>🖼️ Твои слики (макс 50)</h3>
-<div class="upload-box" onclick="document.getElementById('galleryFile').click()">
-📁 Кликни за качување слика
-<input type="file" id="galleryFile" accept="image/*" style="display:none" onchange="uploadGallery(this)">
+<input type="file" id="profileFile" accept="image/*" style="display:none">
+<div id="profileUploadStatus" style="font-size:12px;color:#4caf50;margin-bottom:12px"></div>
+<!-- COVER BANNER -->
+<label style="color:#4db8ff;font-weight:700;margin:12px 0 6px;display:block">🖼️ Банер / Cover слика (за профилот)</label>
+<img id="coverPreview" class="cover-preview" style="display:none">
+<div style="display:flex;gap:8px;margin-bottom:10px">
+<input id="pCoverUrl" class="input" placeholder="URL на банер слика (или качи подолу)" style="flex:1;margin-bottom:0">
 </div>
-<p style="color:#888;font-size:12px;margin:8px 0">Можеш до 50 слики од твоја работа. Првата е главна.</p>
-<div class="gallery" id="galleryList"></div>
+<div class="upload-area" style="border-color:#4db8ff33" onclick="document.getElementById('coverFile').click()">
+<div>📁 Кликни за качување банер</div><div style="font-size:11px;color:#666;margin-top:4px">Препорачано 1200x400px, до 10MB</div>
 </div>
+<input type="file" id="coverFile" accept="image/*" style="display:none">
+<div id="coverUploadStatus" style="font-size:12px;color:#4db8ff;margin-bottom:12px"></div>
+<button class="btn" onclick="saveProfile()">💾 Зачувај профил</button>
+<div id="saveMsg" style="margin-top:8px;font-size:13px;color:#4caf50"></div>
 </div>
-
-<div class="tab-content" id="tab-stats">
-<div class="card">
-<h3>📊 Статистика</h3>
-<div class="stats-grid" id="statsGrid"></div>
+<div id="tab-gallery" class="card" style="display:none">
+<h3 style="color:#ff6b35;margin-bottom:12px">🖼️ Галерија</h3>
+<div class="upload-area" onclick="document.getElementById('galleryFile').click()">
+<div style="font-size:24px">📤</div><div>Качи слики од твои работи</div><div style="font-size:11px;color:#666;margin-top:4px">До 50 слики, секоја до 10MB</div>
 </div>
-<div class="card">
-<h3>⭐ Оценки</h3>
-<div id="ratingsList"></div>
+<input type="file" id="galleryFile" accept="image/*" multiple style="display:none">
+<div id="galleryStatus" style="font-size:12px;color:#888;margin-bottom:12px"></div>
+<div id="galleryGrid" class="gallery"></div>
 </div>
-</div>
-
-<div class="tab-content" id="tab-payment">
-<div class="card" id="paymentCard"></div>
-</div>
-</div>
-</div>
-
+<div id="tab-stats" class="card" style="display:none"><h3>📊 Статистика</h3><div id="statsContent">Вчитувам...</div></div>
+<div id="tab-billing" class="card" style="display:none"><h3>💳 Наплата</h3><div>Директно на твоја Стопанска сметка - види наплата страница</div><a href="/naplata.html" style="display:block;margin-top:12px;background:#ff6b35;color:#fff;padding:12px;border-radius:12px;text-align:center;text-decoration:none">Оди на наплата →</a></div>
 <script>
-const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
-const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари и Молери",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ прозори и врати",dvorovi:"🌳 Уредување дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи работници",bravari:"🔨 Браварски услуги",belatehnika:"🔌 Бела техника",videonadzor:"📹 Видео надзор",bazeni:"🏊 Базени",fasadi:"🎨 Фасади",iskop:"🚜 Ископ",hidroizolacija:"💧 Хидро изолација",otpad:"🗑️ Фрлање отпад"};
-
-let currentUser=null, myProfile=null, myMedia=[], myRatings=[];
-
-function showTab(e,tab){
+let currentUser=null;
+const urlParams=new URLSearchParams(window.location.search);
+const editId=urlParams.get('edit_id');
+async function init(){
+  const res=await fetch('/api/me');
+  if(!res.ok){ location.href='/'; return; }
+  const data=await res.json();
+  currentUser=data;
+  document.getElementById('userEmail').textContent=data.email||'';
+  document.getElementById('greet').textContent='Здраво, '+(data.name||'Мајсторе')+'!';
+  document.getElementById('founderBadge').textContent='🚀 FOUNDER #'+(data.founder_number||data.id||'?')+' — бесплатно засекогаш';
+  document.getElementById('pName').value=data.name||'';
+  document.getElementById('pPhone').value=data.phone||'';
+  document.getElementById('pCity').value=data.city||'Скопје';
+  document.getElementById('pCategory').value=data.category||'elektrika';
+  document.getElementById('pDesc').value=data.description||'';
+  document.getElementById('pFb').value=data.facebook_url||'';
+  document.getElementById('pWeb').value=data.website_url||'';
+  document.getElementById('pPhotoUrl').value=data.photo_url||data.profile_photo||'';
+  document.getElementById('pCoverUrl').value=data.cover_url||data.cover_photo||'';
+  if(data.photo_url||data.profile_photo){ document.getElementById('profilePreview').src=data.photo_url||data.profile_photo; document.getElementById('profilePreview').style.display='block'; }
+  if(data.cover_url||data.cover_photo){ document.getElementById('coverPreview').src=data.cover_url||data.cover_photo; document.getElementById('coverPreview').style.display='block'; }
+  loadGallery();
+}
+function showTab(name){
+  document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');
+  document.getElementById('tab-'+name).style.display='block';
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  e.target.classList.add('active');
-  document.getElementById('tab-'+tab).classList.add('active');
+  event?.target?.classList.add('active');
+  if(name==='gallery') loadGallery();
 }
-
-window.addEventListener('load', async()=>{
-  if(!window.Clerk){ document.getElementById('loading').textContent='Clerk не се вчита'; return; }
-  await Clerk.load();
-  currentUser=Clerk.user;
-  document.getElementById('pCity').innerHTML=CITIES.map(c=>`<option value="${c}">${c}</option>`).join('');
-  document.getElementById('pCategory').innerHTML=Object.entries(CAT_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
-  
-  if(!currentUser){
-    document.getElementById('loading').innerHTML='<div style="text-align:center;padding:40px"><h2>🔐 Најави се</h2><p style="color:#888;margin:12px 0">Мора да се најавиш за да го уредуваш профилот</p><button class="btn btn-orange" onclick="Clerk.openSignIn()">Најави се / Регистрирај се</button><br><br><a href="/" class="btn">← Кон почетна</a></div>';
-    document.getElementById('headerAuth').innerHTML='<button class="btn btn-orange" onclick="Clerk.openSignIn()">Најава</button>';
-    return;
-  }
-  document.getElementById('headerAuth').innerHTML=`<span style="color:#888;font-size:12px">${currentUser.primaryEmailAddress.emailAddress}</span> <button class="btn" onclick="Clerk.signOut().then(()=>location.reload())">Одјава</button> <a href="/" class="btn">Почетна</a>`;
-  loadMe();
-});
-
-async function loadMe(){
+async function uploadFile(file, statusEl, previewEl, urlInput){
+  statusEl.textContent='⏳ Качувам... '+file.name;
+  const fd=new FormData(); fd.append('file',file);
   try{
-    const res=await fetch(`/api/me?clerk_id=${currentUser.id}&email=${encodeURIComponent(currentUser.primaryEmailAddress.emailAddress)}`);
+    const res=await fetch('/api/upload',{method:'POST',body:fd});
     const data=await res.json();
-    if(data.error){ document.getElementById('loading').textContent='Грешка: '+data.error; return; }
-    myProfile=data;
-    document.getElementById('loading').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    document.getElementById('welcome').textContent=`Здраво, ${myProfile.name||currentUser.firstName||'Мајсторе'}!`;
-    if(myProfile.is_founder){
-      document.getElementById('founderBadge').innerHTML=`<span style="background:linear-gradient(90deg,#4caf50,#8bc34a);color:#000;padding:6px 12px;border-radius:20px;font-weight:900">🚀 FOUNDER #${myProfile.founder_number} — бесплатно засекогаш</span>`;
-    } else if(myProfile.is_premium){
-      document.getElementById('founderBadge').innerHTML=`<span style="background:#ff6b35;color:#000;padding:6px 12px;border-radius:20px;font-weight:900">👑 PREMIUM до ${myProfile.paid_until?new Date(myProfile.paid_until).toLocaleDateString('mk-MK'):'активен'}</span>`;
+    if(data.url){
+      if(urlInput) urlInput.value=data.url;
+      if(previewEl){ previewEl.src=data.url; previewEl.style.display='block'; }
+      statusEl.textContent='✅ Качено! '+data.url.slice(0,40)+'...';
+      statusEl.style.color='#4caf50';
+      return data.url;
     } else {
-      document.getElementById('founderBadge').innerHTML=`<span style="background:#333;color:#aaa;padding:6px 12px;border-radius:20px;font-weight:600">🆓 Бесплатен - <a href="/naplata.html" style="color:#ff6b35">Стани Premium 1000 ден/год</a></span>`;
+      statusEl.textContent='❌ '+ (data.error||'Грешка');
+      statusEl.style.color='#f44336';
     }
-    document.getElementById('pName').value=myProfile.name||'';
-    document.getElementById('pPhone').value=myProfile.phone||'';
-    document.getElementById('pCity').value=myProfile.city||'Скопје';
-    document.getElementById('pCategory').value=myProfile.category||'elektrika';
-    document.getElementById('pDesc').value=myProfile.description||'';
-    document.getElementById('pFb').value=myProfile.facebook_url||'';
-    document.getElementById('pWeb').value=myProfile.website_url||'';
-    document.getElementById('pPhoto').value=myProfile.photo_url||'';
-    loadMedia(); loadStats(); loadPayment();
-  }catch(e){ document.getElementById('loading').textContent='Грешка: '+e.message; }
-}
-
-async function loadMedia(){
-  const res=await fetch(`/api/media?majstor_id=${myProfile.id}`);
-  myMedia=await res.json(); if(!Array.isArray(myMedia)) myMedia=[];
-  document.getElementById('gCount').textContent=myMedia.length;
-  document.getElementById('galleryList').innerHTML=myMedia.map(m=>`<div class="img-wrap"><img src="${m.url}"><button onclick="deleteMedia(${m.id})">✕</button></div>`).join('') || '<p style="color:#666">Нема слики</p>';
-}
-
-async function loadStats(){
-  document.getElementById('statsGrid').innerHTML=`<div class="stat"><div class="num">${myProfile.views||0}</div><div class="lbl">👁️ Прегледи</div></div><div class="stat"><div class="num">${myProfile.phone_clicks||0}</div><div class="lbl">📞 Телефон</div></div><div class="stat"><div class="num">${myMedia.length}</div><div class="lbl">🖼️ Слики</div></div><div class="stat"><div class="num">${myProfile.rating||0}</div><div class="lbl">⭐ Оценка</div></div>`;
-  const rRes=await fetch(`/api/ratings?majstor_id=${myProfile.id}`);
-  myRatings=await rRes.json(); if(!Array.isArray(myRatings)) myRatings=[];
-  document.getElementById('ratingsList').innerHTML=myRatings.map(r=>`<div style="background:#1a1a1a;border:1px solid #222;border-radius:8px;padding:8px;margin-bottom:6px"><b>${'★'.repeat(r.rating)} ${r.user_name||'Анонимен'}</b><p style="color:#ccc;font-size:13px">${r.comment||''}</p></div>`).join('') || '<p style="color:#666">Нема оценки</p>';
-}
-
-function loadPayment(){
-  const card=document.getElementById('paymentCard');
-  if(myProfile.is_founder){
-    card.innerHTML='<h3>🚀 Founder - бесплатно засекогаш</h3><p style="color:#ccc">Ти си меѓу првите 50 - не плаќаш ништо, засекогаш.</p><a href="/profile.html?id='+myProfile.id+'" class="btn btn-orange" style="display:inline-block;margin-top:12px">Види мој профил</a>';
-  } else if(myProfile.is_premium && myProfile.paid_until && new Date(myProfile.paid_until)>new Date()){
-    card.innerHTML=`<h3>👑 Premium активен</h3><p style="color:#4caf50;font-weight:800">Активен до ${new Date(myProfile.paid_until).toLocaleDateString('mk-MK')}</p><a href="/profile.html?id=${myProfile.id}" class="btn btn-orange" style="margin-top:12px;display:inline-block">Види профил</a>`;
-  } else {
-    card.innerHTML='<h3>💳 Стани Premium - 1000 ден / година</h3><p style="color:#ccc">50 слики, статистика, приоритет во пребарување.</p><a href="/naplata.html" class="btn btn-orange" style="display:block;text-align:center;margin-top:12px;text-decoration:none">→ Кон наплата (Стопанска директно)</a>';
+  }catch(e){
+    statusEl.textContent='❌ Грешка: '+e.message;
+    statusEl.style.color='#f44336';
   }
+  return null;
 }
-
+document.getElementById('profileFile').addEventListener('change', async function(){
+  const file=this.files[0]; if(!file) return;
+  await uploadFile(file, document.getElementById('profileUploadStatus'), document.getElementById('profilePreview'), document.getElementById('pPhotoUrl'));
+});
+document.getElementById('coverFile').addEventListener('change', async function(){
+  const file=this.files[0]; if(!file) return;
+  await uploadFile(file, document.getElementById('coverUploadStatus'), document.getElementById('coverPreview'), document.getElementById('pCoverUrl'));
+});
+document.getElementById('galleryFile').addEventListener('change', async function(){
+  const files=Array.from(this.files);
+  const status=document.getElementById('galleryStatus');
+  for(let file of files){
+    status.textContent='⏳ Качувам '+file.name+'...';
+    const url=await uploadFile(file, status, null, null);
+    if(url){
+      await fetch('/api/add-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url, majstor_id: currentUser.id})});
+    }
+  }
+  loadGallery();
+});
+async function loadGallery(){
+  try{
+    const res=await fetch('/api/my-media');
+    const media=await res.json();
+    document.getElementById('gCount').textContent=media.length+'/50';
+    document.getElementById('galleryGrid').innerHTML=media.map(m=>`<div class="gitem"><img src="${m.url}"><button class="gdel" onclick="deleteMedia(${m.id})">✕</button></div>`).join('')||'<div style="color:#666">Нема слики</div>';
+  }catch(e){ console.log(e); }
+}
+async function deleteMedia(id){
+  if(!confirm('Избриши?')) return;
+  await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+  loadGallery();
+}
 async function saveProfile(){
-  const body={id:myProfile.id, name:document.getElementById('pName').value, phone:document.getElementById('pPhone').value, city:document.getElementById('pCity').value, category:document.getElementById('pCategory').value, description:document.getElementById('pDesc').value, facebook_url:document.getElementById('pFb').value, website_url:document.getElementById('pWeb').value, photo_url:document.getElementById('pPhoto').value, clerk_id:currentUser.id, email:currentUser.primaryEmailAddress.emailAddress};
+  const body={
+    name: document.getElementById('pName').value,
+    phone: document.getElementById('pPhone').value,
+    city: document.getElementById('pCity').value,
+    category: document.getElementById('pCategory').value,
+    description: document.getElementById('pDesc').value,
+    facebook_url: document.getElementById('pFb').value,
+    website_url: document.getElementById('pWeb').value,
+    photo_url: document.getElementById('pPhotoUrl').value,
+    cover_url: document.getElementById('pCoverUrl').value,
+  };
+  if(editId) body.edit_id=editId;
   const res=await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const data=await res.json();
-  document.getElementById('pMsg').textContent=data.success?'✅ Зачувано!':'Грешка: '+(data.error||'');
-  if(data.success) loadMe();
+  if(res.ok){ document.getElementById('saveMsg').textContent='✅ Зачувано!'; setTimeout(()=>location.href='/profile?id='+(data.id||currentUser.id),1000); }
+  else document.getElementById('saveMsg').textContent='❌ '+data.error;
 }
-
-async function uploadAvatar(input){
-  const file=input.files[0]; if(!file) return;
-  const fd=new FormData(); fd.append('file',file);
-  const res=await fetch('/api/upload',{method:'POST',body:fd});
-  const data=await res.json();
-  if(data.url){ document.getElementById('pPhoto').value=data.url; }
-}
-
-async function uploadGallery(input){
-  const file=input.files[0]; if(!file) return;
-  if(myMedia.length>=50){ alert('Максимум 50 слики!'); return; }
-  const fd=new FormData(); fd.append('file',file); fd.append('majstor_id',myProfile.id);
-  const res=await fetch('/api/upload',{method:'POST',body:fd});
-  const data=await res.json();
-  if(data.url){ await fetch('/api/media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:myProfile.id, url:data.url})}); loadMedia(); }
-  else alert('Грешка: '+(data.error||''));
-}
-
-async function deleteMedia(id){
-  if(!confirm('Избриши слика?')) return;
-  await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
-  loadMedia();
-}
+init();
 </script>
-</body>
-</html>
+</body></html>
