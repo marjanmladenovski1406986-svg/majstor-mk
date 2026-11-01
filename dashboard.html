@@ -107,27 +107,24 @@ window.addEventListener('load', async()=>{
   document.getElementById('userName').textContent = currentUser;
   
    try {
-    // 1. Го земаме мејлот и правиме директно барање до API-то
-    const res = await fetch('/api/majstori?email=' + encodeURIComponent(currentUser));
-    const data = await res.json();
+    // 1. Директно го вчитуваме профилот со ID 29 (твојот профил)
+    const res = await fetch('/api/majstori?id=29');
+    const myProfile = await res.json();
     
-    // 2. Ако базата врати низа (Array), го земаме првиот, инаку го земаме објектот
-    const profile = Array.isArray(data) ? data[0] : data;
-    
-    // 3. Ако не е најден профил, покажи грешка
-    if(!profile || !profile.id){
+    // 2. Ако не најде, покажи грешка
+    if(!myProfile || !myProfile.id){
       document.getElementById('main').innerHTML=`
         <div class="card">
           <h2>⚠️ Профилот не е пронајден</h2>
-          <p>API-то не врати податоци за мејлот: <b>${currentUser}</b></p>
+          <p>Не можам да го вчитам профилот со ID 29.</p>
           <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p>
         </div>`;
       return;
     }
     
-    majstor = profile;
+    majstor = myProfile;
     
-    // 4. Вчитување на слики и оценки
+    // 3. Вчитување на слики и оценки
     const [mRes,rRes] = await Promise.all([
       fetch('/api/media?majstor_id='+majstor.id), 
       fetch('/api/ratings?majstor_id='+majstor.id)
