@@ -107,40 +107,27 @@ window.addEventListener('load', async()=>{
   document.getElementById('userName').textContent = currentUser;
   
    try {
-    // 1. Ги земаме и мејлот и Clerk ID-то
-    const clerkId = Clerk.user.id;
-    
-    // 2. Ги вчитуваме сите мајстори
-    const res = await fetch('/api/majstori');
+    // 1. Го земаме мејлот и правиме директно барање до API-то
+    const res = await fetch('/api/majstori?email=' + encodeURIComponent(currentUser));
     const data = await res.json();
     
-    console.log("Базата врати:", data); // Ова ќе ни покаже во конзола
+    // 2. Ако базата врати низа (Array), го земаме првиот, инаку го земаме објектот
+    const profile = Array.isArray(data) ? data[0] : data;
     
-    let foundProfile = null;
-    if (Array.isArray(data)) {
-      // 3. Бараме по Clerk ID (user_id) - најсигурно
-      foundProfile = data.find(m => m.user_id === clerkId || m.clerk_id === clerkId);
-      
-      // 4. Ако не најде, бараме по мејл
-      if (!foundProfile) {
-        foundProfile = data.find(m => m.email && m.email.toLowerCase().trim() === currentUser.toLowerCase().trim());
-      }
-    }
-    
-    // 5. Ако не е најден, покажи грешка
-    if(!foundProfile || !foundProfile.id){
+    // 3. Ако не е најден профил, покажи грешка
+    if(!profile || !profile.id){
       document.getElementById('main').innerHTML=`
         <div class="card">
           <h2>⚠️ Профилот не е пронајден</h2>
-          <p>Баравме Clerk ID: <b>${clerkId}</b> и мејл: <b>${currentUser}</b> во базата, но не ги најдовме.</p>
+          <p>API-то не врати податоци за мејлот: <b>${currentUser}</b></p>
           <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p>
         </div>`;
       return;
     }
     
-    majstor = foundProfile;
+    majstor = profile;
     
-    // 6. Вчитување на слики и оценки
+    // 4. Вчитување на слики и оценки
     const [mRes,rRes] = await Promise.all([
       fetch('/api/media?majstor_id='+majstor.id), 
       fetch('/api/ratings?majstor_id='+majstor.id)
