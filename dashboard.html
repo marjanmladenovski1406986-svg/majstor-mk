@@ -105,23 +105,31 @@ window.addEventListener('load',async()=>{
   for(let i=0;i<50&&!window.Clerk;i++) await new Promise(r=>setTimeout(r,200));
   if(!window.Clerk){$('main').replaceChildren(h('p',{class:'muted'},'Не успеа да се вчита најавата. Освежи ја страницата.'));return}
   await Clerk.load();
-   const em = Clerk.user.primaryEmailAddress.emailAddress;
+    const em = Clerk.user.primaryEmailAddress.emailAddress.trim();
   $('userName').textContent = em;
 
   try {
-    // Бараме мајстор директно по мејл (ова работи во твојот worker.js)
+    console.log("1. Барам профил за мејл:", em);
+    
     const res = await fetch('/api/majstori?email=' + encodeURIComponent(em));
-    majstor = await res.json();
+    const data = await res.json();
+    
+    console.log("2. Одговорот од базата е:", data);
+    
+    majstor = Array.isArray(data) ? data[0] : data;
+
   } catch(e) {
     console.error("Грешка при вчитување:", e);
     majstor = null;
   }
 
-  // Ако не е најден профил, покажи форма за регистрација
   if(!majstor || !majstor.id) {
+    console.log("3. НЕ Е НАЈДЕН ПРОФИЛ. Покажувам форма за регистрација.");
     return renderRegister();
   }
-  $('sidebar').style.display='';
+
+  console.log("4. Профилот е најден! Го вчитувам Dashboard-от...");
+  $('#sidebar').style.display='';
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));
   await loadExtras();
   show('info');
