@@ -1,167 +1,338 @@
+
 <!DOCTYPE html>
 <html lang="mk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Мајстор — Majsto.mk</title>
-<link rel="icon" href="/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#ff6b35">
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<title>Профил на мајстор — Мајстор.мк</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
-header{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid #222;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:900;font-size:20px;color:#ff6b35;text-decoration:none}
-.container{max-width:1100px;margin:0 auto;padding:20px}
-.profile-header{background:#141414;border:1px solid #262626;border-radius:20px;padding:24px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
-.avatar{width:100px;height:100px;border-radius:50%;background:#ff6b35;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#000;overflow:hidden;flex-shrink:0}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.info{flex:1;min-width:250px}
-.info h1{font-size:26px;font-weight:800}
-.info .meta{color:#888;font-size:14px;margin-top:4px}
-.badges{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.badge{font-size:11px;padding:4px 12px;border-radius:20px;font-weight:800}
-.badge-founder{background:#4caf50;color:#000}
-.badge-premium{background:#ff6b35;color:#000}
-.badge-verified{background:#4db8ff;color:#000}
-.contact-buttons{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-.btn-contact{background:#ff6b35;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:6px}
-.btn-facebook{background:#1877f2;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:6px}
-.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-top:20px}
-@media(max-width:800px){.grid{grid-template-columns:1fr}}
-.card{background:#141414;border:1px solid #262626;border-radius:16px;padding:20px;margin-bottom:20px}
-.card h2{font-size:18px;font-weight:800;color:#ff6b35;margin-bottom:16px;display:flex;justify-content:space-between}
-.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
-.media-item{aspect-ratio:1;border-radius:10px;overflow:hidden;background:#222}
-.media-item img{width:100%;height:100%;object-fit:cover}
-.rating-item{padding:12px;background:#1e1e1e;border-radius:10px;margin-bottom:8px}
-.rating-stars{color:#ffb84d;font-size:14px;margin-bottom:4px}
-.rating-comment{color:#ccc;font-size:13px}
-.rating-meta{color:#666;font-size:11px;margin-top:6px}
-.stat-box{text-align:center;padding:12px;background:#1a1a1a;border-radius:10px;margin-bottom:8px}
-.stat-box b{font-size:20px;display:block;color:#ff6b35}
-.stat-box span{font-size:11px;color:#888}
-  @media (max-width: 768px) {
-  .media-grid { grid-template-columns: 1fr !important; gap: 12px; }
-  .media-item { aspect-ratio: 16/9; border-radius: 12px; }
-  .profile-header { flex-direction: column; text-align: center; padding: 20px; }
-  .avatar { width: 120px; height: 120px; font-size: 50px; margin: 0 auto; }
-  .info h1 { font-size: 24px; margin-top: 10px; }
-  .badges, .contact-buttons { justify-content: center; }
-  .btn-contact, .btn-facebook { width: 100%; justify-content: center; }
-  .card { padding: 16px; }
-  .card h2 { font-size: 16px; }
-  }
+:root{
+  --ink:#1f2328; --muted:#667085; --line:#e4e6ea; --bg:#f4f5f7; --card:#fff;
+  --brand:#ff6b35; --brand-d:#d9501a; --ok:#1a7f4b; --err:#c0341d;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --ink:#eceef1; --muted:#9aa3b0; --line:#2e333b; --bg:#14171b; --card:#1d2127; }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding-bottom:env(safe-area-inset-bottom,0)}
+a{color:var(--brand-d)}
+.top{background:#1f2328;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0))}
+.top a{color:#fff;text-decoration:none;font-weight:700}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+h1{font-size:1.7rem;line-height:1.2;margin:0 0 4px}
+h2{font-size:1.1rem;margin:0 0 12px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+.tag{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.85rem}
+.tag.prem{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:10px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:600;cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.danger{color:var(--err)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #ffb899;outline-offset:2px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.shot{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--bg)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.shot .del{position:absolute;top:6px;right:6px;min-height:36px;padding:0 10px;border-radius:8px;border:0;
+  background:rgba(0,0,0,.7);color:#fff;font:inherit;font-size:.85rem;cursor:pointer}
+form label{display:block;font-weight:600;margin:12px 0 4px}
+input,select,textarea{width:100%;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;
+  background:var(--card);color:var(--ink);font:inherit}
+textarea{min-height:110px;resize:vertical}
+.rating{padding:10px 0;border-top:1px solid var(--line)}
+.rating:first-of-type{border-top:0}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0));transform:translateX(-50%);
+  background:#1f2328;color:#fff;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%}
+#toast.show{opacity:1}
+#toast.err{background:var(--err)}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+#lightbox.show{display:flex}
+#lightbox img{max-width:100%;max-height:100%;border-radius:8px}
+@media (prefers-reduced-motion: reduce){#toast{transition:none}}
 </style>
 </head>
 <body>
-<header>
-  <a href="/" class="logo">🔨 Majsto.mk</a>
-  <a href="/" style="color:#aaa;font-size:13px;text-decoration:none;border:1px solid #333;padding:6px 12px;border-radius:8px;">← Назад кон сајтот</a>
-</header>
-
-<div class="container" id="mainContent">
-  <div style="text-align:center;padding:80px;color:#666;">Вчитувам профил...</div>
-</div>
-
+<div class="top"><a href="index.html">← Мајстор.мк</a></div>
+<main class="wrap" id="app"><p class="muted">Се вчитува...</p></main>
+<div id="toast" role="status"></div>
+<div id="lightbox" role="dialog" aria-label="Слика"><img alt=""></div>
+ 
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA"
+  src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+ 
 <script>
-const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ",dvorovi:"🌳 Дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи",bravari:"🔨 Бравари",belatehnika:"🔌 Бела техника"};
-let majstor=null;
-
-function getId(){ return new URLSearchParams(window.location.search).get('id'); }
-
-window.addEventListener('load', async () => {
-  const id = getId();
-  if(!id){ document.getElementById('mainContent').innerHTML='<p>Не е пронајден мајстор.</p>'; return; }
-
-  try {
-    const res = await fetch('/api/majstori?id=' + id);
-    majstor = await res.json();
-    
-    if(!majstor || !majstor.id){
-      document.getElementById('mainContent').innerHTML='<p style="text-align:center;padding:40px;color:#ff6b6b">⚠️ Мајсторот не е пронајден во базата.</p>';
-      return;
-    }
-
-    // Вчитај слики и оценки
-    const [mRes, rRes] = await Promise.all([
-      fetch('/api/media?majstor_id=' + id),
-      fetch('/api/ratings?majstor_id=' + id)
-    ]);
-    const media = await mRes.json();
-    const ratings = await rRes.json();
-
-    renderProfile(majstor, media, ratings);
-  } catch(e) {
-    document.getElementById('mainContent').innerHTML = '<p style="color:#ff6b6b;text-align:center">Грешка при вчитување: ' + e.message + '</p>';
+// ===== ПОДЕСУВАЊА (мора да се исти како во worker.js) =====
+const IMAGE_LIMIT = 50;
+const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари и Молери",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ прозори и врати",dvorovi:"🌳 Уредување дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи работници",bravari:"🔨 Браварски услуги",belatehnika:"🔌 Бела техника",videonadzor:"📹 Видео надзор",bazeni:"🏊 Базени",fasadi:"🎨 Фасади",iskop:"🚜 Ископ",hidroizolacija:"💧 Хидро изолација",otpad:"🗑️ Фрлање отпад"};
+const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
+ 
+const app = document.getElementById('app');
+let S = { m: null, media: [], ratings: [], isOwner: false, clerkReady: false };
+ 
+// ===== ПОМОШНИ =====
+function h(tag, attrs, ...kids){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs || {})){
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v);
   }
-});
-
-function renderProfile(m, media, ratings){
-  const name = m.name || 'Мајстор';
-  const avatar = (m.photo_url && m.photo_url.startsWith('http')) 
-    ? `<img src="${m.photo_url}">` 
-    : name.charAt(0).toUpperCase();
-  
-  const badges = [];
-  if(m.is_founder) badges.push('<span class="badge badge-founder">🚀 FOUNDER</span>');
-  if(m.is_premium) badges.push('<span class="badge badge-premium">👑 PREMIUM</span>');
-  if(m.verified) badges.push('<span class="badge badge-verified">✅ Верификуван</span>');
-
-  document.getElementById('mainContent').innerHTML = `
-    <div class="profile-header">
-      <div class="avatar">${avatar}</div>
-      <div class="info">
-        <h1>${name}</h1>
-        <div class="meta">${CAT_NAMES[m.category]||m.category} • 📍 ${m.city||'-'} • ⭐ ${m.rating||0} (${m.rating_count||0})</div>
-        <div class="badges">${badges.join('')}</div>
-        <div class="contact-buttons">
-          ${m.phone ? `<a href="tel:${m.phone}" class="btn-contact" onclick="trackPhone()">📞 ${m.phone}</a>` : ''}
-          ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" class="btn-facebook">📘 Facebook</a>` : ''}
-        </div>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div>
-        ${m.description ? `<div class="card"><h2>📝 Опис</h2><p style="color:#ccc;font-size:14px;line-height:1.6">${m.description}</p></div>` : ''}
-        
-        <div class="card">
-          <h2>🖼️ Галерија (${media.length})</h2>
-          <div class="media-grid">
-            ${media.length ? media.map(img => `<div class="media-item"><img src="${img.url}" onclick="window.open('${img.url}','_blank')"></div>`).join('') : '<p style="color:#666">Нема слики.</p>'}
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>⭐ Оценки (${ratings.length})</h2>
-          ${ratings.length ? ratings.map(r => `
-            <div class="rating-item">
-              <div class="rating-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-              <div class="rating-comment">${r.comment || ''}</div>
-              <div class="rating-meta">${new Date(r.created_at).toLocaleDateString('mk-MK')}</div>
-            </div>
-          `).join('') : '<p style="color:#666">Нема оценки.</p>'}
-        </div>
-      </div>
-
-      <div>
-        <div class="card">
-          <h2>📊 Статистика</h2>
-          <div class="stat-box"><b>${m.views||0}</b><span>👁️ Прегледи</span></div>
-          <div class="stat-box"><b>${m.phone_clicks||0}</b><span>📞 Кликови на телефон</span></div>
-          <div class="stat-box"><b>${m.rating||0}</b><span>⭐ Просечна оценка</span></div>
-        </div>
-        ${m.website_url ? `<div class="card"><h2>🌐 Вебсајт</h2><a href="${m.website_url}" target="_blank" style="color:#ff6b35;word-break:break-all;font-size:13px">${m.website_url}</a></div>` : ''}
-      </div>
-    </div>
-  `;
+  for (const c of kids.flat()) if (c != null && c !== false) e.append(c);
+  return e;
 }
-
-function trackPhone(){
-  const id = getId();
-  if(id) fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:id,type:'phone'})});
+function safeUrl(u){
+  if (!u) return null;
+  let s = String(u).trim();
+  if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
+  try { const x = new URL(s); return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : null; }
+  catch(e){ return null; }
 }
+function toast(msg, isErr){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show' + (isErr ? ' err' : '');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.className = '', 3200);
+}
+function arr(x){ return Array.isArray(x) ? x : []; }
+ 
+async function authFetch(path, opts){
+  opts = opts || {};
+  const token = await window.Clerk.session.getToken();
+  opts.headers = Object.assign({}, opts.headers, { Authorization: 'Bearer ' + token });
+  const res = await fetch(path, opts);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Грешка. Обиди се повторно.');
+  return data;
+}
+function postJson(path, body){
+  return authFetch(path, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+}
+ 
+async function waitClerk(){
+  for (let i = 0; i < 50 && !window.Clerk; i++) await new Promise(r => setTimeout(r, 200));
+  if (!window.Clerk) return null;
+  try { await window.Clerk.load(); } catch(e){ return null; }
+  return window.Clerk.user || null;
+}
+ 
+// ===== ПОДАТОЦИ =====
+async function loadAll(){
+  const get = p => fetch(p).then(r => r.json()).catch(() => []);
+  const [ms, md, rt] = await Promise.all([get('/api/majstori'), get('/api/media'), get('/api/ratings')]);
+  return { ms: arr(ms), media: arr(md), ratings: arr(rt) };
+}
+const myImages = () => S.media.filter(x => String(x.majstor_id) === String(S.m.id) && x.type !== 'video');
+const limitFor = () => IMAGE_LIMIT;
+ 
+// ===== ПРИКАЗ =====
+function render(){
+  const m = S.m;
+  app.replaceChildren();
+  const imgs = myImages();
+ 
+  // Заглавие
+  const head = h('div', {class:'card'},
+    h('h1', {}, m.name || 'Мајстор'),
+    h('div', {class:'meta'},
+      m.category && h('span', {class:'tag'}, CAT_NAMES[m.category] || m.category),
+      m.city && h('span', {class:'tag'}, m.city),
+      m.is_premium && h('span', {class:'tag prem'}, 'Премиум'),
+      Number(m.rating_count) > 0 && h('span', {class:'tag'}, 'Оцена ' + Number(m.rating).toFixed(1) + ' (' + m.rating_count + ')')
+    )
+  );
+  const actions = h('div', {class:'actions'});
+  if (m.phone) actions.append(h('a', {class:'btn primary', onclick: () => track('phone'), href:'tel:' + String(m.phone).replace(/[^\d+]/g,'')}, 'Јави се: ' + m.phone));
+  const fb = safeUrl(m.facebook_url), web = safeUrl(m.website_url);
+  if (fb) actions.append(h('a', {class:'btn', href:fb, target:'_blank', rel:'noopener noreferrer'}, 'Facebook'));
+  if (web) actions.append(h('a', {class:'btn', href:web, target:'_blank', rel:'noopener noreferrer'}, 'Веб-страница'));
+  if (S.isOwner) actions.append(h('button', {class:'btn', onclick: showEdit}, 'Уреди профил'));
+  head.append(actions);
+  app.append(head);
+ 
+  if (m.description) app.append(h('div', {class:'card'}, h('h2', {}, 'За мене'), h('p', {style:'white-space:pre-wrap;margin:0'}, m.description)));
+ 
+  // Галерија
+  const gal = h('div', {class:'card'}, h('h2', {}, S.isOwner ? 'Мои слики (' + imgs.length + '/' + limitFor() + ')' : 'Слики од работа'));
+  if (imgs.length === 0){
+    gal.append(h('p', {class:'muted'}, S.isOwner ? 'Сè уште нема слики. Додади ги првите слики од твојата работа.' : 'Мајсторот сè уште нема слики.'));
+  } else {
+    const grid = h('div', {class:'gallery'});
+    imgs.forEach(x => {
+      const src = safeUrl(x.url);
+      if (!src) return;
+      const shot = h('div', {class:'shot'}, h('img', {src, alt:'Слика од работа', loading:'lazy', onclick: () => openBox(src)}));
+      if (S.isOwner) shot.append(h('button', {class:'del', onclick: () => delImage(x.id)}, 'Избриши'));
+      grid.append(shot);
+    });
+    gal.append(grid);
+  }
+  if (S.isOwner){
+    const input = h('input', {type:'file', accept:'image/jpeg,image/png,image/webp,image/gif', multiple:'', hidden:'', id:'file'});
+    input.addEventListener('change', () => uploadFiles(input));
+    const full = imgs.length >= limitFor();
+    gal.append(input, h('div', {class:'actions'},
+      h('button', {class:'btn primary', id:'addBtn', disabled: full, onclick: () => input.click()}, full ? 'Лимитот е достигнат' : 'Додади слики')));
+  }
+  app.append(gal);
+ 
+  // Оценки
+  const rs = S.ratings.filter(r => String(r.majstor_id) === String(m.id));
+  const rc = h('div', {class:'card'}, h('h2', {}, 'Оценки и коментари'));
+  if (rs.length === 0) rc.append(h('p', {class:'muted'}, 'Сè уште нема оценки.'));
+  rs.forEach(r => {
+    rc.append(h('div', {class:'rating'},
+      h('strong', {}, (r.author_name || r.name || 'Клиент') + ' · ' + (r.rating || r.stars || '') + '/5'),
+      (r.comment || r.text) && h('div', {}, r.comment || r.text)));
+  });
+  app.append(rc);
+  if (!S.isOwner) app.append(ratingForm());
+ 
+  document.title = (m.name || 'Мајстор') + ' — Мајстор.мк';
+}
+ 
+function message(title, text, link){
+  app.replaceChildren(h('div', {class:'card'}, h('h2', {}, title), h('p', {class:'muted'}, text),
+    link && h('div', {class:'actions'}, h('a', {class:'btn primary', href:link.href}, link.label))));
+}
+ 
+function openBox(src){
+  const box = document.getElementById('lightbox');
+  box.querySelector('img').src = src;
+  box.classList.add('show');
+}
+document.getElementById('lightbox').addEventListener('click', e => e.currentTarget.classList.remove('show'));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('show'); });
+ 
+// ===== УРЕДУВАЊЕ НА ПРОФИЛ =====
+function showEdit(){
+  const m = S.m;
+  const f = (id, label, el) => [h('label', {for:id}, label), el];
+  const form = h('form', {class:'card', novalidate:''},
+    h('h2', {}, 'Уреди профил'),
+    f('f-name','Име', h('input', {id:'f-name', value:m.name || '', maxlength:100, required:''})),
+    f('f-phone','Телефон', h('input', {id:'f-phone', type:'tel', value:m.phone || '', maxlength:30, required:''})),
+    f('f-city','Град', h('input', {id:'f-city', value:m.city || '', maxlength:60, required:''})),
+    f('f-cat','Категорија', h('select', {id:'f-cat'}, Object.entries(CAT_NAMES).map(([k,v]) => h('option', {value:k, selected: k === m.category}, v)))),
+    f('f-desc','Опис', h('textarea', {id:'f-desc', maxlength:2000}, m.description || '')),
+    f('f-fb','Facebook линк', h('input', {id:'f-fb', value:m.facebook_url || '', maxlength:300})),
+    f('f-web','Веб-страница', h('input', {id:'f-web', value:m.website_url || '', maxlength:300})),
+    h('div', {class:'actions'},
+      h('button', {class:'btn primary', type:'submit', id:'saveBtn'}, 'Зачувај промени'),
+      h('button', {class:'btn', type:'button', onclick: render}, 'Откажи')));
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const v = id => form.querySelector('#' + id).value.trim();
+    if (!v('f-name') || !v('f-phone') || !v('f-city')) return toast('Име, телефон и град се задолжителни.', true);
+    const btn = form.querySelector('#saveBtn'); btn.disabled = true;
+    try {
+      const res = await postJson('/api/update-profile', {id:S.m.id,
+        name:v('f-name'), phone:v('f-phone'), city:v('f-city'), category:v('f-cat'),
+        description:v('f-desc'), facebook_url:v('f-fb'), website_url:v('f-web')
+      });
+      S.m = res.majstor || S.m;
+      toast('Промените се зачувани.');
+      render();
+    } catch(err){ toast(err.message, true); btn.disabled = false; }
+  });
+  app.replaceChildren(form);
+  window.scrollTo(0, 0);
+}
+ 
+// ===== СЛИКИ =====
+async function uploadFiles(input){
+  const files = Array.from(input.files || []);
+  input.value = '';
+  if (!files.length) return;
+  const btn = document.getElementById('addBtn'); btn.disabled = true;
+  let done = 0;
+  for (const file of files){
+    if (myImages().length >= limitFor()){ toast('Го достигна лимитот од ' + limitFor() + ' слики.', true); break; }
+    if (file.size > 5 * 1024 * 1024){ toast('„' + file.name + '“ е преголема (максимум 5 MB).', true); continue; }
+    try {
+      btn.textContent = 'Се качува ' + (done + 1) + '/' + files.length + '...';
+      const fd = new FormData(); fd.append('file', file);
+      const up = await authFetch('/api/upload', { method:'POST', body: fd });
+      await postJson('/api/add-media', { majstor_id: S.m.id, url: up.secure_url, delete_url: up.delete_url });
+      S.media = arr(await fetch('/api/media?majstor_id=' + S.m.id).then(r => r.json()));
+      done++;
+    } catch(err){ toast(err.message, true); }
+  }
+  if (done) toast(done === 1 ? 'Сликата е додадена.' : done + ' слики се додадени.');
+  render();
+}
+ 
+async function delImage(id){
+  if (!confirm('Дали сакаш да ја избришеш сликата?')) return;
+  try {
+    await postJson('/api/delete-media', { id });
+    S.media = S.media.filter(x => x.id !== id);
+    toast('Сликата е избришана.');
+    render();
+  } catch(err){ toast(err.message, true); }
+}
+ 
+// ===== ОЦЕНКА И СЛЕДЕЊЕ =====
+function track(type){
+  if (S.isOwner || !S.m) return;
+  fetch('/api/track', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({majstor_id:S.m.id, type})}).catch(() => {});
+}
+function ratingForm(){
+  const box = h('div', {class:'card'}, h('h2', {}, 'Остави оценка'));
+  if (!S.user){
+    box.append(h('p', {class:'muted'}, 'Најави се за да оставиш оценка.'),
+      h('button', {class:'btn primary', onclick: () => window.Clerk && Clerk.openSignIn({afterSignInUrl: location.href})}, 'Најави се'));
+    return box;
+  }
+  const sel = h('select', {id:'r-stars'}, [5,4,3,2,1].map(n => h('option', {value:n}, '★'.repeat(n) + ' (' + n + ')')));
+  const txt = h('textarea', {id:'r-comment', maxlength:500, placeholder:'Кратко искуство (незадолжително)'});
+  const btn = h('button', {class:'btn primary', type:'button'}, 'Испрати оценка');
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    try {
+      await authFetch('/api/add-rating', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({majstor_id:S.m.id, rating:Number(sel.value), comment:txt.value})});
+      toast('Оцената е испратена и чека одобрување.'); txt.value = '';
+    } catch(err){ toast(err.message, true); }
+    btn.disabled = false;
+  });
+  box.append(h('label', {for:'r-stars'}, 'Оцена'), sel, h('label', {for:'r-comment'}, 'Коментар'), txt, h('div', {class:'actions'}, btn));
+  return box;
+}
+ 
+// ===== СТАРТ =====
+(async function init(){
+  const id = new URLSearchParams(location.search).get('id');
+  const get = p => fetch(p).then(r => r.json()).catch(() => null);
+  const loadExtras = async () => {
+    S.media = arr(await get('/api/media?majstor_id=' + S.m.id));
+    S.ratings = arr(await get('/api/ratings?majstor_id=' + S.m.id));
+  };
+  if (id){
+    S.m = await get('/api/majstori?id=' + encodeURIComponent(id));
+    if (!S.m || !S.m.id) return message('Профилот не е пронајден', 'Овој мајстор не постои или е избришан.', {href:'index.html', label:'Назад на почетна'});
+    await loadExtras(); render(); track('view');
+    S.user = await waitClerk();
+    if (S.user){
+      try { const mine = await authFetch('/api/my-profile'); if (mine && mine.id === S.m.id) S.isOwner = true; } catch(e){}
+      render();
+    }
+    return;
+  }
+  S.user = await waitClerk();
+  if (!S.user) return message('Најави се', 'Најави се за да го видиш и уредуваш твојот профил.', {href:'dashboard.html', label:'Најави се'});
+  let mine = null;
+  try { mine = await authFetch('/api/my-profile'); } catch(e){}
+  if (!mine) return message('Немаш профил на мајстор', 'Создај профил за да се појавиш на сајтот.', {href:'dashboard.html', label:'Создај профил'});
+  S.m = mine; S.isOwner = true;
+  await loadExtras(); render();
+})();
 </script>
 </body>
 </html>
+
