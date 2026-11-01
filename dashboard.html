@@ -105,23 +105,22 @@ window.addEventListener('load',async()=>{
   for(let i=0;i<50&&!window.Clerk;i++) await new Promise(r=>setTimeout(r,200));
   if(!window.Clerk){$('main').replaceChildren(h('p',{class:'muted'},'Не успеа да се вчита најавата. Освежи ја страницата.'));return}
   await Clerk.load();
-  if(!Clerk.user){Clerk.openSignIn({afterSignInUrl:'/dashboard.html'});return}
-  const em=Clerk.user.primaryEmailAddress;
-  $('userName').textContent=em?em.emailAddress:'';
- 
-  const editId=new URLSearchParams(location.search).get('edit_id');
-  try{
-    if(editId){ // само админ
-      try{const all=await api('/api/admin/majstori');majstor=all.find(m=>String(m.id)===editId)||null}catch(e){majstor=null}
-    }
-    if(!majstor) majstor=await api('/api/my-profile');
-    if(!majstor){ // стар профил со иста е-пошта се поврзува автоматски
-      try{const r=await post('/api/register-user',{});majstor=r.majstor;toast('Твојот профил е поврзан.')}catch(e){}
-    }
-  }catch(e){
-    $('main').replaceChildren(h('div',{class:'card'},h('h2',{},'Грешка'),h('p',{class:'muted'},e.message)));return;
+   const em = Clerk.user.primaryEmailAddress.emailAddress;
+  $('userName').textContent = em;
+
+  try {
+    // Бараме мајстор директно по мејл (ова работи во твојот worker.js)
+    const res = await fetch('/api/majstori?email=' + encodeURIComponent(em));
+    majstor = await res.json();
+  } catch(e) {
+    console.error("Грешка при вчитување:", e);
+    majstor = null;
   }
-  if(!majstor) return renderRegister();
+
+  // Ако не е најден профил, покажи форма за регистрација
+  if(!majstor || !majstor.id) {
+    return renderRegister();
+  }
   $('sidebar').style.display='';
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));
   await loadExtras();
