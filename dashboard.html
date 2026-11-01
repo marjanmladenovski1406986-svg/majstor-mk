@@ -104,18 +104,19 @@ const post=(p,b)=>api(p,{method:'POST',headers:{'Content-Type':'application/json
 window.addEventListener('load',async()=>{
   for(let i=0;i<50&&!window.Clerk;i++) await new Promise(r=>setTimeout(r,200));
   if(!window.Clerk){$('main').replaceChildren(h('p',{class:'muted'},'Не успеа да се вчита најавата. Освежи ја страницата.'));return}
-  await Clerk.load();
-    const em = Clerk.user.primaryEmailAddress.emailAddress.trim();
+   const em = Clerk.user.primaryEmailAddress.emailAddress.trim();
   $('userName').textContent = em;
 
   try {
     console.log("1. Барам профил за мејл:", em);
     
+    // Бараме само еден мајстор преку API-то
     const res = await fetch('/api/majstori?email=' + encodeURIComponent(em));
     const data = await res.json();
     
     console.log("2. Одговорот од базата е:", data);
     
+    // Ако базата врати низа, го земаме првиот (или null ако е празно)
     majstor = Array.isArray(data) ? data[0] : data;
 
   } catch(e) {
@@ -127,6 +128,17 @@ window.addEventListener('load',async()=>{
     console.log("3. НЕ Е НАЈДЕН ПРОФИЛ. Покажувам форма за регистрација.");
     return renderRegister();
   }
+
+  console.log("4. Профилот е најден! Го вчитувам Dashboard-от...");
+  
+  // Го вчитуваме главниот дел
+  document.getElementById('main').innerHTML = ''; // Исчисти го "Вчитувам..."
+  
+  // Ги поврзуваме табовите (ако постојат во HTML)
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));
+  
+  // Го прикажуваме првиот таб
+  show('info');
 
   console.log("4. Профилот е најден! Го вчитувам Dashboard-от...");
   $('#sidebar').style.display='';
