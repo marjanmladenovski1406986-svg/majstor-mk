@@ -111,22 +111,38 @@ window.addEventListener('load', async()=>{
   document.getElementById('userName').textContent = currentUser;
   
   // 3. Вчитување на профилот од база
-  try {
-    const res = await fetch('/api/majstori');
+   try {
+    // Директно бараме преку API-то со параметар ?email=
+    const res = await fetch('/api/majstori?email=' + encodeURIComponent(currentUser));
     const data = await res.json();
     
-    // Филтрираме од листата (бидејќи API-то враќа сите)
-    const myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === currentUser.toLowerCase()) : data;
-    
-    if(!myProfile || !myProfile.id){
+    // Ако не најде ништо, покажи грешка
+    if(!data || !data.id){
       document.getElementById('main').innerHTML=`
         <div class="card">
           <h2>⚠️ Профилот не е пронајден</h2>
-          <p>Твојот мејл (${currentUser}) не е поврзан со мајстор во базата.</p>
-          <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна и регистрирај се</a></p>
+          <p>API-то не врати податоци за мејлот: <b>${currentUser}</b></p>
+          <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p>
         </div>`;
       return;
     }
+    
+    majstor = data;
+    
+    const [mRes,rRes] = await Promise.all([
+      fetch('/api/media?majstor_id='+majstor.id), 
+      fetch('/api/ratings?majstor_id='+majstor.id)
+    ]);
+    media = await mRes.json(); 
+    ratings = await rRes.json();
+    
+    document.getElementById('galCount').textContent=`${media.length}/50`;
+    document.getElementById('sidebar').style.display='block';
+    renderInfo();
+    
+  } catch(e) {
+    document.getElementById('main').innerHTML=`<div class="card"><h2>❌ Грешка</h2><p>${e.message}</p></div>`;
+  }
     
     majstor = myProfile;
     
