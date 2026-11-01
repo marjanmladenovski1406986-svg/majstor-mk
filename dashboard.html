@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="mk">
 <head>
@@ -7,211 +8,239 @@
 <script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
-header{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid #222;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+body{font-family:Inter,system-ui,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
+header{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.9);backdrop-filter:blur(20px);border-bottom:1px solid #222;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .logo{font-weight:900;font-size:20px;color:#ff6b35;text-decoration:none}
-.header-right{display:flex;align-items:center;gap:10px}
-.btn-logout{background:transparent;border:1px solid #ff6b35;color:#ff6b35;padding:6px 12px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;transition:.2s}
-.btn-logout:hover{background:#ff6b35;color:#fff}
-.container{max-width:1200px;margin:0 auto;padding:20px;display:grid;grid-template-columns:220px 1fr;gap:20px}
-@media(max-width:800px){.container{grid-template-columns:1fr}}
-.sidebar{background:#141414;border:1px solid #262626;border-radius:16px;padding:12px;height:fit-content;position:sticky;top:80px}
-.tab{padding:12px 14px;border-radius:10px;cursor:pointer;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.hr{display:flex;align-items:center;gap:8px}
+.hbtn{background:transparent;border:1px solid #444;color:#aaa;padding:6px 12px;border-radius:8px;cursor:pointer;font:inherit;font-size:13px;font-weight:600;text-decoration:none}
+.hbtn.o{border-color:#ff6b35;color:#ff6b35}
+.container{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:200px 1fr;gap:16px}
+@media(max-width:800px){.container{grid-template-columns:1fr}.sidebar{display:flex;gap:6px;flex-wrap:wrap;position:static!important}.sidebar .st{display:none}}
+.sidebar{background:#141414;border:1px solid #262626;border-radius:16px;padding:10px;height:fit-content;position:sticky;top:76px}
+.tab{padding:11px 12px;border-radius:10px;cursor:pointer;font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
 .tab.active{background:#ff6b35;color:#000}
-.tab span.count{background:#222;color:#fff;padding:2px 8px;border-radius:20px;font-size:12px}
-.tab.active span.count{background:#000;color:#fff}
-.card{background:#141414;border:1px solid #262626;border-radius:16px;padding:20px;margin-bottom:16px}
-.card h2{font-size:18px;font-weight:800;color:#ff6b35;margin-bottom:16px;display:flex;justify-content:space-between}
-.banner{border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.banner-founder{background:linear-gradient(90deg,#1a2e0a,#2a3a0a);border:1px solid #4caf50}
-.banner-premium{background:linear-gradient(90deg,#2a1a0a,#3a2510);border:1px solid #ff6b35}
-.progress{height:10px;background:#222;border-radius:20px;overflow:hidden;margin-top:10px}
-.progress-fill{height:100%;background:#ff6b35;transition:.5s}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
-.input{width:100%;padding:12px;background:#222;border:1px solid #333;border-radius:10px;color:#fff;margin-bottom:10px;font-family:inherit}
-textarea.input{resize:vertical}
-.btn{padding:12px 18px;border-radius:10px;font-weight:800;border:none;cursor:pointer}
-.btn-orange{background:#ff6b35;color:#fff;width:100%}
-.btn-ghost{background:#222;color:#fff;border:1px solid #333}
-.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.media-item{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#222}
-.media-item img{width:100%;height:100%;object-fit:cover}
-.media-actions{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent);display:flex;align-items:flex-end;justify-content:flex-end;padding:8px;opacity:0;transition:.2s}
-.media-item:hover .media-actions{opacity:1}
-.icon-btn{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px}
-.dropzone{border:2px dashed #333;border-radius:16px;padding:30px;text-align:center;cursor:pointer;transition:.2s;background:#161616}
-.dropzone:hover{border-color:#ff6b35;background:#1a1a1a}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-.stat{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:16px;text-align:center}
-.stat b{font-size:24px;display:block}
-.stat span{color:#888;font-size:12px}
-.rating{padding:12px;background:#1e1e1e;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between;gap:12px}
-.toast{position:fixed;bottom:20px;right:20px;background:#222;border:1px solid #333;padding:14px 18px;border-radius:12px;z-index:100;transform:translateY(100px);opacity:0;transition:.3s}
-.toast.show{transform:translateY(0);opacity:1}
-.loading{color:#666;text-align:center;padding:40px}
+.card{background:#141414;border:1px solid #262626;border-radius:16px;padding:18px;margin-bottom:14px}
+.card h2{font-size:18px;font-weight:800;color:#ff6b35;margin-bottom:14px}
+.banner{border-radius:12px;padding:12px 16px;margin-bottom:14px;border:1px solid #ff6b35;background:#2a1a0a}
+.banner.f{border-color:#4caf50;background:#1a2e0a}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.g2{grid-template-columns:1fr}}
+.input{width:100%;padding:12px;background:#222;border:1px solid #333;border-radius:10px;color:#fff;margin-bottom:10px;font:inherit}
+label.l{display:block;font-size:13px;color:#999;margin:2px 0 4px}
+.btn{padding:12px 18px;border-radius:10px;font-weight:800;border:none;cursor:pointer;font:inherit;font-weight:800}
+.btn.o{background:#ff6b35;color:#fff;width:100%}
+.btn:disabled{opacity:.5}
+.bar{height:10px;background:#222;border-radius:20px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:#ff6b35}
+.drop{border:2px dashed #333;border-radius:14px;padding:26px;text-align:center;cursor:pointer;background:#161616}
+.drop:hover{border-color:#ff6b35}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.mi{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#222}
+.mi img{width:100%;height:100%;object-fit:cover;display:block}
+.mi button{position:absolute;right:6px;bottom:6px;min-height:34px;padding:0 10px;border:0;border-radius:8px;background:rgba(0,0,0,.75);color:#fff;font:inherit;font-size:13px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px;text-align:center}
+.stat b{font-size:22px;display:block}.stat span{color:#888;font-size:12px}
+.rt{padding:10px;background:#1e1e1e;border-radius:10px;margin-bottom:8px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#222;border:1px solid #333;padding:12px 18px;border-radius:12px;z-index:100;opacity:0;transition:.3s;max-width:90%}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.err{border-color:#ff6b6b;color:#ff9b9b}
+.muted{color:#888;font-size:13px}
 </style>
 </head>
 <body>
 <header>
   <a href="/" class="logo">🔨 Majsto.mk</a>
-  <div class="header-right">
-    <span id="userName" style="color:#888;font-size:13px"></span>
-    <a href="/" class="logo" style="font-size:14px;border:1px solid #333;padding:6px 12px;border-radius:8px;text-decoration:none;color:#aaa">← Сајт</a>
-    <button class="btn-logout" onclick="logout()">Одјави се</button>
+  <div class="hr">
+    <span id="userName" class="muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+    <a href="/" class="hbtn">← Сајт</a>
+    <button class="hbtn o" onclick="logout()">Одјави се</button>
   </div>
 </header>
-
 <div class="container">
-<div class="sidebar">
-<div class="tab active" data-tab="info" onclick="switchTab('info')">📝 Основни <span class="count">•</span></div>
-<div class="tab" data-tab="gallery" onclick="switchTab('gallery')">🖼️ Галерија <span class="count" id="galCount">0/50</span></div>
-<div class="tab" data-tab="stats" onclick="switchTab('stats')">📊 Статистика</div>
-<div style="margin-top:20px;padding-top:20px;border-top:1px solid #222">
-<div style="font-size:12px;color:#666">Статус</div>
-<div id="statusBadge" style="margin-top:6px"></div>
+  <div class="sidebar" id="sidebar" style="display:none">
+    <div class="tab active" data-tab="info">📝 Основни</div>
+    <div class="tab" data-tab="gallery">🖼️ Галерија <span id="galCount">0/50</span></div>
+    <div class="tab" data-tab="stats">📊 Статистика</div>
+    <div class="st" style="margin-top:14px;padding-top:14px;border-top:1px solid #222"><div class="muted">Статус</div><div id="statusBadge" style="margin-top:6px"></div></div>
+  </div>
+  <div id="main"><p class="muted" style="text-align:center;padding:40px">Вчитувам дашборд...</p></div>
 </div>
-</div>
-
-<div class="main" id="main">
-<div class="loading">Вчитувам дашборд...</div>
-</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
+<div class="toast" id="toast" role="status"></div>
+ 
 <script>
-const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ",dvorovi:"🌳 Дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи",bravari:"🔨 Бравари",belatehnika:"🔌 Бела техника"};
+const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари и Молери",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ прозори и врати",dvorovi:"🌳 Уредување дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи работници",bravari:"🔨 Браварски услуги",belatehnika:"🔌 Бела техника",videonadzor:"📹 Видео надзор",bazeni:"🏊 Базени",fasadi:"🎨 Фасади",iskop:"🚜 Ископ",hidroizolacija:"💧 Хидро изолација",otpad:"🗑️ Фрлање отпад"};
 const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
-let majstor=null, currentUser=null, media=[], ratings=[];
-
-function switchTab(t){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  document.querySelector(`[data-tab="${t}"]`).classList.add('active');
-  if(t==='info') renderInfo();
-  if(t==='gallery') renderGallery();
-  if(t==='stats') renderStats();
+const IMAGE_LIMIT=50;
+let majstor=null, media=[], ratings=[], tab='info';
+const $=id=>document.getElementById(id);
+ 
+// безбедно креирање елементи (без innerHTML)
+function h(tag,attrs,...kids){
+  const e=document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs||{})){
+    if(k==='class') e.className=v;
+    else if(k.startsWith('on')) e.addEventListener(k.slice(2),v);
+    else if(v!==false&&v!=null) e.setAttribute(k,v);
+  }
+  for(const c of kids.flat()) if(c!=null&&c!==false) e.append(c);
+  return e;
 }
-
-window.addEventListener('load', async()=>{
-  if(!window.Clerk){document.getElementById('main').innerHTML='Clerk не е вчитан';return}
+function toast(msg,err){const t=$('toast');t.textContent=msg;t.className='toast show'+(err?' err':'');clearTimeout(toast._t);toast._t=setTimeout(()=>t.className='toast',3200)}
+function safeImg(u){return typeof u==='string'&&/^https:\/\//.test(u)?u:null}
+ 
+async function api(path,opts){
+  opts=opts||{};
+  const token=await Clerk.session.getToken();
+  opts.headers=Object.assign({},opts.headers,{Authorization:'Bearer '+token});
+  const res=await fetch(path,opts);
+  const data=await res.json().catch(()=>null);
+  if(!res.ok) throw new Error((data&&data.error)||'Грешка. Обиди се повторно.');
+  return data;
+}
+const post=(p,b)=>api(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+ 
+// ===== СТАРТ =====
+window.addEventListener('load',async()=>{
+  for(let i=0;i<50&&!window.Clerk;i++) await new Promise(r=>setTimeout(r,200));
+  if(!window.Clerk){$('main').replaceChildren(h('p',{class:'muted'},'Не успеа да се вчита најавата. Освежи ја страницата.'));return}
   await Clerk.load();
-  if(!Clerk.user){Clerk.openSignIn({afterSignInUrl:'/dashboard.html'}); return}
-  currentUser=Clerk.user.primaryEmailAddress.emailAddress;
-  document.getElementById('userName').textContent=currentUser;
-  
-  const myRes=await fetch('/api/majstori?email='+encodeURIComponent(currentUser));
-  const myData=await myRes.json();
-  
-  if(!myData || !myData.id){
-    document.getElementById('main').innerHTML=`<div class="card"><h2>⚠️ Профилот не е пронајден</h2><p>Твојот мејл (${currentUser}) не е поврзан со мајстор во базата. Регистрирај се повторно преку почетната страна.</p><a href="/" class="btn btn-orange" style="display:block;text-align:center;text-decoration:none;margin-top:12px">← Кон почетна</a></div>`;
-  } else {
-    majstor=myData;
-    const [mRes,rRes]=await Promise.all([fetch('/api/media?majstor_id='+majstor.id), fetch('/api/ratings?majstor_id='+majstor.id)]);
-    media=await mRes.json(); ratings=await rRes.json();
-    document.getElementById('galCount').textContent=`${media.length}/50`;
-    renderInfo();
-  }
-});
-
-function renderInfo(){
-  const isFounder=majstor.is_founder;
-  const banner=isFounder?`<div class="banner banner-founder"><div><b>🚀 FOUNDER</b><br><span style="font-size:13px">Ти си меѓу првите 50 - имаш бесплатно засекогаш!</span></div></div>`
-    : (majstor.is_premium?`<div class="banner banner-premium"><b>👑 PREMIUM</b> - Активен профил</div>`
-    : `<div class="banner banner-premium" style="border-color:#ff6b35; background:#2a1a0a"><b>⚠️ Профилот не е активен</b></div>`);
-  
-  document.getElementById('main').innerHTML=`
-    ${banner}
-    <div class="card"><h2>📝 Основни информации</h2>
-      <div class="grid-2"><input id="e-name" class="input" value="${majstor.name||''}" placeholder="Име"><input id="e-phone" class="input" value="${majstor.phone||''}" placeholder="Телефон"></div>
-      <div class="grid-2"><select id="e-city" class="input">${CITIES.map(c=>`<option value="${c}" ${c===majstor.city?'selected':''}>${c}</option>`).join('')}</select><select id="e-cat" class="input">${Object.entries(CAT_NAMES).map(([k,v])=>`<option value="${k}" ${k===majstor.category?'selected':''}>${v}</option>`).join('')}</select></div>
-      <textarea id="e-desc" class="input" rows="4" placeholder="Опис">${majstor.description||''}</textarea>
-      <div class="grid-2"><input id="e-fb" class="input" value="${majstor.facebook_url||''}" placeholder="Facebook URL"><input id="e-web" class="input" value="${majstor.website_url||''}" placeholder="Вебсајт"></div>
-      <button class="btn btn-orange" onclick="saveInfo()">💾 Зачувај промени</button>
-      <div style="margin-top:12px;text-align:center"><a href="/profile.html?id=${majstor.id}" target="_blank" style="color:#ff6b35;font-size:13px">👁️ Види јавен профил →</a></div>
-    </div>`;
-  document.getElementById('statusBadge').innerHTML=majstor.is_founder?'<span style="background:#4caf50;color:#000;padding:4px 10px;border-radius:20px;font-weight:800;font-size:11px">🚀 FOUNDER</span>':(majstor.is_premium?'<span style="background:#ff6b35;color:#000;padding:4px 10px;border-radius:20px;font-weight:800;font-size:11px">👑 PREMIUM</span>':'');
-}
-
-async function saveInfo(){
-  const body={id:majstor.id,name:document.getElementById('e-name').value,phone:document.getElementById('e-phone').value,city:document.getElementById('e-city').value,category:document.getElementById('e-cat').value,description:document.getElementById('e-desc').value,facebook_url:document.getElementById('e-fb').value,website_url:document.getElementById('e-web').value};
-  const res=await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  toast(res.ok?'✅ Зачувано':'Грешка');
-}
-
-function renderGallery(){
-  document.getElementById('main').innerHTML=`
-    <div class="card"><h2>🖼️ Галерија <span style="color:#888;font-weight:400">${media.length}/50</span></h2>
-      <div class="progress"><div class="progress-fill" style="width:${media.length/50*100}%"></div></div>
-      <p style="color:#888;font-size:13px;margin:10px 0">${media.length>=50?'Достигнат лимит':`Можеш да додадеш уште ${50-media.length} слики`}</p>
-      <div class="dropzone" onclick="document.getElementById('fileInput').click()">
-        <div style="font-size:24px">📤</div><b>Кликни за качување слики</b>
-        <input type="file" id="fileInput" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
-      </div>
-    </div>
-    <div class="card"><div class="media-grid">${media.map(m=>`<div class="media-item"><img src="${m.url}"><div class="media-actions"><button class="icon-btn" onclick="deleteImg(${m.id})">🗑️</button></div></div>`).join('') || '<p style="color:#666;text-align:center">Нема слики уште</p>'}</div></div>
-  `;
-}
-
-async function handleFiles(files){
-  const toUpload=Array.from(files).slice(0,50-media.length);
-  for(const file of toUpload){
-    toast(`Се качува ${file.name}...`);
-    const fd=new FormData(); fd.append('file',file);
-    
-    try {
-      // 1. Качување на ImgBB
-      const up=await fetch('/api/upload',{method:'POST',body:fd});
-      const j=await up.json();
-      
-      if(!j.secure_url){
-         toast('❌ Грешка при качување на ImgBB: ' + (j.error || 'Непозната грешка'));
-         continue;
-      }
-
-      // 2. Зачувување во база
-      const dbRes = await fetch('/api/add-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({majstor_id:majstor.id,url:j.secure_url,type:'image'})});
-      
-      if(!dbRes.ok){
-         const dbErr = await dbRes.json();
-         toast('❌ Грешка во базата: ' + (dbErr.error || 'Непозната'));
-      }
-      
-    } catch(e) {
-       toast('❌ Грешка: ' + e.message);
+  if(!Clerk.user){Clerk.openSignIn({afterSignInUrl:'/dashboard.html'});return}
+  const em=Clerk.user.primaryEmailAddress;
+  $('userName').textContent=em?em.emailAddress:'';
+ 
+  const editId=new URLSearchParams(location.search).get('edit_id');
+  try{
+    if(editId){ // само админ
+      try{const all=await api('/api/admin/majstori');majstor=all.find(m=>String(m.id)===editId)||null}catch(e){majstor=null}
     }
+    if(!majstor) majstor=await api('/api/my-profile');
+    if(!majstor){ // стар профил со иста е-пошта се поврзува автоматски
+      try{const r=await post('/api/register-user',{});majstor=r.majstor;toast('Твојот профил е поврзан.')}catch(e){}
+    }
+  }catch(e){
+    $('main').replaceChildren(h('div',{class:'card'},h('h2',{},'Грешка'),h('p',{class:'muted'},e.message)));return;
   }
-  
-  // Освежи ја галеријата на крај
-  const r=await fetch('/api/media?majstor_id='+majstor.id); 
-  media=await r.json(); 
-  document.getElementById('galCount').textContent=`${media.length}/50`; 
-  renderGallery(); 
-  toast('✅ Постапката заврши');
+  if(!majstor) return renderRegister();
+  $('sidebar').style.display='';
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));
+  await loadExtras();
+  show('info');
+});
+ 
+async function loadExtras(){
+  const get=p=>fetch(p).then(r=>r.json()).catch(()=>[]);
+  [media,ratings]=await Promise.all([get('/api/media?majstor_id='+majstor.id),get('/api/ratings?majstor_id='+majstor.id)]);
+  if(!Array.isArray(media)) media=[]; if(!Array.isArray(ratings)) ratings=[];
 }
-
-async function deleteImg(id){if(!confirm('Избриши?'))return; await fetch('/api/delete-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); const r=await fetch('/api/media?majstor_id='+majstor.id); media=await r.json(); document.getElementById('galCount').textContent=`${media.length}/50`; renderGallery(); toast('Избришано');}
-
+function show(t){
+  tab=t;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===t));
+  $('galCount').textContent=media.length+'/'+IMAGE_LIMIT;
+  const b=$('statusBadge');b.replaceChildren();
+  if(majstor.is_founder) b.append(h('span',{style:'background:#4caf50;color:#000;padding:4px 10px;border-radius:20px;font-weight:800;font-size:11px'},'🚀 FOUNDER'));
+  else if(majstor.is_premium) b.append(h('span',{style:'background:#ff6b35;color:#000;padding:4px 10px;border-radius:20px;font-weight:800;font-size:11px'},'👑 PREMIUM'));
+  if(t==='info') renderInfo(); else if(t==='gallery') renderGallery(); else renderStats();
+}
+ 
+// ===== ФОРМА (регистрација и уредување) =====
+function profileForm(m,isNew){
+  const f=(id,label,el)=>[h('label',{class:'l',for:id},label),el];
+  const cats=Object.entries(CAT_NAMES);
+  const form=h('form',{novalidate:''},
+    h('div',{class:'g2'},
+      h('div',{},f('f-name','Име',h('input',{class:'input',id:'f-name',value:m.name||'',maxlength:100}))),
+      h('div',{},f('f-phone','Телефон',h('input',{class:'input',id:'f-phone',type:'tel',value:m.phone||'',maxlength:30})))),
+    h('div',{class:'g2'},
+      h('div',{},f('f-city','Град',h('select',{class:'input',id:'f-city'},CITIES.map(c=>h('option',{value:c,selected:c===m.city},c))))),
+      h('div',{},f('f-cat','Категорија',h('select',{class:'input',id:'f-cat'},cats.map(([k,v])=>h('option',{value:k,selected:k===m.category},v)))))),
+    f('f-desc','Опис',h('textarea',{class:'input',id:'f-desc',rows:4,maxlength:2000},m.description||'')),
+    h('div',{class:'g2'},
+      h('div',{},f('f-fb','Facebook',h('input',{class:'input',id:'f-fb',value:m.facebook_url||'',maxlength:300}))),
+      h('div',{},f('f-web','Веб-страница',h('input',{class:'input',id:'f-web',value:m.website_url||'',maxlength:300})))),
+    isNew&&h('label',{class:'l',style:'display:flex;gap:8px;align-items:center;margin:6px 0 12px'},h('input',{type:'checkbox',id:'f-terms'}),'Се согласувам со условите за користење'),
+    h('button',{class:'btn o',type:'submit',id:'f-save'},isNew?'Создај профил':'Зачувај промени'));
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const v=id=>form.querySelector('#'+id).value.trim();
+    if(!v('f-name')||!v('f-phone')) return toast('Име и телефон се задолжителни.',true);
+    if(isNew&&!form.querySelector('#f-terms').checked) return toast('Мора да се согласиш со условите.',true);
+    const body={id:isNew?undefined:m.id,name:v('f-name'),phone:v('f-phone'),city:v('f-city'),category:v('f-cat'),description:v('f-desc'),facebook_url:v('f-fb'),website_url:v('f-web')};
+    const btn=form.querySelector('#f-save');btn.disabled=true;
+    try{
+      const r=await post(isNew?'/api/register-user':'/api/update-profile',body);
+      majstor=r.majstor;
+      if(isNew){toast(r.isFounder?'🚀 Добредојде, Founder!':'Профилот е создаден.');await loadExtras();$('sidebar').style.display='';document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));show('info')}
+      else{toast('Зачувано.');renderInfo()}
+    }catch(err){toast(err.message,true);btn.disabled=false}
+  });
+  return form;
+}
+function renderRegister(){
+  $('main').replaceChildren(h('div',{class:'card'},h('h2',{},'Стани мајстор'),
+    h('p',{class:'muted',style:'margin-bottom:12px'},'Пополни ги податоците за да добиеш профил. Првите 50 мајстори се бесплатни засекогаш.'),
+    profileForm({},true)));
+}
+function renderInfo(){
+  const m=majstor,main=$('main');main.replaceChildren();
+  if(m.is_founder) main.append(h('div',{class:'banner f'},h('b',{},'🚀 FOUNDER'),h('div',{class:'muted'},'Ти си меѓу првите 50 мајстори. Профилот е бесплатен засекогаш.')));
+  else if(m.is_premium){
+    const until=m.paid_until?new Date(m.paid_until).toLocaleDateString('mk-MK'):null;
+    main.append(h('div',{class:'banner'},h('b',{},'👑 PREMIUM'),until&&h('div',{class:'muted'},'Активен до '+until+' · ',h('a',{href:'naplata.html',style:'color:#ff6b35'},'Плаќање'))));
+  } else main.append(h('div',{class:'banner'},h('b',{},'⚠️ Профилот не е активен'),h('div',{class:'muted'},h('a',{href:'naplata.html',style:'color:#ff6b35'},'Активирај профил →'))));
+  main.append(h('div',{class:'card'},h('h2',{},'📝 Основни информации'),profileForm(m,false),
+    h('div',{style:'margin-top:12px;text-align:center'},h('a',{href:'/profile.html?id='+encodeURIComponent(m.id),target:'_blank',style:'color:#ff6b35;font-size:13px'},'👁️ Види јавен профил →'))));
+}
+ 
+// ===== ГАЛЕРИЈА =====
+function renderGallery(){
+  const main=$('main');main.replaceChildren();
+  const input=h('input',{type:'file',id:'fileInput',hidden:'',accept:'image/jpeg,image/png,image/webp,image/gif',multiple:''});
+  input.addEventListener('change',()=>handleFiles(input));
+  const full=media.length>=IMAGE_LIMIT;
+  main.append(h('div',{class:'card'},h('h2',{},'🖼️ Галерија '+media.length+'/'+IMAGE_LIMIT),
+    h('div',{class:'bar'},h('i',{style:'width:'+Math.min(100,media.length/IMAGE_LIMIT*100)+'%'})),
+    h('p',{class:'muted',style:'margin-bottom:10px'},full?'Го достигна лимитот.':'Можеш да додадеш уште '+(IMAGE_LIMIT-media.length)+' слики (до 5 MB секоја).'),
+    h('div',{class:'drop',onclick:()=>!full&&input.click()},h('div',{style:'font-size:24px'},'📤'),h('b',{},full?'Лимитот е достигнат':'Кликни за качување слики')),input));
+  const grid=h('div',{class:'mg'});
+  media.forEach(x=>{const s=safeImg(x.url);if(!s)return;grid.append(h('div',{class:'mi'},h('img',{src:s,alt:'Слика од работа',loading:'lazy'}),h('button',{onclick:()=>delImg(x.id)},'Избриши')))});
+  main.append(h('div',{class:'card'},media.length?grid:h('p',{class:'muted',style:'text-align:center'},'Нема слики уште. Додади ги првите.')));
+}
+async function handleFiles(input){
+  const files=Array.from(input.files||[]);input.value='';
+  let done=0;
+  for(const file of files){
+    if(media.length>=IMAGE_LIMIT){toast('Го достигна лимитот.',true);break}
+    if(file.size>5*1024*1024){toast('„'+file.name+'“ е преголема (макс. 5 MB).',true);continue}
+    try{
+      toast('Се качува '+file.name+'...');
+      const fd=new FormData();fd.append('file',file);
+      const up=await api('/api/upload',{method:'POST',body:fd});
+      await post('/api/add-media',{majstor_id:majstor.id,url:up.secure_url,delete_url:up.delete_url});
+      media=await fetch('/api/media?majstor_id='+majstor.id).then(r=>r.json());
+      done++;
+    }catch(e){toast(e.message,true)}
+  }
+  if(done) toast(done===1?'Сликата е додадена.':done+' слики се додадени.');
+  show('gallery');
+}
+async function delImg(id){
+  if(!confirm('Дали сакаш да ја избришеш сликата?')) return;
+  try{await post('/api/delete-media',{id});media=media.filter(x=>x.id!==id);toast('Избришано.');show('gallery')}catch(e){toast(e.message,true)}
+}
+ 
+// ===== СТАТИСТИКА =====
 function renderStats(){
-  document.getElementById('main').innerHTML=`
-    <div class="stats-grid">
-      <div class="stat"><b>${majstor.views||0}</b><span>Прегледи</span></div>
-      <div class="stat"><b>${majstor.phone_clicks||0}</b><span>Кликови на тел</span></div>
-      <div class="stat"><b>${majstor.rating||0} (${majstor.rating_count||0})</b><span>Оценка</span></div>
-    </div>
-    <div class="card"><h2>⭐ Оценки (${ratings.length})</h2>${ratings.length?ratings.map(r=>`<div class="rating"><div><div style="color:#ffb84d">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><div style="margin-top:4px;color:#ccc;font-size:13px">${r.comment||''}</div></div></div>`).join(''):'<p style="color:#666;text-align:center">Нема оценки</p>'}</div>
-  `;
+  const m=majstor,main=$('main');main.replaceChildren();
+  const st=(n,l)=>h('div',{class:'stat'},h('b',{},String(n)),h('span',{},l));
+  main.append(h('div',{class:'stats'},st(m.views||0,'Прегледи'),st(m.phone_clicks||0,'Кликови на телефон'),st((m.rating||0)+' ('+(m.rating_count||0)+')','Оценка')));
+  const card=h('div',{class:'card'},h('h2',{},'⭐ Оценки ('+ratings.length+')'));
+  if(!ratings.length) card.append(h('p',{class:'muted',style:'text-align:center'},'Нема оценки.'));
+  ratings.forEach(r=>{const n=Math.max(0,Math.min(5,Number(r.rating)||0));card.append(h('div',{class:'rt'},h('div',{style:'color:#ffb84d'},'★'.repeat(n)+'☆'.repeat(5-n)),r.comment&&h('div',{style:'color:#ccc;font-size:13px;margin-top:4px'},r.comment)))});
+  main.append(card);
 }
-
-function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);}
-
-function logout() {
-  if(window.Clerk) {
-    Clerk.signOut().then(() => {
-      location.href = '/';
-    });
-  }
-}
+function logout(){if(window.Clerk)Clerk.signOut().then(()=>location.href='/')}
 </script>
 </body>
 </html>
+ 
