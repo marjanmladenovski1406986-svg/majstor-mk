@@ -88,19 +88,17 @@ let majstor=null, currentUser=null, media=[], ratings=[];
 
 function switchTab(t){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  document.querySelector(`[data-tab="${t}"]`).classList.add('active');
+  document.querySelector('[data-tab="'+t+'"]').classList.add('active');
   if(t==='info') renderInfo();
   if(t==='gallery') renderGallery();
   if(t==='stats') renderStats();
 }
 
 window.addEventListener('load', async()=>{
-  // 1. Проверка дали Clerk е вчитан
   if(!window.Clerk){document.getElementById('main').innerHTML='Clerk не е вчитан';return}
   
   await Clerk.load();
   
-  // 2. Проверка дали сме најавени
   if(!Clerk.user){
     document.getElementById('main').innerHTML='<div class="card"><h2>🔒 Не си најавен</h2><p>Те пренасочувам кон најава...</p></div>';
     setTimeout(()=>{ window.location.href = '/'; }, 1500);
@@ -110,20 +108,12 @@ window.addEventListener('load', async()=>{
   currentUser = Clerk.user.primaryEmailAddress.emailAddress.trim();
   document.getElementById('userName').textContent = currentUser;
   
-  // 3. Вчитување на профилот од база
-   try {
-    // Директно бараме преку API-то со параметар ?email=
+  try {
     const res = await fetch('/api/majstori?email=' + encodeURIComponent(currentUser));
     const data = await res.json();
     
-    // Ако не најде ништо, покажи грешка
     if(!data || !data.id){
-      document.getElementById('main').innerHTML=`
-        <div class="card">
-          <h2>⚠️ Профилот не е пронајден</h2>
-          <p>API-то не врати податоци за мејлот: <b>${currentUser}</b></p>
-          <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p>
-        </div>`;
+      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Профилот не е пронајден</h2><p>API-то не врати податоци за мејлот: <b>' + currentUser + '</b></p><p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p></div>';
       return;
     }
     
@@ -136,65 +126,43 @@ window.addEventListener('load', async()=>{
     media = await mRes.json(); 
     ratings = await rRes.json();
     
-    document.getElementById('galCount').textContent=`${media.length}/50`;
+    document.getElementById('galCount').textContent=media.length + '/50';
     document.getElementById('sidebar').style.display='block';
     renderInfo();
     
   } catch(e) {
-    document.getElementById('main').innerHTML=`<div class="card"><h2>❌ Грешка</h2><p>${e.message}</p></div>`;
-  }
-    
-    majstor = myProfile;
-    
-    // 4. Вчитување на слики и оценки
-    const [mRes,rRes] = await Promise.all([
-      fetch('/api/media?majstor_id='+majstor.id), 
-      fetch('/api/ratings?majstor_id='+majstor.id)
-    ]);
-    media = await mRes.json(); 
-    ratings = await rRes.json();
-    
-    document.getElementById('galCount').textContent=`${media.length}/50`;
-    
-    // 5. Прикажување на Dashboard
-    document.getElementById('sidebar').style.display='block';
-    renderInfo();
-    
-  } catch(e) {
-    document.getElementById('main').innerHTML=`<div class="card"><h2>❌ Грешка</h2><p>${e.message}</p></div>`;
+    document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>' + e.message + '</p></div>';
   }
 });
 
 function renderInfo(){
   const isFounder = majstor.is_founder;
   const banner = isFounder 
-    ? `<div class="banner banner-founder"><div><b>🚀 FOUNDER</b><br><span style="font-size:13px">Ти си меѓу првите 50 - имаш бесплатно засекогаш!</span></div></div>`
+    ? '<div class="banner banner-founder"><div><b>🚀 FOUNDER</b><br><span style="font-size:13px">Ти си меѓу првите 50 - имаш бесплатно засекогаш!</span></div></div>'
     : (majstor.is_premium 
-        ? `<div class="banner banner-premium"><b>👑 PREMIUM</b> - Активен профил</div>`
-        : `<div class="banner banner-premium" style="border-color:#ff6b35; background:#2a1a0a"><b>⚠️ Профилот не е активен</b></div>`);
+        ? '<div class="banner banner-premium"><b>👑 PREMIUM</b> - Активен профил</div>'
+        : '<div class="banner banner-premium" style="border-color:#ff6b35; background:#2a1a0a"><b>⚠️ Профилот не е активен</b></div>');
   
-  document.getElementById('main').innerHTML=`
-    ${banner}
-    <div class="card">
-      <h2>📝 Основни информации</h2>
-      <div class="grid-2">
-        <input id="e-name" class="input" value="${majstor.name||''}" placeholder="Име">
-        <input id="e-phone" class="input" value="${majstor.phone||''}" placeholder="Телефон">
-      </div>
-      <div class="grid-2">
-        <select id="e-city" class="input">${CITIES.map(c=>`<option value="${c}" ${c===majstor.city?'selected':''}>${c}</option>`).join('')}</select>
-        <select id="e-cat" class="input">${Object.entries(CAT_NAMES).map(([k,v])=>`<option value="${k}" ${k===majstor.category?'selected':''}>${v}</option>`).join('')}</select>
-      </div>
-      <textarea id="e-desc" class="input" rows="4" placeholder="Опис">${majstor.description||''}</textarea>
-      <div class="grid-2">
-        <input id="e-fb" class="input" value="${majstor.facebook_url||''}" placeholder="Facebook URL">
-        <input id="e-web" class="input" value="${majstor.website_url||''}" placeholder="Вебсајт">
-      </div>
-      <button class="btn btn-orange" onclick="saveInfo()">💾 Зачувај промени</button>
-      <div style="margin-top:12px;text-align:center">
-        <a href="/profile.html?id=${majstor.id}" target="_blank" style="color:#ff6b35;font-size:13px">👁️ Види јавен профил →</a>
-      </div>
-    </div>`;
+  document.getElementById('main').innerHTML=
+    banner +
+    '<div class="card">' +
+      '<h2>📝 Основни информации</h2>' +
+      '<div class="grid-2">' +
+        '<input id="e-name" class="input" value="' + (majstor.name||'') + '" placeholder="Име">' +
+        '<input id="e-phone" class="input" value="' + (majstor.phone||'') + '" placeholder="Телефон">' +
+      '</div>' +
+      '<div class="grid-2">' +
+        '<select id="e-city" class="input">' + CITIES.map(c=>'<option value="'+c+'" '+(c===majstor.city?'selected':'')+'>'+c+'</option>').join('') + '</select>' +
+        '<select id="e-cat" class="input">' + Object.entries(CAT_NAMES).map(([k,v])=>'<option value="'+k+'" '+(k===majstor.category?'selected':'')+'>'+v+'</option>').join('') + '</select>' +
+      '</div>' +
+      '<textarea id="e-desc" class="input" rows="4" placeholder="Опис">' + (majstor.description||'') + '</textarea>' +
+      '<div class="grid-2">' +
+        '<input id="e-fb" class="input" value="' + (majstor.facebook_url||'') + '" placeholder="Facebook URL">' +
+        '<input id="e-web" class="input" value="' + (majstor.website_url||'') + '" placeholder="Вебсајт">' +
+      '</div>' +
+      '<button class="btn btn-orange" onclick="saveInfo()">💾 Зачувај промени</button>' +
+      '<div style="margin-top:12px;text-align:center"><a href="/profile.html?id=' + majstor.id + '" target="_blank" style="color:#ff6b35;font-size:13px">👁️ Види јавен профил →</a></div>' +
+    '</div>';
     
   document.getElementById('statusBadge').innerHTML = majstor.is_founder 
     ? '<span style="background:#4caf50;color:#000;padding:4px 10px;border-radius:20px;font-weight:800;font-size:11px">🚀 FOUNDER</span>' 
@@ -221,28 +189,26 @@ async function saveInfo(){
 }
 
 function renderGallery(){
-  document.getElementById('main').innerHTML=`
-    <div class="card">
-      <h2>🖼️ Галерија <span style="color:#888;font-weight:400">${media.length}/50</span></h2>
-      <div class="progress"><div class="progress-fill" style="width:${media.length/50*100}%"></div></div>
-      <p style="color:#888;font-size:13px;margin:10px 0">${media.length>=50?'Достигнат лимит':`Можеш да додадеш уште ${50-media.length} слики`}</p>
-      <div class="dropzone" onclick="document.getElementById('fileInput').click()">
-        <div style="font-size:24px">📤</div><b>Кликни за качување слики</b>
-        <input type="file" id="fileInput" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
-      </div>
-    </div>
-    <div class="card">
-      <div class="media-grid">
-        ${media.map(m=>`<div class="media-item"><img src="${m.url}"><div class="media-actions"><button class="icon-btn" onclick="deleteImg(${m.id})">🗑️</button></div></div>`).join('') || '<p style="color:#666;text-align:center;grid-column:1/-1">Нема слики уште</p>'}
-      </div>
-    </div>
-  `;
+  let gridHtml = media.map(m=>'<div class="media-item"><img src="'+m.url+'"><div class="media-actions"><button class="icon-btn" onclick="deleteImg('+m.id+')">🗑️</button></div></div>').join('');
+  if(media.length === 0) gridHtml = '<p style="color:#666;text-align:center;grid-column:1/-1">Нема слики уште</p>';
+
+  document.getElementById('main').innerHTML=
+    '<div class="card">' +
+      '<h2>🖼️ Галерија <span style="color:#888;font-weight:400">' + media.length + '/50</span></h2>' +
+      '<div class="progress"><div class="progress-fill" style="width:' + (media.length/50*100) + '%"></div></div>' +
+      '<p style="color:#888;font-size:13px;margin:10px 0">' + (media.length>=50?'Достигнат лимит':'Можеш да додадеш уште ' + (50-media.length) + ' слики') + '</p>' +
+      '<div class="dropzone" onclick="document.getElementById(\'fileInput\').click()">' +
+        '<div style="font-size:24px">📤</div><b>Кликни за качување слики</b>' +
+        '<input type="file" id="fileInput" hidden accept="image/*" multiple onchange="handleFiles(this.files)">' +
+      '</div>' +
+    '</div>' +
+    '<div class="card"><div class="media-grid">' + gridHtml + '</div></div>';
 }
 
 async function handleFiles(files){
   const toUpload = Array.from(files).slice(0, 50-media.length);
   for(const file of toUpload){
-    toast(`Се качува ${file.name}...`);
+    toast('Се качува ' + file.name + '...');
     const fd = new FormData(); fd.append('file', file);
     try {
       const up = await fetch('/api/upload', {method:'POST', body:fd});
@@ -258,7 +224,7 @@ async function handleFiles(files){
   }
   const r = await fetch('/api/media?majstor_id='+majstor.id); 
   media = await r.json(); 
-  document.getElementById('galCount').textContent=`${media.length}/50`; 
+  document.getElementById('galCount').textContent=media.length + '/50'; 
   renderGallery(); 
   toast('✅ Сликите се качени');
 }
@@ -272,29 +238,22 @@ async function deleteImg(id){
   }); 
   const r = await fetch('/api/media?majstor_id='+majstor.id); 
   media = await r.json(); 
-  document.getElementById('galCount').textContent=`${media.length}/50`; 
+  document.getElementById('galCount').textContent=media.length + '/50'; 
   renderGallery(); 
   toast('Избришано');
 }
 
 function renderStats(){
-  document.getElementById('main').innerHTML=`
-    <div class="stats-grid">
-      <div class="stat"><b>${majstor.views||0}</b><span>Прегледи</span></div>
-      <div class="stat"><b>${majstor.phone_clicks||0}</b><span>Кликови на тел</span></div>
-      <div class="stat"><b>${majstor.rating||0} (${majstor.rating_count||0})</b><span>Оценка</span></div>
-    </div>
-    <div class="card">
-      <h2>⭐ Оценки (${ratings.length})</h2>
-      ${ratings.length ? ratings.map(r=>`
-        <div class="rating">
-          <div>
-            <div style="color:#ffb84d">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-            <div style="margin-top:4px;color:#ccc;font-size:13px">${r.comment||''}</div>
-          </div>
-        </div>`).join('') : '<p style="color:#666;text-align:center">Нема оценки</p>'}
-    </div>
-  `;
+  let ratingsHtml = ratings.map(r=>'<div class="rating"><div><div style="color:#ffb84d">' + '★'.repeat(r.rating) + '☆'.repeat(5-r.rating) + '</div><div style="margin-top:4px;color:#ccc;font-size:13px">' + (r.comment||'') + '</div></div></div>').join('');
+  if(ratings.length === 0) ratingsHtml = '<p style="color:#666;text-align:center">Нема оценки</p>';
+
+  document.getElementById('main').innerHTML=
+    '<div class="stats-grid">' +
+      '<div class="stat"><b>' + (majstor.views||0) + '</b><span>Прегледи</span></div>' +
+      '<div class="stat"><b>' + (majstor.phone_clicks||0) + '</b><span>Кликови на тел</span></div>' +
+      '<div class="stat"><b>' + (majstor.rating||0) + ' (' + (majstor.rating_count||0) + ')</b><span>Оценка</span></div>' +
+    '</div>' +
+    '<div class="card"><h2>⭐ Оценки (' + ratings.length + ')</h2>' + ratingsHtml + '</div>';
 }
 
 function toast(msg){
