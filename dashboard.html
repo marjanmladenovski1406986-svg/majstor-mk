@@ -106,26 +106,41 @@ window.addEventListener('load', async()=>{
   currentUser = Clerk.user.primaryEmailAddress.emailAddress.trim();
   document.getElementById('userName').textContent = currentUser;
   
-  try {
-    // 1. Ги вчитуваме СИТЕ мајстори
+   try {
+    // 1. Ги земаме и мејлот и Clerk ID-то
+    const clerkId = Clerk.user.id;
+    
+    // 2. Ги вчитуваме сите мајстори
     const res = await fetch('/api/majstori');
     const data = await res.json();
     
-    // 2. Рачно го бараме нашиот профил по мејл
+    console.log("Базата врати:", data); // Ова ќе ни покаже во конзола
+    
     let foundProfile = null;
     if (Array.isArray(data)) {
-      foundProfile = data.find(m => m.email && m.email.toLowerCase().trim() === currentUser.toLowerCase().trim());
+      // 3. Бараме по Clerk ID (user_id) - најсигурно
+      foundProfile = data.find(m => m.user_id === clerkId || m.clerk_id === clerkId);
+      
+      // 4. Ако не најде, бараме по мејл
+      if (!foundProfile) {
+        foundProfile = data.find(m => m.email && m.email.toLowerCase().trim() === currentUser.toLowerCase().trim());
+      }
     }
     
-    // 3. Ако не е најден, покажи грешка
+    // 5. Ако не е најден, покажи грешка
     if(!foundProfile || !foundProfile.id){
-      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Профилот не е пронајден</h2><p>Баравме мејл: <b>' + currentUser + '</b> во базата, но не го најдовме.</p><p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p></div>';
+      document.getElementById('main').innerHTML=`
+        <div class="card">
+          <h2>⚠️ Профилот не е пронајден</h2>
+          <p>Баравме Clerk ID: <b>${clerkId}</b> и мејл: <b>${currentUser}</b> во базата, но не ги најдовме.</p>
+          <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p>
+        </div>`;
       return;
     }
     
     majstor = foundProfile;
     
-    // 4. Вчитување на слики и оценки
+    // 6. Вчитување на слики и оценки
     const [mRes,rRes] = await Promise.all([
       fetch('/api/media?majstor_id='+majstor.id), 
       fetch('/api/ratings?majstor_id='+majstor.id)
@@ -138,7 +153,7 @@ window.addEventListener('load', async()=>{
     renderInfo();
     
   } catch(e) {
-    document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>' + e.message + '</p></div>';
+    document.getElementById('main').innerHTML=`<div class="card"><h2>❌ Грешка</h2><p>${e.message}</p></div>`;
   }
 });
 
