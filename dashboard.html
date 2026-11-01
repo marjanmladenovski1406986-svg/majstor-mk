@@ -62,7 +62,6 @@ textarea.input{resize:vertical}
 </header>
 
 <div class="container">
-  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar" style="display:none;">
     <div class="tab active" data-tab="info" onclick="switchTab('info')">📝 Основни <span class="count">•</span></div>
     <div class="tab" data-tab="gallery" onclick="switchTab('gallery')">🖼️ Галерија <span class="count" id="galCount">0/50</span></div>
@@ -73,7 +72,6 @@ textarea.input{resize:vertical}
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main" id="main">
     <div class="loading">Вчитувам дашборд...</div>
   </div>
@@ -109,16 +107,25 @@ window.addEventListener('load', async()=>{
   document.getElementById('userName').textContent = currentUser;
   
   try {
-    const res = await fetch('/api/majstori?email=' + encodeURIComponent(currentUser));
+    // 1. Ги вчитуваме СИТЕ мајстори
+    const res = await fetch('/api/majstori');
     const data = await res.json();
     
-    if(!data || !data.id){
-      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Профилот не е пронајден</h2><p>API-то не врати податоци за мејлот: <b>' + currentUser + '</b></p><p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p></div>';
+    // 2. Рачно го бараме нашиот профил по мејл
+    let foundProfile = null;
+    if (Array.isArray(data)) {
+      foundProfile = data.find(m => m.email && m.email.toLowerCase().trim() === currentUser.toLowerCase().trim());
+    }
+    
+    // 3. Ако не е најден, покажи грешка
+    if(!foundProfile || !foundProfile.id){
+      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Профилот не е пронајден</h2><p>Баравме мејл: <b>' + currentUser + '</b> во базата, но не го најдовме.</p><p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p></div>';
       return;
     }
     
-    majstor = data;
+    majstor = foundProfile;
     
+    // 4. Вчитување на слики и оценки
     const [mRes,rRes] = await Promise.all([
       fetch('/api/media?majstor_id='+majstor.id), 
       fetch('/api/ratings?majstor_id='+majstor.id)
