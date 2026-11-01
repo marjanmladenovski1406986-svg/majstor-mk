@@ -27,21 +27,28 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .founder-banner .bar { height: 8px; background: #222; border-radius: 20px; overflow: hidden; flex: 1; min-width: 120px; max-width: 200px; }
 .founder-banner .fill { height: 100%; background: #ff6b35; }
 
-.city-filter { max-width: 600px; margin: 25px auto 20px; text-align: center; padding: 0 20px; }
-.city-filter select { width: 100%; max-width: 280px; padding: 10px 18px; background: #1a1a1a; border: 1px solid #333; border-radius: 25px; color: #fff; font-size: 14px; font-family: inherit; cursor: pointer; text-align: center; }
-.city-filter select:focus { outline: none; border-color: #ff6b35; }
+/* SEARCH BAR */
+.search-bar { max-width: 760px; margin: 32px auto; background: #161616; border: 1px solid #2a2a2a; border-radius: 16px; padding: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+.search-bar select, .search-bar button { padding: 14px 16px; border-radius: 10px; border: 1px solid #333; background: #222; color: #fff; font-size: 15px; }
+.search-bar select { flex: 1; min-width: 160px; }
+.search-bar button { flex: 0 0 140px; background: #ff6b35; border-color: #ff6b35; font-weight: 800; cursor: pointer; }
 
-.categories-wrapper { padding: 20px 0; overflow: hidden; }
-.categories { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-.categories::-webkit-scrollbar { display: none; }
-.cat-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 10px 18px; border-radius: 25px; cursor: pointer; font-size: 14px; font-family: inherit; white-space: nowrap; flex-shrink: 0; scroll-snap-align: start; }
-.cat-btn.active { background: #ff6b35; border-color: #ff6b35; }
-@media (min-width: 769px) { .categories { flex-wrap: wrap; justify-content: center; } }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.section { padding: 40px 0; }
+.section h2 { font-size: 28px; font-weight: 800; margin-bottom: 20px; }
+
+/* CATEGORIES GRID */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 12px; }
+.cat-card { background: #141414; border: 1px solid #262626; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; transition: .2s; }
+.cat-card:hover { border-color: #ff6b35; transform: translateY(-2px); }
+.cat-card .ico { font-size: 28px; margin-bottom: 8px; }
+.cat-card b { font-size: 14px; display: block;}
+.cat-card span { color: #666; font-size: 12px; display: block; margin-top: 4px; }
 
 .main-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 0 20px 40px; max-width: 1400px; margin: 0 auto; }
 .section-title { padding: 0 20px; margin-bottom: 20px; font-size: 22px; font-weight: 800; }
 
-/* ХОРИЗОНТАЛНО ЛИЗГАЊЕ НА МАЈСТОРИ */
+/* МАЈСТОРИ */
 .majstori-list { background: #1a1a1a; border-radius: 12px; padding: 15px; max-height: 700px; overflow-y: auto; }
 .majstori-list h3 { color: #ff6b35; margin-bottom: 15px; font-size: 18px; }
 .majstor-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(145deg, #2a2a2a, #1e1e1e); border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05); border: 1px solid #2a2a2a; text-decoration: none; }
@@ -53,7 +60,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .majstor-meta { font-size: 12px; color: #999; display: flex; gap: 8px; align-items: center; }
 .majstor-rating { color: #ffb84d; font-weight: 600; }
 
-/* МРЕЖА ЗА СЛИКИ (Најново) */
+/* НАЈНОВО (Слики) */
 .loading { text-align: center; color: #999; padding: 40px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
 .card { background: #1a1a1a; border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.2s; text-decoration: none; display: block;}
@@ -65,11 +72,22 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .card-author { font-size: 12px; color: #ff6b35; margin-bottom: 10px; }
 .card-meta { display: flex; justify-content: space-between; font-size: 13px; color: #999; }
 
-/* ПАРТНЕР БАНЕР */
+/* ПАРТНЕР */
 .partner-banner { display: flex; align-items: center; gap: 18px; background: linear-gradient(145deg, #2a2a2a, #1e1e1e); border-radius: 12px; padding: 18px 22px; margin-bottom: 20px; text-decoration: none; border: 1px solid #2a2a2a; box-shadow: 0 4px 8px rgba(0,0,0,0.3); transition: all 0.3s ease; }
 .partner-banner:hover { border-color: #4da6ff; transform: translateY(-3px); }
 
-/* МОБИЛЕН ДИЗАЈН */
+/* ЦЕНИ */
+.pricing { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto; }
+.price-card { background: #141414; border: 1px solid #262626; border-radius: 20px; padding: 28px; text-align: center; }
+.price-card.founder { border-color: #ff6b35; position: relative; overflow: hidden; }
+.price-card.founder::before { content: 'ПОПУЛАРНО'; position: absolute; top: 14px; right: -30px; background: #ff6b35; color: #000; font-size: 10px; font-weight: 900; padding: 4px 40px; transform: rotate(35deg); }
+.price { font-size: 36px; font-weight: 900; margin: 12px 0; }
+.price small { font-size: 14px; color: #888; }
+.features { list-style: none; text-align: left; margin: 18px 0; }
+.features li { padding: 8px 0; border-bottom: 1px solid #1f1f1f; font-size: 14px; color:#ccc; }
+.features li::before { content: '✅ '; }
+
+/* МОБИЛЕН */
 @media (max-width: 768px) {
   .main-layout { grid-template-columns: 1fr; }
   .majstori-list { max-height: none; padding: 15px 0; }
@@ -81,6 +99,8 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   .majstor-info { width: 100%; }
   .majstor-name { font-size: 13px; }
   .majstor-meta { justify-content: center; flex-wrap: wrap; }
+  .search-bar { flex-direction: column; }
+  .search-bar button { flex: 1; width: 100%; }
 }
 
 /* ФУТЕР */
@@ -113,35 +133,45 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <div style="font-weight:800;color:#ff6b35" id="founderCount">0/50</div>
 </div>
 
-<div class="city-filter">
-  <select id="city-select" onchange="filterByCity(this.value)">
-    <option value="">📍 Сите градови</option>
+<!-- SEARCH BAR -->
+<div class="search-bar">
+  <select id="catFilter" onchange="filterCat(this.value)">
+    <option value="all">Сите категории</option>
+    <option value="elektrika">⚡ Електрика</option>
+    <option value="vodovod">💧 Водовод</option>
+    <option value="gradeznistvo">🏗️ Градежништво</option>
+    <option value="popravki">🔧 Поправки</option>
+    <option value="finalni">🎨 Финални работи</option>
+    <option value="plockari">🔲 Плочкари</option>
+    <option value="gipsari">🧱 Гипсари</option>
+    <option value="stolari">🚪 Столари</option>
+    <option value="klima">❄️ Клима</option>
+    <option value="greenje">🔥 Греење</option>
+    <option value="krov">🏠 Кров</option>
+    <option value="sanitarii">🚿 Санитарии</option>
+    <option value="pvc">🪟 ПВЦ</option>
+    <option value="dvorovi">🌳 Дворови</option>
+    <option value="cistenje">🧹 Чистење</option>
+    <option value="opti">🔨 Општи</option>
   </select>
+  <select id="cityFilter" onchange="filterByCity(this.value)">
+    <option value="">Сите градови</option>
+  </select>
+  <button onclick="scrollToMasters()">🔍 Барај</button>
 </div>
 
-<div class="categories-wrapper">
-  <div class="categories" id="categories-bar">
-    <button class="cat-btn active" data-cat="all" onclick="filterCat('all')">Сите</button>
-    <button class="cat-btn" data-cat="elektrika" onclick="filterCat('elektrika')">⚡ Електрика</button>
-    <button class="cat-btn" data-cat="vodovod" onclick="filterCat('vodovod')">💧 Водовод</button>
-    <button class="cat-btn" data-cat="gradeznistvo" onclick="filterCat('gradeznistvo')">🏗️ Градежништво</button>
-    <button class="cat-btn" data-cat="popravki" onclick="filterCat('popravki')">🔧 Поправки</button>
-    <button class="cat-btn" data-cat="finalni" onclick="filterCat('finalni')">🎨 Финални работи</button>
-    <button class="cat-btn" data-cat="plockari" onclick="filterCat('plockari')">🔲 Плочкари</button>
-    <button class="cat-btn" data-cat="gipsari" onclick="filterCat('gipsari')">🧱 Гипсари</button>
-    <button class="cat-btn" data-cat="stolari" onclick="filterCat('stolari')">🚪 Столари</button>
-    <button class="cat-btn" data-cat="klima" onclick="filterCat('klima')">❄️ Клима</button>
-    <button class="cat-btn" data-cat="greenje" onclick="filterCat('greenje')">🔥 Греење</button>
-    <button class="cat-btn" data-cat="krov" onclick="filterCat('krov')">🏠 Кров</button>
-    <button class="cat-btn" data-cat="sanitarii" onclick="filterCat('sanitarii')">🚿 Санитарии</button>
-    <button class="cat-btn" data-cat="pvc" onclick="filterCat('pvc')">🪟 ПВЦ</button>
-    <button class="cat-btn" data-cat="dvorovi" onclick="filterCat('dvorovi')">🌳 Дворови</button>
-    <button class="cat-btn" data-cat="cistenje" onclick="filterCat('cistenje')">🧹 Чистење</button>
-    <button class="cat-btn" data-cat="opti" onclick="filterCat('opti')">🔨 Општи</button>
+<!-- CATEGORIES GRID -->
+<div class="container">
+  <div class="section" id="kategorii">
+    <h2>Сите категории</h2>
+    <div class="cat-grid" id="catGrid">
+      <!-- Овде JS ќе ги вметне картичките -->
+    </div>
   </div>
 </div>
 
-<div class="main-layout">
+<!-- MAIN LAYOUT (МАЈСТОРИ И НАЈНОВО) -->
+<div class="main-layout" id="majstori-section">
   <!-- ЛЕВО: ЛИЗГАЊЕ НА МАЈСТОРИ -->
   <div class="majstori-list">
     <h3>👷 Мајстори</h3>
@@ -150,7 +180,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 
   <!-- ДЕСНО: ПАРТНЕР + НАЈНОВО -->
   <div>
-    <!-- Oglasise Banner -->
     <a href="https://oglasise.mk" target="_blank" class="partner-banner">
       <div style="width: 90px; height: 90px; border-radius: 10px; flex-shrink: 0; background: #fff; display:flex; align-items:center; justify-content:center; font-size: 40px;">📢</div>
       <div style="flex: 1;">
@@ -163,6 +192,43 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <h2 class="section-title">🔥 Најново</h2>
     <div class="loading" id="loading">Вчитувам слики...</div>
     <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<!-- PRICING SECTION -->
+<div class="container">
+  <div class="section" id="ceni">
+    <h2 style="text-align:center">Едноставни цени</h2>
+    <div class="pricing">
+      <div class="price-card founder">
+        <h3>🚀 FOUNDER</h3>
+        <div class="price">Бесплатно <small>/ засекогаш</small></div>
+        <p style="color:#ff6b35;font-weight:700">За првите 50 мајстори</p>
+        <ul class="features">
+          <li>50 слики од работа</li>
+          <li>Топ позиција засекогаш</li>
+          <li>🚀 Founder беџ</li>
+          <li>Статистика</li>
+          <li>Без провизија</li>
+        </ul>
+        <button onclick="openClerkSignUp()" style="width:100%; background:#ff6b35; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:700; cursor:pointer;">Пријави се бесплатно</button>
+        <p style="font-size:12px;color:#666;margin-top:10px" id="placesLeft">Останати 12 места</p>
+      </div>
+      <div class="price-card">
+        <h3>👑 PREMIUM</h3>
+        <div class="price">1000 ден <small>/ годишно</small></div>
+        <p style="color:#aaa">После првите 50</p>
+        <ul class="features">
+          <li>50 слики од работа</li>
+          <li>Приоритет во пребарување</li>
+          <li>Статистика</li>
+          <li>Оценки и коментари</li>
+          <li>Директен контакт</li>
+        </ul>
+        <button onclick="openClerkSignUp()" style="width:100%; background:transparent; border:1px solid #ff6b35; color:#ff6b35; padding:12px; border-radius:8px; font-weight:700; cursor:pointer;">Стани премиум</button>
+        <p style="font-size:12px;color:#666;margin-top:10px">83 ден / месечно</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -201,6 +267,7 @@ let currentCityFilter = '';
 
 window.addEventListener('load', async()=>{
   populateCities();
+  renderCatGrid();
   
   if(window.Clerk){
     await Clerk.load();
@@ -211,8 +278,25 @@ window.addEventListener('load', async()=>{
 });
 
 function populateCities(){
-  const citySelect = document.getElementById('city-select');
+  const citySelect = document.getElementById('cityFilter');
   CITIES.forEach(c => { citySelect.innerHTML += `<option value="${c}">📍 ${c}</option>`; });
+}
+
+function renderCatGrid(){
+  const grid = document.getElementById('catGrid');
+  const icons = {
+    elektrika:'⚡', vodovod:'💧', gradeznistvo:'🏗️', popravki:'🔧', finalni:'🎨',
+    plockari:'🔲', gipsari:'🧱', stolari:'🚪', klima:'❄️', greenje:'🔥',
+    krov:'🏠', sanitarii:'🚿', pvc:'🪟', dvorovi:'🌳', cistenje:'🧹', opti:'🔨'
+  };
+  
+  grid.innerHTML = Object.entries(CAT_NAMES).map(([k,v]) => `
+    <div class="cat-card" onclick="filterCat('${k}')" id="grid-cat-${k}">
+      <div class="ico">${icons[k]}</div>
+      <b>${v.split(' ').slice(1).join(' ')}</b>
+      <span id="count-${k}">...</span>
+    </div>
+  `).join('');
 }
 
 async function loadData(){
@@ -225,7 +309,15 @@ async function loadData(){
     document.getElementById('founderCount').textContent = `${count}/50`;
     document.getElementById('founderFill').style.width = `${Math.min(100, count/50*100)}%`;
     document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
+    const pl = document.getElementById('placesLeft'); if (pl) pl.textContent = left > 0 ? `Останати ${left} места` : `Пополнето`;
     
+    // Ажурирај ги бројачите во категориите
+    Object.keys(CAT_NAMES).forEach(k => {
+      const c = allMajstori.filter(m => m.category === k).length;
+      const el = document.getElementById('count-' + k);
+      if (el) el.textContent = c ? `${c} мајстори` : `0 мајстори`;
+    });
+
     renderMajstori();
 
     const mediaRes = await fetch('/api/media');
@@ -311,9 +403,14 @@ function renderMedia() {
 }
 
 function filterCat(cat) {
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`.cat-btn[data-cat="${cat}"]`).classList.add('active');
   currentFilter = cat;
+  document.getElementById('catFilter').value = cat;
+  
+  // Осветли ја картичката во мрежата
+  document.querySelectorAll('.cat-card').forEach(c => c.style.borderColor = '#262626');
+  const activeCard = document.getElementById('grid-cat-' + cat);
+  if(activeCard) activeCard.style.borderColor = '#ff6b35';
+
   renderMajstori();
   renderMedia();
 }
@@ -322,6 +419,10 @@ function filterByCity(city) {
   currentCityFilter = city;
   renderMajstori();
   renderMedia();
+}
+
+function scrollToMasters() {
+  document.getElementById('majstori-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function renderClerkHeader() {
