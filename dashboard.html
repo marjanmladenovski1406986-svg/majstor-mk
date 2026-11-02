@@ -91,7 +91,8 @@ function switchTab(t){
   if(t==='stats') renderStats();
 }
 
-window.addEventListener('load', async()=>{
+
+ window.addEventListener('load', async()=>{
   const email = localStorage.getItem('logged_email');
   const userType = localStorage.getItem('user_type');
 
@@ -108,50 +109,54 @@ window.addEventListener('load', async()=>{
     return;
   }
 
-  
-    try {
-  const res = await fetch('/api/majstori');
-  const data = await res.json();
-  let myProfile = null;
+  try {
+    const res = await fetch('/api/majstori');
+    const data = await res.json();
+    let myProfile = null;
 
-  // 1. Проверка дали сме админ и дали има admin_id во URL-то
-  const urlParams = new URLSearchParams(window.location.search);
-  const adminId = urlParams.get('admin_id');
-  const ADMIN_EMAILS = ['marjanmladenovski1406986@gmail.com', 'majsto.info@gmail.com'];
-  
-  if (adminId && ADMIN_EMAILS.includes(email.toLowerCase())) {
-    // Ако сме админ, го вчитуваме профилот на избраниот мајстор
-    myProfile = Array.isArray(data) ? data.find(m => m.id == adminId) : null;
+    // 1. Проверка дали сме админ (преку admin_id во URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    const adminId = urlParams.get('admin_id');
+    const ADMIN_EMAILS = ['marjanmladenovski1406986@gmail.com', 'majsto.info@gmail.com'];
     
-    // Додаваме мал банер за да знаеме дека сме во админ режим
-    document.getElementById('userName').innerHTML = `<span style="color:#ff6b35; font-weight:bold;">[АДМИН РЕЖИМ]</span> Уредуваш профил на: ${myProfile?.name || 'Непознат'}`;
-  } else {
-    // 2. Нормална најава (ако не сме админ, го бараме нашиот профил)
-    myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
-    document.getElementById('userName').textContent = email;
+    if (adminId && ADMIN_EMAILS.includes(email.toLowerCase())) {
+      myProfile = Array.isArray(data) ? data.find(m => m.id == adminId) : null;
+      document.getElementById('userName').innerHTML = `<span style="color:#ff6b35; font-weight:bold;">[АДМИН]</span> Уредуваш: ${myProfile?.name || 'Непознат'}`;
+    } else {
+      // 2. Нормална најава
+      myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
+    }
+    
+    if(!myProfile || !myProfile.id){
+      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p></div>';
+      return;
+    }
+    
+    majstor = myProfile;
+    
+    // Вчитување на слики и оценки со заштита (ако едната падне, другата пак ќе се вчита)
+    try {
+        const mRes = await fetch('/api/media?majstor_id='+majstor.id);
+        media = await mRes.json();
+        if(!Array.isArray(media)) media = []; 
+    } catch(e) { media = []; }
+
+    try {
+        const rRes = await fetch('/api/ratings?majstor_id='+majstor.id);
+        ratings = await rRes.json();
+        if(!Array.isArray(ratings)) ratings = [];
+    } catch(e) { ratings = []; }
+    
+    document.getElementById('galCount').textContent=media.length + '/50';
+    document.getElementById('sidebar').style.display='block';
+    renderInfo();
+    
+  } catch(e) {
+    document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
   }
+}); 
+
   
-  if(!myProfile || !myProfile.id){
-    document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p></div>';
-    return;
-  }
-  
-  majstor = myProfile;
-  const [mRes,rRes] = await Promise.all([
-    fetch('/api/media?majstor_id='+majstor.id), 
-    fetch('/api/ratings?majstor_id='+majstor.id)
-  ]);
-  media = await mRes.json(); 
-  ratings = await rRes.json();
-  
-  document.getElementById('galCount').textContent=media.length + '/50';
-  document.getElementById('sidebar').style.display='block';
-  renderInfo();
-  
-} catch(e) {
-  document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
-}
-});
 
 function renderInfo(){
   const isFounder = majstor.is_founder;
