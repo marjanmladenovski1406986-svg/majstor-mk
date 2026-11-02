@@ -143,6 +143,26 @@ export default {
           return out({ success: true });
         }
 
+// ===== ЗЕМИ ОЦЕНКИ НА ЧЕКАЊЕ (ЗА АДМИН) =====
+if (path === "/api/pending-ratings" && method === "GET") {
+  const ratings = await sql`
+    SELECT r.*, m.name as majstor_name 
+    FROM ratings r 
+    JOIN majstori m ON r.majstor_id = m.id 
+    WHERE r.status = 'pending' 
+    ORDER BY r.created_at DESC
+  `;
+  return out(ratings);
+}
+
+// ===== ОДОБРИ ОЦЕНКА (ЗА АДМИН) =====
+if (path === "/api/approve-rating" && method === "POST") {
+  const body = await request.json();
+  await sql`UPDATE ratings SET status = 'approved' WHERE id = ${body.id}`;
+  return out({ success: true });
+}
+        
+
         // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
         if (path === "/api/upload" && method === "POST") {
           const formData = await request.formData();
