@@ -167,16 +167,14 @@ function renderProfile(m, media, ratings){
   `;
 }
 
-async function submitRating(majstorId) {
-  // 1. Прво се осигурај дека Clerk е вчитан
-  if (window.Clerk && !window.Clerk.loaded) {
-    await window.Clerk.load();
-  }
 
-  // 2. Сега провери дали си најавен
-  if(!window.Clerk || !window.Clerk.user) {
-    alert("Мора да бидеш најавен за да оставиш оценка. Те пренасочувам кон најава...");
-    if(window.Clerk) window.Clerk.openSignIn();
+async function submitRating(majstorId) {
+  // 1. Проверка дали си најавен преку твојот локален систем
+  const userEmail = localStorage.getItem('logged_email');
+
+  if(!userEmail) {
+    alert("Мора да бидеш најавен за да оставиш оценка. Те пренасочувам кон почетна страна...");
+    window.location.href = '/'; // Врати го на почетна за да се најави
     return;
   }
 
@@ -192,26 +190,32 @@ async function submitRating(majstorId) {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        majstor_id: majstorId,
-        user_id: window.Clerk.user.id,
+        majstor_id: parseInt(majstorId),
+        user_id: userEmail, // Го користиме мејлот на корисникот како ID
         rating: parseInt(rating),
         comment: comment
       })
     });
+
+    const data = await res.json();
 
     if(res.ok) {
       msg.textContent = "✅ Благодариме за оценката! Таа ќе биде видлива по одобрување од администратор.";
       msg.style.color = "#6bff6b";
       document.getElementById('ratingComment').value = '';
     } else {
-      msg.textContent = "❌ Грешка при испраќање.";
+      msg.textContent = "❌ " + (data.error || "Грешка при испраќање.");
       msg.style.color = "#ff6b6b";
     }
   } catch(e) {
     msg.textContent = "❌ Грешка: " + e.message;
     msg.style.color = "#ff6b6b";
   }
-}
+}  
+
+
+  
+
 </script>
 </body>
 </html>
