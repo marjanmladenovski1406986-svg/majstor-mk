@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+u<!DOCTYPE html>
 <html lang="mk">
 <head>
 <meta charset="UTF-8">
@@ -310,7 +310,7 @@ function renderMajstori() {
         <button class="btn-verify ${m.verified?'active':''}" onclick="toggleMajstor(${m.id}, 'verified', ${!!m.verified})">✅</button>
         <button class="btn-feature ${m.featured?'active':''}" onclick="toggleMajstor(${m.id}, 'featured', ${!!m.featured})">⭐</button>
         <button class="btn-pause ${m.is_paused?'active':''}" onclick="toggleMajstor(${m.id}, 'is_paused', ${!!m.is_paused})">⏸</button>
-        <button class="btn-edit" onclick='openEditMajstor(${JSON.stringify(m)})'>✏️</button>
+        <button class="btn-edit" onclick="window.open('/dashboard.html?admin_id=${m.id}', '_blank')">✏️ Уреди како Админ</button>
         <button class="btn-delete" onclick="deleteMajstor(${m.id})">🗑️</button>
       </div>
     </div>`).join('');
