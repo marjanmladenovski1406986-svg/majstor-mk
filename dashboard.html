@@ -4,7 +4,6 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Дашборд — Majsto.mk</title>
 <link rel="icon" href="/icon-192.png"><meta name="theme-color" content="#ff6b35">
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Inter,system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
@@ -82,74 +81,44 @@ textarea.input{resize:vertical}
 <script>
 const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ",dvorovi:"🌳 Дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи"};
 const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
-let majstor=null, currentUser=null, media=[], ratings=[];
+let majstor=null, media=[], ratings=[];
 
 function switchTab(t){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  document.querySelector(`[data-tab="${t}"]`).classList.add('active');
+  document.querySelector('[data-tab="'+t+'"]').classList.add('active');
   if(t==='info') renderInfo();
   if(t==='gallery') renderGallery();
   if(t==='stats') renderStats();
 }
 
 window.addEventListener('load', async()=>{
-  if(!window.Clerk){document.getElementById('main').innerHTML='Clerk не е вчитан';return}
-  
-  await Clerk.load();
-  
-  if(!Clerk.user){
+  const email = localStorage.getItem('logged_email');
+  const userType = localStorage.getItem('user_type');
+
+  if(!email) {
     document.getElementById('main').innerHTML='<div class="card"><h2>🔒 Не си најавен</h2><p>Те пренасочувам кон најава...</p></div>';
     setTimeout(()=>{ window.location.href = '/'; }, 1500);
     return;
   }
 
-  const em = Clerk.user.primaryEmailAddress.emailAddress.trim();
-  document.getElementById('userName').textContent = em;
-  
-  // 1. ПРОВЕРКА ДАЛИ Е КЛИЕНТ
-  const pendingType = localStorage.getItem('pending_user_type');
-  if (pendingType === 'baram') {
-    try {
-      await fetch('/api/register-client', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          clerk_id: Clerk.user.id,
-          email: em,
-          name: Clerk.user.fullName || 'Клиент'
-        })
-      });
-    } catch(e) { console.log("API грешка:", e); }
-    
-    // Врати го клиентот на почетна веднаш
-    localStorage.removeItem('pending_user_type');
-    alert("✅ Успешно се регистриравте како Клиент! Сега можете да оставате оценки.");
-    window.location.href = '/';
+  document.getElementById('userName').textContent = email;
+
+  if(userType === 'client') {
+    document.getElementById('main').innerHTML='<div class="card"><h2>✅ Најавен си како Клиент</h2><p>Клиентите немаат Dashboard. Можеш да се вратиш на <a href="/" style="color:#ff6b35">почетна</a>.</p></div>';
     return;
   }
 
-  // 2. АКО НЕ Е КЛИЕНТ, БАРАМЕ МАЈСТОР
   try {
     const res = await fetch('/api/majstori');
     const data = await res.json();
-    
-    let myProfile = null;
-    if (Array.isArray(data)) {
-      myProfile = data.find(m => m.email && m.email.toLowerCase().trim() === em.toLowerCase().trim());
-    }
+    let myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
     
     if(!myProfile || !myProfile.id){
-      document.getElementById('main').innerHTML=`
-        <div class="card">
-          <h2>⚠️ Немате профил на мајстор</h2>
-          <p>Најавени сте како <b>${em}</b>, но овој мејл не е поврзан со мајстор.</p>
-          <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Кон почетна</a></p>
-        </div>`;
+      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p></div>';
       return;
     }
     
     majstor = myProfile;
-    
     const [mRes,rRes] = await Promise.all([
       fetch('/api/media?majstor_id='+majstor.id), 
       fetch('/api/ratings?majstor_id='+majstor.id)
@@ -162,7 +131,7 @@ window.addEventListener('load', async()=>{
     renderInfo();
     
   } catch(e) {
-    document.getElementById('main').innerHTML=`<div class="card"><h2>❌ Грешка</h2><p>${e.message}</p></div>`;
+    document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
   }
 });
 
@@ -178,6 +147,22 @@ function renderInfo(){
     banner +
     '<div class="card">' +
       '<h2>📝 Основни информации</h2>' +
+      '<div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px;">' +
+        '<div style="text-align:center;">' +
+          '<div style="width:80px; height:80px; border-radius:50%; background:#ff6b35; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; overflow:hidden; margin:0 auto 8px;">' +
+            (majstor.photo_url ? '<img src="'+majstor.photo_url+'" style="width:100%; height:100%; object-fit:cover;">' : (majstor.name||'?').charAt(0).toUpperCase()) +
+          '</div>' +
+          '<button class="btn-ghost" style="padding:6px 12px; border-radius:6px; border:1px solid #333; background:#222; color:#fff; font-size:12px; cursor:pointer;" onclick="document.getElementById(\'avatarInput\').click()">📸 Смени слика</button>' +
+          '<input type="file" id="avatarInput" hidden accept="image/*" onchange="uploadAvatar(this)">' +
+        '</div>' +
+        '<div style="text-align:center; flex:1; min-width:200px;">' +
+          '<div style="width:100%; max-width:300px; height:80px; border-radius:10px; background:#222 center/cover; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; color:#666; font-size:12px; background-image:url(\''+(majstor.cover_url||'')+'\')">' +
+            (majstor.cover_url ? '' : 'Нема банер') +
+          '</div>' +
+          '<button class="btn-ghost" style="padding:6px 12px; border-radius:6px; border:1px solid #333; background:#222; color:#fff; font-size:12px; cursor:pointer;" onclick="document.getElementById(\'coverInput\').click()">🖼️ Смени банер</button>' +
+          '<input type="file" id="coverInput" hidden accept="image/*" onchange="uploadCover(this)">' +
+        '</div>' +
+      '</div>' +
       '<div class="grid-2">' +
         '<input id="e-name" class="input" value="' + (majstor.name||'') + '" placeholder="Име">' +
         '<input id="e-phone" class="input" value="' + (majstor.phone||'') + '" placeholder="Телефон">' +
@@ -211,12 +196,40 @@ async function saveInfo(){
     facebook_url: document.getElementById('e-fb').value,
     website_url: document.getElementById('e-web').value
   };
-  const res = await fetch('/api/update-profile', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(body)
-  });
+  const res = await fetch('/api/update-profile', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
   toast(res.ok ? '✅ Зачувано' : 'Грешка при зачувување');
+}
+
+async function uploadAvatar(input) {
+  const file = input.files[0]; if(!file) return;
+  const compressed = await compressImage(file, 400, 0.8);
+  const fd = new FormData(); fd.append('file', compressed);
+  toast('Се качува...');
+  try {
+    const up = await fetch('/api/upload', {method:'POST', body:fd});
+    const j = await up.json();
+    if(j.secure_url) {
+      await fetch('/api/update-avatar', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:majstor.id, url:j.secure_url}) });
+      toast('✅ Сликата е сменета!');
+      setTimeout(() => window.location.reload(), 1000);
+    } else { toast('❌ Грешка: ' + (j.error || 'Непозната')); }
+  } catch(e) { toast('❌ Грешка: ' + e.message); }
+}
+
+async function uploadCover(input) {
+  const file = input.files[0]; if(!file) return;
+  const compressed = await compressImage(file, 1200, 0.7);
+  const fd = new FormData(); fd.append('file', compressed);
+  toast('Се качува...');
+  try {
+    const up = await fetch('/api/upload', {method:'POST', body:fd});
+    const j = await up.json();
+    if(j.secure_url) {
+      await fetch('/api/update-cover', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:majstor.id, url:j.secure_url}) });
+      toast('✅ Банерот е сменет!');
+      setTimeout(() => window.location.reload(), 1000);
+    } else { toast('❌ Грешка: ' + (j.error || 'Непозната')); }
+  } catch(e) { toast('❌ Грешка: ' + e.message); }
 }
 
 function renderGallery(){
@@ -240,16 +253,13 @@ async function handleFiles(files){
   const toUpload = Array.from(files).slice(0, 50-media.length);
   for(const file of toUpload){
     toast('Се качува ' + file.name + '...');
-    const fd = new FormData(); fd.append('file', file);
+    const compressed = await compressImage(file, 1200, 0.7);
+    const fd = new FormData(); fd.append('file', compressed);
     try {
       const up = await fetch('/api/upload', {method:'POST', body:fd});
       const j = await up.json();
       if(j.secure_url){
-        await fetch('/api/add-media', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image'})
-        });
+        await fetch('/api/add-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image'}) });
       }
     } catch(e) { toast('❌ Грешка: ' + e.message); }
   }
@@ -262,11 +272,7 @@ async function handleFiles(files){
 
 async function deleteImg(id){
   if(!confirm('Избриши?')) return; 
-  await fetch('/api/delete-media', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({id})
-  }); 
+  await fetch('/api/delete-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id}) }); 
   const r = await fetch('/api/media?majstor_id='+majstor.id); 
   media = await r.json(); 
   document.getElementById('galCount').textContent=media.length + '/50'; 
@@ -287,17 +293,41 @@ function renderStats(){
     '<div class="card"><h2>⭐ Оценки (' + ratings.length + ')</h2>' + ratingsHtml + '</div>';
 }
 
-function toast(msg){
-  const t = document.getElementById('toast'); 
-  t.textContent = msg; 
-  t.classList.add('show'); 
-  setTimeout(()=>t.classList.remove('show'), 3000);
-}
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
 function logout() {
-  if(window.Clerk) {
-    Clerk.signOut().then(() => { location.href = '/'; });
-  }
+  localStorage.removeItem('logged_email');
+  localStorage.removeItem('user_type');
+  location.href = '/';
+}
+
+// АЛАТКА ЗА КОМПРЕСИЈА НА СЛИКИ
+function compressImage(file, maxWidth = 1200, quality = 0.7) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      const img = new Image();
+      img.src = e.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg', lastModified: Date.now() });
+          resolve(newFile);
+        }, 'image/jpeg', quality);
+      };
+    };
+  });
 }
 </script>
 </body>
