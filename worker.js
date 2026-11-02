@@ -204,28 +204,36 @@ export default {
           return out({ success: true });
         }
 
-        // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
+        // ===== КАЧУВАЊЕ НА СЛИКА (ImageKit) =====
         if (path === "/api/upload" && method === "POST") {
-          if (!env.IMGBB_API_KEY) {
-            return out({ error: "Клучот IMGBB_API_KEY не е поставен во Cloudflare!" }, 500);
+          if (!env.IMAGEKIT_PRIVATE_KEY || !env.IMAGEKIT_URL_ENDPOINT) {
+            return out({ error: "ImageKit клучевите не се поставени во Cloudflare!" }, 500);
           }
 
           const fd = await request.formData();
           const file = fd.get('file');
           if (!file) return out({ error: "Нема слика" }, 400);
-          
-          const imgbb = new FormData(); 
-          imgbb.append('image', file);
-          
+
+          const imagekitData = new FormData();
+          imagekitData.append('file', file);
+          imagekitData.append('fileName', `majsto_${Date.now()}.jpg`);
+
           try {
-            const res = await fetch(`https://api.imgbb.com/1/upload?key=${env.IMGBB_API_KEY}`, { method: 'POST', body: imgbb });
+            const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
+            
+            const res = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
+              method: 'POST',
+              headers: { 'Authorization': `Basic ${auth}` },
+              body: imagekitData
+            });
+            
             const json = await res.json();
             
-            if (!json.success || !json.data?.url) {
-              return out({ error: json.error?.message || "ImgBB не ја прифати сликата" }, 500);
+            if (!res.ok || !json.url) {
+              return out({ error: json.message || "ImageKit не ја прифати сликата" }, 500);
             }
             
-            return out({ secure_url: json.data.url, url: json.data.url });
+            return out({ secure_url: json.url, url: json.url });
           } catch (err) {
             return out({ error: "Мрежна грешка при качување: " + err.message }, 500);
           }
