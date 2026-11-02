@@ -27,13 +27,11 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .founder-banner .bar { height: 8px; background: #222; border-radius: 20px; overflow: hidden; flex: 1; min-width: 120px; max-width: 200px; }
 .founder-banner .fill { height: 100%; background: #ff6b35; }
 
-/* SEARCH BAR */
 .search-bar { max-width: 760px; margin: 32px auto; background: #161616; border: 1px solid #2a2a2a; border-radius: 16px; padding: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
 .search-bar select, .search-bar button { padding: 14px 16px; border-radius: 10px; border: 1px solid #333; background: #222; color: #fff; font-size: 15px; }
 .search-bar select { flex: 1; min-width: 160px; }
 .search-bar button { flex: 0 0 140px; background: #ff6b35; border-color: #ff6b35; font-weight: 800; cursor: pointer; }
 
-/* СТАРИ ЛИЗГАЧКИ КАТЕГОРИИ */
 .categories-wrapper { padding: 20px 0; overflow: hidden; }
 .categories { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
 .categories::-webkit-scrollbar { display: none; }
@@ -41,11 +39,9 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .cat-btn.active { background: #ff6b35; border-color: #ff6b35; }
 @media (min-width: 769px) { .categories { flex-wrap: wrap; justify-content: center; } }
 
-/* ГЛАВЕН РАСПОРЕД (Мајстори лево, Партнер десно) */
 .main-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 0 20px 40px; max-width: 1400px; margin: 0 auto; }
 .section-title { padding: 0 20px; margin-bottom: 20px; font-size: 22px; font-weight: 800; }
 
-/* ЛИЗГАЊЕ НА МАЈСТОРИ */
 .majstori-list { background: #1a1a1a; border-radius: 12px; padding: 15px; max-height: 700px; overflow-y: auto; }
 .majstori-list h3 { color: #ff6b35; margin-bottom: 15px; font-size: 18px; }
 .majstor-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(145deg, #2a2a2a, #1e1e1e); border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05); border: 1px solid #2a2a2a; text-decoration: none; }
@@ -57,7 +53,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .majstor-meta { font-size: 12px; color: #999; display: flex; gap: 8px; align-items: center; }
 .majstor-rating { color: #ffb84d; font-weight: 600; }
 
-/* МРЕЖА ЗА СЛИКИ (Најново) */
 .loading { text-align: center; color: #999; padding: 40px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
 .card { background: #1a1a1a; border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.2s; text-decoration: none; display: block;}
@@ -69,11 +64,9 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .card-author { font-size: 12px; color: #ff6b35; margin-bottom: 10px; }
 .card-meta { display: flex; justify-content: space-between; font-size: 13px; color: #999; }
 
-/* ПАРТНЕР */
 .partner-banner { display: flex; align-items: center; gap: 18px; background: linear-gradient(145deg, #2a2a2a, #1e1e1e); border-radius: 12px; padding: 18px 22px; margin-bottom: 20px; text-decoration: none; border: 1px solid #2a2a2a; box-shadow: 0 4px 8px rgba(0,0,0,0.3); transition: all 0.3s ease; }
 .partner-banner:hover { border-color: #4da6ff; transform: translateY(-3px); }
 
-/* ЦЕНИ */
 .pricing { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto; }
 .price-card { background: #141414; border: 1px solid #262626; border-radius: 20px; padding: 28px; text-align: center; }
 .price-card.founder { border-color: #ff6b35; position: relative; overflow: hidden; }
@@ -84,7 +77,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .features li { padding: 8px 0; border-bottom: 1px solid #1f1f1f; font-size: 14px; color:#ccc; }
 .features li::before { content: '✅ '; }
 
-/* МОБИЛЕН */
 @media (max-width: 768px) {
   .main-layout { grid-template-columns: 1fr; }
   .majstori-list { max-height: none; padding: 15px 0; }
@@ -100,7 +92,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   .search-bar button { flex: 1; width: 100%; }
 }
 
-/* ФУТЕР */
 .footer { background: #1a1a1a; padding: 40px 20px 20px; border-top: 1px solid #2a2a2a; color: #999; margin-top: 40px;}
 .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-bottom: 30px; }
 .footer-column h4 { color: #ff6b35; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
@@ -123,14 +114,12 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <p>Само верификувани мајстори. Слики од реална работа. Без измами, без провизија.</p>
 </section>
 
-<!-- FOUNDER BANNER -->
 <div class="founder-banner">
   <div><b>🎉 Првите 50 мајстори БЕСПЛАТНО</b><br><span style="color:#aaa;font-size:13px" id="founderText">Вчитувам...</span></div>
   <div class="bar"><div class="fill" id="founderFill" style="width:0%"></div></div>
   <div style="font-weight:800;color:#ff6b35" id="founderCount">0/50</div>
 </div>
 
-<!-- SEARCH BAR -->
 <div class="search-bar">
   <select id="cityFilter" onchange="filterByCity(this.value)">
     <option value="">📍 Сите градови</option>
@@ -138,7 +127,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <button onclick="scrollToMasters()">🔍 Барај</button>
 </div>
 
-<!-- СТАРИ ЛИЗГАЧКИ КАТЕГОРИИ -->
 <div class="categories-wrapper">
   <div class="categories" id="categories-bar">
     <button class="cat-btn active" data-cat="all" onclick="filterCat('all', this)">Сите</button>
@@ -161,15 +149,12 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   </div>
 </div>
 
-<!-- MAIN LAYOUT (МАЈСТОРИ И НАЈНОВО) -->
 <div class="main-layout" id="majstori-section">
-  <!-- ЛЕВО: ЛИЗГАЊЕ НА МАЈСТОРИ -->
   <div class="majstori-list">
     <h3>👷 Мајстори</h3>
     <div id="majstori-grid"></div>
   </div>
 
-  <!-- ДЕСНО: ПАРТНЕР + НАЈНОВО -->
   <div>
     <a href="https://oglasise.mk" target="_blank" class="partner-banner">
       <div style="width: 90px; height: 90px; border-radius: 10px; flex-shrink: 0; background: #fff; display:flex; align-items:center; justify-content:center; font-size: 40px;">📢</div>
@@ -186,10 +171,9 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   </div>
 </div>
 
-<!-- PRICING SECTION -->
 <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 20px;">
   <div class="section" id="ceni">
-    <h2 style="text-align:center">Едноставни цени</h2>
+    <h2 style="text-align:center; margin-bottom:20px;">Едноставни цени</h2>
     <div class="pricing">
       <div class="price-card founder">
         <h3>🚀 FOUNDER</h3>
@@ -202,7 +186,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
           <li>Статистика</li>
           <li>Без провизија</li>
         </ul>
-        <button onclick="openClerkSignUp()" style="width:100%; background:#ff6b35; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:700; cursor:pointer;">Пријави се бесплатно</button>
+        <button onclick="openChoiceModal()" style="width:100%; background:#ff6b35; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:700; cursor:pointer;">Пријави се бесплатно</button>
         <p style="font-size:12px;color:#666;margin-top:10px" id="placesLeft">Останати 12 места</p>
       </div>
       <div class="price-card">
@@ -216,7 +200,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
           <li>Оценки и коментари</li>
           <li>Директен контакт</li>
         </ul>
-        <button onclick="openClerkSignUp()" style="width:100%; background:transparent; border:1px solid #ff6b35; color:#ff6b35; padding:12px; border-radius:8px; font-weight:700; cursor:pointer;">Стани премиум</button>
+        <button onclick="openChoiceModal()" style="width:100%; background:transparent; border:1px solid #ff6b35; color:#ff6b35; padding:12px; border-radius:8px; font-weight:700; cursor:pointer;">Стани премиум</button>
         <p style="font-size:12px;color:#666;margin-top:10px">83 ден / месечно</p>
       </div>
     </div>
@@ -232,7 +216,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     </div>
     <div class="footer-column">
       <h4>ЗА ПРОФЕСИОНАЛЦИ</h4>
-      <a href="#" onclick="event.preventDefault(); openClerkSignUp();">Регистрација</a>
+      <a href="#" onclick="event.preventDefault(); openChoiceModal();">Регистрација</a>
       <a href="/dashboard.html">Мој Профил</a>
     </div>
     <div class="footer-column">
@@ -258,12 +242,7 @@ let currentCityFilter = '';
 
 window.addEventListener('load', async()=>{
   populateCities();
-  
-  if(window.Clerk){
-    await Clerk.load();
-    renderClerkHeader();
-  }
-
+  if(window.Clerk){ await Clerk.load(); renderClerkHeader(); }
   loadData();
 });
 
@@ -276,54 +255,28 @@ async function loadData(){
   try {
     const mRes = await fetch('/api/majstori');
     allMajstori = await mRes.json();
-    
     const count = allMajstori.length;
     const left = Math.max(0, 50 - count);
     document.getElementById('founderCount').textContent = `${count}/50`;
     document.getElementById('founderFill').style.width = `${Math.min(100, count/50*100)}%`;
     document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
     const pl = document.getElementById('placesLeft'); if (pl) pl.textContent = left > 0 ? `Останати ${left} места` : `Пополнето`;
-    
     renderMajstori();
-
     const mediaRes = await fetch('/api/media');
     allMedia = await mediaRes.json();
     document.getElementById('loading').style.display = 'none';
     renderMedia();
-
-  } catch(e) {
-    console.error("Грешка:", e);
-    document.getElementById('loading').textContent = "Грешка при вчитување.";
-  }
+  } catch(e) { console.error("Грешка:", e); }
 }
 
 function renderMajstori() {
   const grid = document.getElementById('majstori-grid');
   let filtered = allMajstori.filter(m => currentFilter === 'all' || m.category === currentFilter);
   if(currentCityFilter) filtered = filtered.filter(m => m.city === currentCityFilter);
-
-  if(filtered.length === 0) {
-    grid.innerHTML = '<p style="color:#666;padding:15px;">Нема мајстори во оваа категорија.</p>';
-    return;
-  }
-
+  if(filtered.length === 0) { grid.innerHTML = '<p style="color:#666;padding:15px;">Нема мајстори во оваа категорија.</p>'; return; }
   grid.innerHTML = filtered.map(m => {
-    const avatar = (m.photo_url && m.photo_url.startsWith('http')) 
-      ? `<img src="${m.photo_url}">` 
-      : (m.name || '?').charAt(0).toUpperCase();
-      
-    return `
-      <a href="/profile.html?id=${m.id}" class="majstor-card">
-        <div class="majstor-avatar">${avatar}</div>
-        <div class="majstor-info">
-          <div class="majstor-name">${m.name || 'Мајстор'}</div>
-          <div class="majstor-meta">
-            <span>${CAT_NAMES[m.category] || m.category}</span>
-            <span class="majstor-rating">⭐ ${Number(m.rating||0).toFixed(1)}</span>
-          </div>
-        </div>
-      </a>
-    `;
+    const avatar = (m.photo_url && m.photo_url.startsWith('http')) ? `<img src="${m.photo_url}">` : (m.name || '?').charAt(0).toUpperCase();
+    return `<a href="/profile.html?id=${m.id}" class="majstor-card"><div class="majstor-avatar">${avatar}</div><div class="majstor-info"><div class="majstor-name">${m.name || 'Мајстор'}</div><div class="majstor-meta"><span>${CAT_NAMES[m.category] || m.category}</span><span class="majstor-rating">⭐ ${Number(m.rating||0).toFixed(1)}</span></div></div></a>`;
   }).join('');
 }
 
@@ -334,37 +287,17 @@ function renderMedia() {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     return majstor && majstor.category === currentFilter;
   });
-
   if(currentCityFilter) {
     filtered = filtered.filter(m => {
       const majstor = allMajstori.find(x => x.id == m.majstor_id);
       return majstor && majstor.city === currentCityFilter;
     });
   }
-
-  if(filtered.length === 0) {
-    grid.innerHTML = '<p style="color:#666;padding:15px;">Нема слики во оваа категорија.</p>';
-    return;
-  }
-
+  if(filtered.length === 0) { grid.innerHTML = '<p style="color:#666;padding:15px;">Нема слики во оваа категорија.</p>'; return; }
   grid.innerHTML = filtered.slice(0, 12).map(m => {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     const author = majstor ? majstor.name : 'Мајстор';
-    
-    return `
-      <a href="/profile.html?id=${m.majstor_id}" class="card">
-        <div class="thumb no-play">
-          <img loading="lazy" src="${m.url}" alt="Слика">
-        </div>
-        <div class="card-body">
-          <div class="card-title">📸 Слика од работа</div>
-          <div class="card-author">👤 ${author}</div>
-          <div class="card-meta">
-            <span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span>
-          </div>
-        </div>
-      </a>
-    `;
+    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}" alt="Слика"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span></div></div></a>`;
   }).join('');
 }
 
@@ -372,7 +305,6 @@ function filterCat(cat, btn) {
   currentFilter = cat;
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  
   renderMajstori();
   renderMedia();
   scrollToMasters();
@@ -391,7 +323,6 @@ function scrollToMasters() {
 function renderClerkHeader() {
   const clerkHeader = document.getElementById('clerk-header');
   clerkHeader.innerHTML = '';
-
   if(window.Clerk.user){
     const profileBtn = document.createElement('a');
     profileBtn.href = '/dashboard.html';
@@ -399,20 +330,54 @@ function renderClerkHeader() {
     profileBtn.style.cssText = 'background:#2a2a2a; color:#fff; border:1px solid #ff6b35; padding:8px 15px; border-radius:8px; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:8px; margin-right:10px;';
     profileBtn.innerHTML = `👤 Мој Профил`;
     clerkHeader.appendChild(profileBtn);
-
     window.Clerk.mountUserButton(clerkHeader, { afterSignOutUrl: '/' });
   } else {
     const loginBtn = document.createElement('button');
     loginBtn.className = 'btn-auth';
     loginBtn.style.cssText = 'background:#ff6b35; color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer;';
     loginBtn.textContent = 'Најава / Регистрација';
-    loginBtn.onclick = () => window.Clerk.openSignIn({ afterSignInUrl: '/dashboard.html' });
+    loginBtn.onclick = () => openChoiceModal();
     clerkHeader.appendChild(loginBtn);
   }
 }
 
-function openClerkSignUp() {
-  if(window.Clerk) window.Clerk.openSignUp({ afterSignUpUrl: '/dashboard.html' });
+// ===== ФУНКЦИИ ЗА МОДАЛОТ =====
+function openChoiceModal() {
+  if(document.getElementById('choiceModal')) {
+    document.getElementById('choiceModal').style.display = 'flex';
+    return;
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'choiceModal';
+  modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+
+  modal.innerHTML = `
+    <div style="background:#141414;border:1px solid #333;border-radius:20px;padding:30px;max-width:400px;width:100%;text-align:center;position:relative;">
+      <button onclick="document.getElementById('choiceModal').style.display='none'" style="position:absolute;top:10px;right:15px;background:transparent;border:none;color:#999;font-size:24px;cursor:pointer;">✕</button>
+      <h2 style="color:#ff6b35;margin-bottom:20px;font-size:22px;">Како сакаш да се регистрираш?</h2>
+      
+      <button onclick="chooseRole('majstor')" style="width:100%;padding:16px;background:#ff6b35;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;">
+        🦺 Стани мајстор
+      </button>
+      
+      <button onclick="chooseRole('baram')" style="width:100%;padding:16px;background:#2a2a2a;color:#fff;border:1px solid #ff6b35;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;">
+        🔍 Барам мајстор
+      </button>
+      
+      <p style="color:#666;font-size:12px;margin-top:16px;">Веќе имаш сметка? <a href="#" onclick="event.preventDefault(); document.getElementById('choiceModal').style.display='none'; window.Clerk.openSignIn({afterSignInUrl:'/dashboard.html'});" style="color:#ff6b35;">Најави се</a></p>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+function chooseRole(role) {
+  localStorage.setItem('pending_user_type', role);
+  document.getElementById('choiceModal').style.display = 'none';
+  if(window.Clerk) {
+    window.Clerk.openSignUp({ afterSignUpUrl: '/dashboard.html' });
+  }
 }
 </script>
 </body>
