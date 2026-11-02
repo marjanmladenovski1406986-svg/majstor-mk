@@ -105,6 +105,28 @@ window.addEventListener('load', async()=>{
 
   currentUser = Clerk.user.primaryEmailAddress.emailAddress.trim();
   document.getElementById('userName').textContent = currentUser;
+
+    // Проверка дали корисникот доаѓа како КЛИЕНТ
+  const pendingType = localStorage.getItem('pending_user_type');
+  if (pendingType === 'baram') {
+    try {
+      await fetch('/api/register-client', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          clerk_id: Clerk.user.id,
+          email: currentUser,
+          name: Clerk.user.fullName || 'Клиент'
+        })
+      });
+      localStorage.removeItem('pending_user_type');
+      alert("✅ Успешно се регистриравте како Клиент! Сега можете да оставате оценки.");
+      window.location.href = '/'; // Врати го на почетна
+      return; // Спречи го вчитувањето на Dashboard-от за мајстори
+    } catch(e) {
+      console.error("Грешка при регистрација на клиент:", e);
+    }
+  }
   
    try {
     // 1. Директно го вчитуваме профилот со ID 29 (твојот профил)
