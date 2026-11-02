@@ -38,9 +38,7 @@ export default {
 
         if (path === "/api/toggle-majstor" && method === "POST") {
           const b = await request.json();
-          // b.field може да биде 'verified', 'featured', 'is_paused'
-          const query = sql`UPDATE majstori SET ${sql(b.field)} = ${b.value} WHERE id = ${b.id}`;
-          await query;
+          await sql`UPDATE majstori SET ${sql(b.field)} = ${b.value} WHERE id = ${b.id}`;
           return out({ success: true });
         }
 
@@ -50,17 +48,48 @@ export default {
           return out({ success: true });
         }
 
-        // ===== КЛИЕНТИ =====
-        if (path === "/api/clients" && method === "GET") {
-          return out(await sql`SELECT * FROM clients ORDER BY id DESC`);
+        // ===== МЕДИА (Слики) - ОВА БЕШЕ ИЗБРИШАНО =====
+        if (path === "/api/media" && method === "GET") {
+          const majstorId = url.searchParams.get('majstor_id');
+          let media;
+          if (majstorId) {
+            media = await sql`SELECT * FROM majstor_media WHERE majstor_id=${majstorId} AND type='image' ORDER BY id DESC`;
+          } else {
+            media = await sql`SELECT * FROM majstor_media WHERE type='image' ORDER BY id DESC LIMIT 300`;
+          }
+          return out(media);
         }
-        if (path === "/api/delete-client" && method === "POST") {
+
+        if (path === "/api/add-media" && method === "POST") {
           const b = await request.json();
-          await sql`DELETE FROM clients WHERE id=${b.id}`;
+          const result = await sql`INSERT INTO majstor_media (majstor_id, type, url, title) VALUES (${b.majstor_id}, 'image', ${b.url}, 'Слика од работа') RETURNING *`;
+          return out(result[0]);
+        }
+
+        if (path === "/api/delete-media" && method === "POST") {
+          const b = await request.json();
+          await sql`DELETE FROM majstor_media WHERE id=${b.id}`;
           return out({ success: true });
         }
 
-        // ===== ОЦЕНКИ (МОДЕРАЦИЈА) =====
+        // ===== ОЦЕНКИ =====
+        if (path === "/api/ratings" && method === "GET") {
+          const majstorId = url.searchParams.get('majstor_id');
+          let ratings;
+          if (majstorId) {
+            ratings = await sql`SELECT * FROM ratings WHERE majstor_id=${majstorId} AND status='approved' ORDER BY created_at DESC`;
+          } else {
+            ratings = await sql`SELECT * FROM ratings WHERE status='approved' ORDER BY created_at DESC LIMIT 100`;
+          }
+          return out(ratings);
+        }
+        
+        if (path === "/api/add-rating" && method === "POST") {
+          const b = await request.json();
+          await sql`INSERT INTO ratings (majstor_id, user_id, rating, comment, status) VALUES (${b.majstor_id}, ${b.user_id}, ${b.rating}, ${b.comment || ''}, 'pending')`;
+          return out({ success: true });
+        }
+
         if (path === "/api/pending-ratings" && method === "GET") {
           return out(await sql`SELECT r.*, m.name as majstor_name FROM ratings r JOIN majstori m ON r.majstor_id = m.id WHERE r.status = 'pending' ORDER BY r.created_at DESC`);
         }
@@ -72,6 +101,16 @@ export default {
         if (path === "/api/reject-rating" && method === "POST") {
           const b = await request.json();
           await sql`DELETE FROM ratings WHERE id = ${b.id}`;
+          return out({ success: true });
+        }
+
+        // ===== КЛИЕНТИ =====
+        if (path === "/api/clients" && method === "GET") {
+          return out(await sql`SELECT * FROM clients ORDER BY id DESC`);
+        }
+        if (path === "/api/delete-client" && method === "POST") {
+          const b = await request.json();
+          await sql`DELETE FROM clients WHERE id=${b.id}`;
           return out({ success: true });
         }
 
@@ -119,7 +158,7 @@ export default {
           return out({ success: true });
         }
 
-        // ===== ОСТАНАТИ (Слики, Најава, Статистика) =====
+        // ===== НАЈАВА И ПРОФИЛ =====
         if (path === "/api/login-user" && method === "POST") {
           const b = await request.json();
           const m = await sql`SELECT id, password FROM majstori WHERE LOWER(email)=LOWER(${b.email}) LIMIT 1`;
@@ -129,6 +168,43 @@ export default {
           return out({ error: 'Погрешен мејл или лозинка.' }, 401);
         }
 
+        if (path === "/api/register-user" && method === "POST") {
+          const b = await request.json();
+          const checkM = await sql`SELECT id FROM majstori WHERE LOWER(email)=LOWER(${b.email})`;
+          const checkC = await sql`SELECT id FROM clients WHERE LOWER(email)=LOWER(${b.email})`;
+          if(checkM.length > 0 || checkC.length > 0) return out({ error: "Овој мејл веќе постои." }, 400);
+          if(b.isMajstor) await sql`INSERT INTO majstori (email, password, name, category, city) VALUES (${b.email}, ${b.password}, 'Нов Мајстор', 'opti', 'Скопје')`;
+          else await sql`INSERT INTO clients (email, password, name) VALUES (${b.email}, ${b.password}, 'Клиент')`;
+          return out({ success: true });
+        }
+
+        if (path === "/api/update-profile" && method === "POST") {
+          const b = await request.json();
+          await sql`UPDATE majstori SET name=${b.name}, phone=${b.phone}, city=${b.city}, category=${b.category}, description=${b.description||''}, facebook_url=${b.facebook_url||null}, website_url=${b.website_url||null} WHERE id=${b.id}`;
+          return out({ success: true });
+        }
+        if (path === "/api/update-avatar" && method === "POST") {
+          const b = await request.json();
+          await sql`UPDATE majstori SET photo_url=${b.url} WHERE id=${b.id}`;
+          return out({ success: true });
+        }
+        if (path === "/api/update-cover" && method === "POST") {
+          const b = await request.json();
+          await sql`UPDATE majstori SET cover_url=${b.url} WHERE id=${b.id}`;
+          return out({ success: true });
+        }
+
+        // ===== СТАТИСТИКА =====
+        if (path === "/api/track" && method === "POST") {
+          const b = await request.json();
+          try {
+            if(b.type==='view') await sql`UPDATE majstori SET views = COALESCE(views,0)+1 WHERE id=${b.majstor_id}`;
+            if(b.type==='phone') await sql`UPDATE majstori SET phone_clicks = COALESCE(phone_clicks,0)+1 WHERE id=${b.majstor_id}`;
+          } catch(e){ console.log(e.message); }
+          return out({ success: true });
+        }
+
+        // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
         if (path === "/api/upload" && method === "POST") {
           const fd = await request.formData();
           const file = fd.get('file');
@@ -136,7 +212,7 @@ export default {
           const imgbb = new FormData(); imgbb.append('image', file);
           const res = await fetch(`https://api.imgbb.com/1/upload?key=${env.IMGBB_API_KEY}`, { method: 'POST', body: imgbb });
           const json = await res.json();
-          return out({ url: json.data?.url || null });
+          return out({ secure_url: json.data?.url || null, url: json.data?.url || null });
         }
 
         return out({ error: 'Not Found' }, 404);
