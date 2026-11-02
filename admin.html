@@ -358,7 +358,7 @@ function renderPartners() {
       <div class="item-avatar">${p.logo_url ? `<img src="${p.logo_url}">` : '🤝'}</div>
       <div class="item-info"><div class="item-title">${p.name}</div><div class="item-meta">${p.website_url}</div></div>
       <div class="item-actions">
-        <button class="btn-edit" onclick='openPartnerModal(${JSON.stringify(p)})'>✏️</button>
+    <button class="btn-edit" onclick="window.open('/dashboard.html?admin_id=${m.id}', '_blank')">✏️ Уреди како Админ</button>
         <button class="btn-delete" onclick="deletePartner(${p.id})">🗑️</button>
       </div>
     </div>`).join('');
