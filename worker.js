@@ -27,7 +27,7 @@ export default {
           const email = url.searchParams.get('email');
           if (id) return out((await sql`SELECT * FROM majstori WHERE id=${id} LIMIT 1`)[0] || null);
           if (email) return out((await sql`SELECT * FROM majstori WHERE LOWER(email)=LOWER(${email}) LIMIT 1`)[0] || null);
-          return out(await sql`SELECT * FROM majstori ORDER BY is_founder DESC, is_premium DESC, id DESC`);
+          return out(await sql`SELECT * FROM majstori ORDER BY id DESC`);
         }
 
         if (path === "/api/admin-update-majstor" && method === "POST") {
@@ -48,7 +48,7 @@ export default {
           return out({ success: true });
         }
 
-        // ===== МЕДИА (Слики) - ОВА БЕШЕ ИЗБРИШАНО =====
+        // ===== МЕДИА (Слики) =====
         if (path === "/api/media" && method === "GET") {
           const majstorId = url.searchParams.get('majstor_id');
           let media;
@@ -204,9 +204,8 @@ export default {
           return out({ success: true });
         }
 
-                // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
+        // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
         if (path === "/api/upload" && method === "POST") {
-          // Проверка дали клучот постои
           if (!env.IMGBB_API_KEY) {
             return out({ error: "Клучот IMGBB_API_KEY не е поставен во Cloudflare!" }, 500);
           }
@@ -232,14 +231,11 @@ export default {
           }
         }
 
-        // ===== СТАТИСТИКА =====
-        if (path === "/api/track" && method === "POST") {
-          const b = await request.json();
-          try {
-            if(b.type==='view') await sql`UPDATE majstori SET views = COALESCE(views,0)+1 WHERE id=${b.majstor_id}`;
-            if(b.type==='phone') await sql`UPDATE majstori SET phone_clicks = COALESCE(phone_clicks,0)+1 WHERE id=${b.majstor_id}`;
-          } catch(e){ console.log(e.message); }
-          return out({ success: true });
-        } 
+        return out({ error: 'Not Found' }, 404);
+      } catch (error) {
+        return out({ error: "Worker Грешка: " + error.message }, 500);
+      }
+    }
+    return env.ASSETS.fetch(request);
   },
 };
