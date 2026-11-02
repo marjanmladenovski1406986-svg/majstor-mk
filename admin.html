@@ -239,25 +239,34 @@ function showTab(e, tab) {
   e.target.classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
 }
-
 async function loadAllData() {
   try {
-    const [maj, cli, rat, fb, part, forum] = await Promise.all([
-      fetch('/api/majstori').then(r=>r.json()),
-      fetch('/api/clients').then(r=>r.json()),
-      fetch('/api/pending-ratings').then(r=>r.json()),
-      fetch('/api/feedback').then(r=>r.json()),
-      fetch('/api/partners').then(r=>r.json()),
-      fetch('/api/forum').then(r=>r.json())
-    ]);
-    allMajstori = maj || []; allClients = cli || []; allPendingRatings = rat || [];
-    allFeedback = fb || []; allPartners = part || []; allForum = forum || [];
+    // Вчитуваме едно по едно, за да не падне целата страна ако една табела недостасува
+    const m = await fetch('/api/majstori').then(r=>r.json()).catch(()=>[]);
+    allMajstori = Array.isArray(m) ? m : [];
+    
+    const c = await fetch('/api/clients').then(r=>r.json()).catch(()=>[]);
+    allClients = Array.isArray(c) ? c : [];
+    
+    const rat = await fetch('/api/pending-ratings').then(r=>r.json()).catch(()=>[]);
+    allPendingRatings = Array.isArray(rat) ? rat : [];
+    
+    const f = await fetch('/api/feedback').then(r=>r.json()).catch(()=>[]);
+    allFeedback = Array.isArray(f) ? f : [];
+    
+    const p = await fetch('/api/partners').then(r=>r.json()).catch(()=>[]);
+    allPartners = Array.isArray(p) ? p : [];
+    
+    const fo = await fetch('/api/forum').then(r=>r.json()).catch(()=>[]);
+    allForum = Array.isArray(fo) ? fo : [];
 
+    // Ажурирање на бројачите во табовите
     document.getElementById('modCount').textContent = allPendingRatings.length;
     document.getElementById('fbCount').textContent = allFeedback.length;
     document.getElementById('partCount').textContent = allPartners.length;
     document.getElementById('forumCount').textContent = allForum.filter(f=>f.status==='pending').length;
 
+    // Прикажување на податоците
     renderDashboard();
     renderMajstori();
     renderClients();
@@ -265,8 +274,12 @@ async function loadAllData() {
     renderFeedback();
     renderPartners();
     renderForum();
-  } catch(e) { console.error(e); alert('Грешка при вчитување на податоците.'); }
+  } catch(e) { 
+    console.error("Главна грешка:", e); 
+    alert('Настана грешка при вчитување. Провери конзола (F12).'); 
+  }
 }
+
 
 // --- RENDER FUNCTIONS ---
 function renderDashboard() {
