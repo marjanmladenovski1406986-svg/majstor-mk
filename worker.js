@@ -6,19 +6,7 @@ export default {
     const path = url.pathname;
     const method = request.method;
 
-    // 1. Clerk Proxy (Остави го за секој случај)
-    if (url.hostname === 'clerk.majsto.mk') {
-      const targetUrl = `https://frontend-api.clerk.services${url.pathname}${url.search}`;
-      const newHeaders = new Headers(request.headers);
-      newHeaders.set('host', 'frontend-api.clerk.services');
-      return fetch(targetUrl, {
-        method: request.method,
-        headers: newHeaders,
-        body: request.method !== 'GET' && request.method !== 'HEAD' ? await request.arrayBuffer() : undefined,
-      });
-    }
-
-    // 2. CORS и API Headers
+    // 1. CORS и API Headers
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
@@ -32,12 +20,12 @@ export default {
 
     if (method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-    // 3. Помошна функција за JSON одговор
+    // 2. Помошна функција за JSON одговор
     const out = (data, status = 200) => {
       return new Response(JSON.stringify(data), { status, headers: apiHeaders });
     };
 
-    // 4. API Routes
+    // 3. API Routes
     if (path.startsWith('/api/')) {
       try {
         if (!env.DATABASE_URL) return out({ error: "DATABASE_URL не е поставен!" }, 500);
@@ -58,6 +46,13 @@ export default {
           }
           const majstori = await sql`SELECT * FROM majstori ORDER BY is_founder DESC, is_premium DESC, id DESC`;
           return out(majstori);
+        }
+
+        // ===== БРИШЕЊЕ НА МАЈСТОР (ЗА АДМИН) =====
+        if (path === "/api/delete-majstor" && method === "POST") {
+          const body = await request.json();
+          await sql`DELETE FROM majstori WHERE id=${body.id}`;
+          return out({ success: true });
         }
 
         // ===== МЕДИА (Слики) =====
@@ -143,25 +138,24 @@ export default {
           return out({ success: true });
         }
 
-// ===== ЗЕМИ ОЦЕНКИ НА ЧЕКАЊЕ (ЗА АДМИН) =====
-if (path === "/api/pending-ratings" && method === "GET") {
-  const ratings = await sql`
-    SELECT r.*, m.name as majstor_name 
-    FROM ratings r 
-    JOIN majstori m ON r.majstor_id = m.id 
-    WHERE r.status = 'pending' 
-    ORDER BY r.created_at DESC
-  `;
-  return out(ratings);
-}
+        // ===== ЗЕМИ ОЦЕНКИ НА ЧЕКАЊЕ (ЗА АДМИН) =====
+        if (path === "/api/pending-ratings" && method === "GET") {
+          const ratings = await sql`
+            SELECT r.*, m.name as majstor_name 
+            FROM ratings r 
+            JOIN majstori m ON r.majstor_id = m.id 
+            WHERE r.status = 'pending' 
+            ORDER BY r.created_at DESC
+          `;
+          return out(ratings);
+        }
 
-// ===== ОДОБРИ ОЦЕНКА (ЗА АДМИН) =====
-if (path === "/api/approve-rating" && method === "POST") {
-  const body = await request.json();
-  await sql`UPDATE ratings SET status = 'approved' WHERE id = ${body.id}`;
-  return out({ success: true });
-}
-        
+        // ===== ОДОБРИ ОЦЕНКА (ЗА АДМИН) =====
+        if (path === "/api/approve-rating" && method === "POST") {
+          const body = await request.json();
+          await sql`UPDATE ratings SET status = 'approved' WHERE id = ${body.id}`;
+          return out({ success: true });
+        }
 
         // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
         if (path === "/api/upload" && method === "POST") {
@@ -232,7 +226,7 @@ if (path === "/api/approve-rating" && method === "POST") {
       }
     }
 
-    // 5. Ако не е API, врати статични файлови
+    // 4. Ако не е API, врати статични файлови
     return env.ASSETS.fetch(request);
   },
 };
