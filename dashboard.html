@@ -86,7 +86,7 @@ let majstor=null, currentUser=null, media=[], ratings=[];
 
 function switchTab(t){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  document.querySelector('[data-tab="'+t+'"]').classList.add('active');
+  document.querySelector(`[data-tab="${t}"]`).classList.add('active');
   if(t==='info') renderInfo();
   if(t==='gallery') renderGallery();
   if(t==='stats') renderStats();
@@ -103,10 +103,10 @@ window.addEventListener('load', async()=>{
     return;
   }
 
-  currentUser = Clerk.user.primaryEmailAddress.emailAddress.trim();
-  document.getElementById('userName').textContent = currentUser;
-
-    // Проверка дали корисникот доаѓа како КЛИЕНТ
+  const em = Clerk.user.primaryEmailAddress.emailAddress.trim();
+  document.getElementById('userName').textContent = em;
+  
+  // 1. ПРОВЕРКА ДАЛИ Е КЛИЕНТ
   const pendingType = localStorage.getItem('pending_user_type');
   if (pendingType === 'baram') {
     try {
@@ -115,38 +115,41 @@ window.addEventListener('load', async()=>{
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           clerk_id: Clerk.user.id,
-          email: currentUser,
+          email: em,
           name: Clerk.user.fullName || 'Клиент'
         })
       });
-      localStorage.removeItem('pending_user_type');
-      alert("✅ Успешно се регистриравте како Клиент! Сега можете да оставате оценки.");
-      window.location.href = '/'; // Врати го на почетна
-      return; // Спречи го вчитувањето на Dashboard-от за мајстори
-    } catch(e) {
-      console.error("Грешка при регистрација на клиент:", e);
-    }
-  }
-  
-   try {
-    // 1. Директно го вчитуваме профилот со ID 29 (твојот профил)
-    const res = await fetch('/api/majstori?id=29');
-    const myProfile = await res.json();
+    } catch(e) { console.log("API грешка:", e); }
     
-    // 2. Ако не најде, покажи грешка
+    // Врати го клиентот на почетна веднаш
+    localStorage.removeItem('pending_user_type');
+    alert("✅ Успешно се регистриравте како Клиент! Сега можете да оставате оценки.");
+    window.location.href = '/';
+    return;
+  }
+
+  // 2. АКО НЕ Е КЛИЕНТ, БАРАМЕ МАЈСТОР
+  try {
+    const res = await fetch('/api/majstori');
+    const data = await res.json();
+    
+    let myProfile = null;
+    if (Array.isArray(data)) {
+      myProfile = data.find(m => m.email && m.email.toLowerCase().trim() === em.toLowerCase().trim());
+    }
+    
     if(!myProfile || !myProfile.id){
       document.getElementById('main').innerHTML=`
         <div class="card">
-          <h2>⚠️ Профилот не е пронајден</h2>
-          <p>Не можам да го вчитам профилот со ID 29.</p>
-          <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Врати се на почетна</a></p>
+          <h2>⚠️ Немате профил на мајстор</h2>
+          <p>Најавени сте како <b>${em}</b>, но овој мејл не е поврзан со мајстор.</p>
+          <p style="margin-top:10px"><a href="/" style="color:#ff6b35">← Кон почетна</a></p>
         </div>`;
       return;
     }
     
     majstor = myProfile;
     
-    // 3. Вчитување на слики и оценки
     const [mRes,rRes] = await Promise.all([
       fetch('/api/media?majstor_id='+majstor.id), 
       fetch('/api/ratings?majstor_id='+majstor.id)
