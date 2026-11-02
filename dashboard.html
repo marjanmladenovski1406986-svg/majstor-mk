@@ -91,8 +91,7 @@ function switchTab(t){
   if(t==='stats') renderStats();
 }
 
-
- window.addEventListener('load', async()=>{
+window.addEventListener('load', async()=>{
   const email = localStorage.getItem('logged_email');
   const userType = localStorage.getItem('user_type');
 
@@ -114,7 +113,6 @@ function switchTab(t){
     const data = await res.json();
     let myProfile = null;
 
-    // 1. Проверка дали сме админ (преку admin_id во URL)
     const urlParams = new URLSearchParams(window.location.search);
     const adminId = urlParams.get('admin_id');
     const ADMIN_EMAILS = ['marjanmladenovski1406986@gmail.com', 'majsto.info@gmail.com'];
@@ -123,7 +121,6 @@ function switchTab(t){
       myProfile = Array.isArray(data) ? data.find(m => m.id == adminId) : null;
       document.getElementById('userName').innerHTML = `<span style="color:#ff6b35; font-weight:bold;">[АДМИН]</span> Уредуваш: ${myProfile?.name || 'Непознат'}`;
     } else {
-      // 2. Нормална најава
       myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
     }
     
@@ -134,7 +131,6 @@ function switchTab(t){
     
     majstor = myProfile;
     
-    // Вчитување на слики и оценки со заштита (ако едната падне, другата пак ќе се вчита)
     try {
         const mRes = await fetch('/api/media?majstor_id='+majstor.id);
         media = await mRes.json();
@@ -154,9 +150,7 @@ function switchTab(t){
   } catch(e) {
     document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
   }
-}); 
-
-  
+});
 
 function renderInfo(){
   const isFounder = majstor.is_founder;
@@ -286,31 +280,16 @@ async function handleFiles(files){
       }
     } catch(e) { toast('❌ Грешка: ' + e.message); }
   }
-async function handleFiles(files){
-  const toUpload = Array.from(files).slice(0, 50-media.length);
-  for(const file of toUpload){
-    toast('Се качува ' + file.name + '...');
-    const compressed = await compressImage(file, 1200, 0.7);
-    const fd = new FormData(); fd.append('file', compressed);
-    try {
-      const up = await fetch('/api/upload', {method:'POST', body:fd});
-      const j = await up.json();
-      if(j.secure_url){
-        await fetch('/api/add-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image'}) });
-      }
-    } catch(e) { toast('❌ Грешка: ' + e.message); }
-  }
   
+  // Чекаме 1 секунда за базата да ги зачува сликите, па потоа ги прикажуваме
   setTimeout(async () => {
-    const r = await fetch('/api/media?majstor_id='+majstor.id);
-    media = await r.json();
-    document.getElementById('galCount').textContent = media.length + '/50';
-    renderGallery();
+    const r = await fetch('/api/media?majstor_id='+majstor.id); 
+    media = await r.json(); 
+    document.getElementById('galCount').textContent=media.length + '/50'; 
+    renderGallery(); 
     toast('✅ Сликите се качени');
   }, 1000);
-  }
-  
-
+}
 
 async function deleteImg(id){
   if(!confirm('Избриши?')) return; 
