@@ -286,12 +286,31 @@ async function handleFiles(files){
       }
     } catch(e) { toast('❌ Грешка: ' + e.message); }
   }
-  const r = await fetch('/api/media?majstor_id='+majstor.id); 
-  media = await r.json(); 
-  document.getElementById('galCount').textContent=media.length + '/50'; 
-  renderGallery(); 
-  toast('✅ Сликите се качени');
-}
+async function handleFiles(files){
+  const toUpload = Array.from(files).slice(0, 50-media.length);
+  for(const file of toUpload){
+    toast('Се качува ' + file.name + '...');
+    const compressed = await compressImage(file, 1200, 0.7);
+    const fd = new FormData(); fd.append('file', compressed);
+    try {
+      const up = await fetch('/api/upload', {method:'POST', body:fd});
+      const j = await up.json();
+      if(j.secure_url){
+        await fetch('/api/add-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image'}) });
+      }
+    } catch(e) { toast('❌ Грешка: ' + e.message); }
+  }
+  
+  setTimeout(async () => {
+    const r = await fetch('/api/media?majstor_id='+majstor.id);
+    media = await r.json();
+    document.getElementById('galCount').textContent = media.length + '/50';
+    renderGallery();
+    toast('✅ Сликите се качени');
+  }, 1000);
+  }
+  
+
 
 async function deleteImg(id){
   if(!confirm('Избриши?')) return; 
