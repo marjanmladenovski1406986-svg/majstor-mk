@@ -345,8 +345,9 @@ async function loadData(){
     document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
     
     renderMajstori();
-    const mediaRes = await fetch('/api/media');
-    allMedia = await mediaRes.json();
+       const mediaRes = await fetch('/api/media');
+    const mediaData = await mediaRes.json();
+    allMedia = Array.isArray(mediaData) ? mediaData : []; // Ако не е листа, постави празна листа
     document.getElementById('loading').style.display = 'none';
     renderMedia();
   } catch(e) { console.error("Грешка:", e); }
