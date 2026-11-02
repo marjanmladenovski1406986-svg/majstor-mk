@@ -475,7 +475,43 @@ export default {
             return out({ success: true });
           }
       
+      // ===== РЕГИСТРАЦИЈА (Клиент или Мајстор) =====
+      if (path === "/api/register-user" && method === "POST") {
+        const body = await request.json();
+        
+        // Проверка дали мејлот веќе постои
+        const checkM = await sql`SELECT id FROM majstori WHERE email = ${body.email}`;
+        const checkC = await sql`SELECT id FROM clients WHERE email = ${body.email}`;
+        if(checkM.length > 0 || checkC.length > 0) {
+          return out({ error: "Овој мејл веќе постои." }, 400);
+        }
 
+        if(body.isMajstor) {
+          await sql`INSERT INTO majstori (email, password, name, category, city) VALUES (${body.email}, ${body.password}, 'Нов Мајстор', 'opti', 'Скопје')`;
+        } else {
+          await sql`INSERT INTO clients (email, password, name) VALUES (${body.email}, ${body.password}, 'Клиент')`;
+        }
+        return out({ success: true });
+      }
+
+      // ===== НАЈАВА =====
+      if (path === "/api/login-user" && method === "POST") {
+        const body = await request.json();
+        
+        // Дали е мајстор?
+        const majstor = await sql`SELECT id FROM majstori WHERE email = ${body.email} AND password = ${body.password} LIMIT 1`;
+        if(majstor.length > 0) {
+          return out({ success: true, isMajstor: true });
+        }
+        
+        // Дали е клиент?
+        const client = await sql`SELECT id FROM clients WHERE email = ${body.email} AND password = ${body.password} LIMIT 1`;
+        if(client.length > 0) {
+          return out({ success: true, isMajstor: false });
+        }
+        
+        return out({ error: 'Погрешен мејл или лозинка.' }, 401);
+      }
 
 
       
