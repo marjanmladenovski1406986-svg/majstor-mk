@@ -459,6 +459,26 @@ export default {
         }
       }
 
+          // ===== РЕГИСТРАЦИЈА НА КЛИЕНТ =====
+          if (path === "/api/register-client" && method === "POST") {
+            const body = await request.json();
+            if (!body.clerk_id || !body.email) {
+              return out({ error: "Missing data" }, 400);
+            }
+            
+            await sql`
+              INSERT INTO clients (id, email, name)
+              VALUES (${body.clerk_id}, ${body.email}, ${body.name || 'Клиент'})
+              ON CONFLICT (id) DO NOTHING
+            `;
+            
+            return out({ success: true });
+          }
+      
+
+
+
+      
       return out({ error: 'Not Found' }, 404);
     } catch (error) {
       console.error('API error', error && error.message);
