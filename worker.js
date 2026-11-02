@@ -204,8 +204,13 @@ export default {
           return out({ success: true });
         }
 
-             // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
+                // ===== КАЧУВАЊЕ НА СЛИКА (ImgBB) =====
         if (path === "/api/upload" && method === "POST") {
+          // Проверка дали клучот постои
+          if (!env.IMGBB_API_KEY) {
+            return out({ error: "Клучот IMGBB_API_KEY не е поставен во Cloudflare!" }, 500);
+          }
+
           const fd = await request.formData();
           const file = fd.get('file');
           if (!file) return out({ error: "Нема слика" }, 400);
@@ -217,9 +222,7 @@ export default {
             const res = await fetch(`https://api.imgbb.com/1/upload?key=${env.IMGBB_API_KEY}`, { method: 'POST', body: imgbb });
             const json = await res.json();
             
-            // Ако ImgBB врати грешка, испрати ја точната порака до фронтендот
             if (!json.success || !json.data?.url) {
-              console.error("ImgBB Грешка:", json);
               return out({ error: json.error?.message || "ImgBB не ја прифати сликата" }, 500);
             }
             
@@ -228,11 +231,15 @@ export default {
             return out({ error: "Мрежна грешка при качување: " + err.message }, 500);
           }
         }
-        return out({ error: 'Not Found' }, 404);
-      } catch (error) {
-        return out({ error: "Worker Грешка: " + error.message }, 500);
-      }
-    }
-    return env.ASSETS.fetch(request);
+
+        // ===== СТАТИСТИКА =====
+        if (path === "/api/track" && method === "POST") {
+          const b = await request.json();
+          try {
+            if(b.type==='view') await sql`UPDATE majstori SET views = COALESCE(views,0)+1 WHERE id=${b.majstor_id}`;
+            if(b.type==='phone') await sql`UPDATE majstori SET phone_clicks = COALESCE(phone_clicks,0)+1 WHERE id=${b.majstor_id}`;
+          } catch(e){ console.log(e.message); }
+          return out({ success: true });
+        } 
   },
 };
