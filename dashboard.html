@@ -151,21 +151,6 @@ window.addEventListener('load', async()=>{
 } catch(e) {
   document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
 }
-    majstor = myProfile;
-    const [mRes,rRes] = await Promise.all([
-      fetch('/api/media?majstor_id='+majstor.id), 
-      fetch('/api/ratings?majstor_id='+majstor.id)
-    ]);
-    media = await mRes.json(); 
-    ratings = await rRes.json();
-    
-    document.getElementById('galCount').textContent=media.length + '/50';
-    document.getElementById('sidebar').style.display='block';
-    renderInfo();
-    
-  } catch(e) {
-    document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
-  }
 });
 
 function renderInfo(){
