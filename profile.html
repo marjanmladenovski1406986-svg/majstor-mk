@@ -168,8 +168,15 @@ function renderProfile(m, media, ratings){
 }
 
 async function submitRating(majstorId) {
+  // 1. Прво се осигурај дека Clerk е вчитан
+  if (window.Clerk && !window.Clerk.loaded) {
+    await window.Clerk.load();
+  }
+
+  // 2. Сега провери дали си најавен
   if(!window.Clerk || !window.Clerk.user) {
-    alert("Мора да бидеш најавен за да оставиш оценка.");
+    alert("Мора да бидеш најавен за да оставиш оценка. Те пренасочувам кон најава...");
+    if(window.Clerk) window.Clerk.openSignIn();
     return;
   }
 
@@ -193,7 +200,7 @@ async function submitRating(majstorId) {
     });
 
     if(res.ok) {
-      msg.textContent = "✅ Благодариме за оценката! Таа ќе биде видлива по одобрување.";
+      msg.textContent = "✅ Благодариме за оценката! Таа ќе биде видлива по одобрување од администратор.";
       msg.style.color = "#6bff6b";
       document.getElementById('ratingComment').value = '';
     } else {
