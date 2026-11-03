@@ -382,8 +382,26 @@ function renderForum() {
 
 // --- ACTION FUNCTIONS ---
 async function toggleMajstor(id, field, currentVal) {
-  await fetch('/api/toggle-majstor', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id, field, value: !currentVal}) });
-  loadAllData();
+  try {
+    const res = await fetch('/api/toggle-majstor', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ 
+        id: id, 
+        field: field, 
+        value: !currentVal 
+      })
+    });
+    
+    if (res.ok) {
+      loadAllData();
+    } else {
+      const err = await res.json();
+      alert("Грешка: " + (err.error || "Неуспешно ажурирање"));
+    }
+  } catch (e) {
+    alert("Мрежна грешка: " + e.message);
+  }
 }
 async function deleteMajstor(id) {
   if(!confirm('Избриши мајстор?')) return;
