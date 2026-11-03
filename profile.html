@@ -126,6 +126,7 @@ function renderProfile(m, media, ratings){
         <div class="contact-buttons">
           ${m.phone ? `<a href="tel:${m.phone}" class="btn-contact">📞 ${m.phone}</a>` : ''}
           ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" class="btn-facebook">📘 Facebook</a>` : ''}
+          <button onclick="shareProfile()" class="btn-share" style="background:#4db8ff; color:#fff; padding:10px 20px; border-radius:10px; border:none; font-weight:700; font-size:14px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">📤 Сподели</button>
         </div>
       </div>
     </div>
@@ -213,7 +214,25 @@ async function submitRating(majstorId) {
   }
 }  
 
+function shareProfile() {
+  const url = window.location.href;
+  const title = document.querySelector('.info h1') ? document.querySelector('.info h1').textContent : 'Мајстор на Majsto.mk';
 
+  if (navigator.share) {
+    navigator.share({
+      title: title,
+      text: 'Погледни го овој мајстор на Majsto.mk:',
+      url: url
+    }).catch((error) => console.log('Грешка при споделување', error));
+  } else {
+    // Ако уредот не поддржува директно споделување, го копираме линкот
+    navigator.clipboard.writeText(url).then(() => {
+      alert('✅ Линкот е копиран! Сподели го со пријателите.');
+    }).catch(() => {
+      prompt('Копирај го овој линк за да го споделиш:', url);
+    });
+  }
+}
   
 
 </script>
