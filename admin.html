@@ -317,6 +317,37 @@ function renderMajstori() {
     </div>`).join('');
 }
 
+async function changePassword(id, name) {
+  const newPass = prompt(`Внеси нова лозинка за: ${name}`);
+  if (!newPass) return;
+  
+  if (newPass.length < 6) {
+    alert("Лозинката мора да има најмалку 6 знаци.");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/admin-change-password', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id: id, password: newPass })
+    });
+    
+    if (res.ok) {
+      alert("✅ Лозинката е успешно сменета!");
+    } else {
+      const err = await res.json();
+      alert("Грешка: " + (err.error || "Неуспешна промена"));
+    }
+  } catch (e) {
+    alert("Мрежна грешка: " + e.message);
+  }
+}
+
+  
+
+
+  
 function renderClients() {
   const s = document.getElementById('clientSearch').value.toLowerCase();
   const list = allClients.filter(c => !s || (c.name||'').toLowerCase().includes(s));
