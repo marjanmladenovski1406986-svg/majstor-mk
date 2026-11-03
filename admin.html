@@ -312,6 +312,7 @@ function renderMajstori() {
         <button class="btn-pause ${m.is_paused?'active':''}" onclick="toggleMajstor(${m.id}, 'is_paused', ${!!m.is_paused})">⏸</button>
         <button class="btn-edit" onclick="window.open('/dashboard.html?admin_id=${m.id}', '_blank')">✏️ Уреди како Админ</button>
         <button class="btn-delete" onclick="deleteMajstor(${m.id})">🗑️</button>
+        <button class="btn-edit" style="border-color:#ffb84d; color:#ffb84d;" onclick="changePassword(${m.id}, '${m.name}')">🔑</button>
       </div>
     </div>`).join('');
 }
@@ -392,6 +393,37 @@ async function toggleMajstor(id, field, currentVal) {
         value: !currentVal 
       })
     });
+
+
+    async function changePassword(id, name) {
+  const newPass = prompt(`Внеси нова лозинка за: ${name}`);
+  if (!newPass) return;
+  
+  if (newPass.length < 6) {
+    alert("Лозинката мора да има најмалку 6 знаци.");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/admin-change-password', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id: id, password: newPass })
+    });
+    
+    if (res.ok) {
+      alert("✅ Лозинката е успешно сменета!");
+    } else {
+      const err = await res.json();
+      alert("Грешка: " + (err.error || "Неуспешна промена"));
+    }
+  } catch (e) {
+    alert("Мрежна грешка: " + e.message);
+  }
+}
+
+
+
     
     if (res.ok) {
       loadAllData();
