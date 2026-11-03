@@ -379,8 +379,20 @@ function renderMedia() {
       return majstor && majstor.city === currentCityFilter;
     });
   }
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+  
+
+  
   if(filtered.length === 0) { grid.innerHTML = '<p style="color:#666;padding:15px;">Нема слики во оваа категорија.</p>'; return; }
-  grid.innerHTML = filtered.slice(0, 12).map(m => {
+    const shuffledMedia = shuffleArray([...filtered]);
+  grid.innerHTML = shuffledMedia.slice(0, 12).map(m => {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     const author = majstor ? majstor.name : 'Мајстор';
     return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}" alt="Слика"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span></div></div></a>`;
