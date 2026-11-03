@@ -51,6 +51,13 @@ export default {
           return out({ success: true });
         }
 
+        if (path === "/api/admin-change-password" && method === "POST") {
+          const b = await request.json();
+          await sql`UPDATE majstori SET password = ${b.password} WHERE id = ${b.id}`;
+          return out({ success: true });
+        }
+        
+
         // ===== МЕДИА (Слики) =====
         if (path === "/api/media" && method === "GET") {
           const majstorId = url.searchParams.get('majstor_id');
