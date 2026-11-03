@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Мајстор — Majsto.mk</title>
 <link rel="icon" href="/icon-192.png">
+  <meta property="og:title" content="Мајстор — Majsto.mk" id="og-title">
+<meta property="og:description" content="Погледни го профилот на мајсторот на Majsto.mk." id="og-desc">
+<meta property="og:image" content="https://majsto.mk/icon-512.png" id="og-image">
+<meta property="og:url" content="https://majsto.mk" id="og-url">
 <meta name="theme-color" content="#ff6b35">
 
 <style>
@@ -116,6 +120,14 @@ function renderProfile(m, media, ratings){
     </div>
   `;
 
+
+    // Постави ги Open Graph таговите за Facebook
+    document.getElementById('og-title').setAttribute('content', (m.name || 'Мајстор') + ' — Majsto.mk');
+    document.getElementById('og-desc').setAttribute('content', 'Погледни го профилот на ' + (m.name || 'мајсторот') + ' на Majsto.mk. Слики од работа и директен контакт.');
+    document.getElementById('og-image').setAttribute('content', m.photo_url || 'https://majsto.mk/icon-512.png');
+    document.getElementById('og-url').setAttribute('content', window.location.href);
+
+  
   document.getElementById('mainContent').innerHTML = `
     <div class="profile-header">
       <div class="avatar">${avatar}</div>
