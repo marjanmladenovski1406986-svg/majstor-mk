@@ -193,7 +193,10 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <input type="hidden" id="pId">
     <input type="text" id="pName" placeholder="Име на партнер">
     <input type="text" id="pDescription" placeholder="Опис (кратко)">
-    <input type="url" id="pLogo" placeholder="URL на лого (https://...)">
+        <input type="url" id="pLogo" placeholder="URL на лого (https://...)" style="margin-bottom: 5px;">
+    <input type="file" id="pLogoFile" accept="image/*" style="display:none;" onchange="uploadPartnerLogo(this)">
+    <button type="button" onclick="document.getElementById('pLogoFile').click()" style="background:transparent; border:1px solid #4db8ff; color:#4db8ff; padding:10px; border-radius:8px; cursor:pointer; font-family:inherit; width:100%; margin-bottom:10px; font-size:13px;">📁 Избери слика од уред</button>
+    <div id="pLogoPreview" style="text-align:center; margin-bottom:10px;"></div>
     <input type="url" id="pWebsite" placeholder="Веб-сајт (https://...)">
     <input type="number" id="pOrder" placeholder="Редослед (0 = прв)" value="0">
     <button onclick="savePartner()">Зачувај</button>
@@ -239,7 +242,43 @@ function showTab(e, tab) {
   e.target.classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
 }
-async function loadAllData() {
+
+async function uploadPartnerLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const msg = document.getElementById('partnerMsg');
+  const preview = document.getElementById('pLogoPreview');
+  const logoInput = document.getElementById('pLogo');
+
+  msg.textContent = 'Се качува сликата...';
+  msg.className = 'modal-msg info';
+  preview.innerHTML = '';
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  try {
+    const res = await fetch('/api/upload', { method: 'POST', body: fd });
+    const json = await res.json();
+
+    if (json.url) {
+      logoInput.value = json.url; // Го пополнуваме полето со добиениот линк
+      preview.innerHTML = `<img src="${json.url}" style="max-width:120px; max-height:120px; border-radius:8px; border:1px solid #333;">`;
+      msg.textContent = '✅ Сликата е качена!';
+      msg.className = 'modal-msg success';
+      setTimeout(() => { msg.className = 'modal-msg'; }, 2000);
+    } else {
+      msg.textContent = '❌ Грешка: ' + (json.error || 'Непозната');
+      msg.className = 'modal-msg error';
+    }
+  } catch (e) {
+    msg.textContent = '❌ Грешка при качување: ' + e.message;
+    msg.className = 'modal-msg error';
+  }
+}
+  
+  async function loadAllData() {  
   try {
     // Вчитуваме едно по едно, за да не падне целата страна ако една табела недостасува
     const m = await fetch('/api/majstori').then(r=>r.json()).catch(()=>[]);
