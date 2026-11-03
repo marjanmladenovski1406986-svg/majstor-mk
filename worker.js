@@ -37,8 +37,11 @@ export default {
         }
 
         if (path === "/api/toggle-majstor" && method === "POST") {
-          const b = await request.json();
-          await sql`UPDATE majstori SET ${sql(b.field)} = ${b.value} WHERE id = ${b.id}`;
+                  const b = await request.json();
+          // Мора вака, бидејќи Neon не дозволува динамични имиња на колони
+          if (b.field === 'verified') await sql`UPDATE majstori SET verified = ${b.value} WHERE id = ${b.id}`;
+          if (b.field === 'featured') await sql`UPDATE majstori SET featured = ${b.value} WHERE id = ${b.id}`;
+          if (b.field === 'is_paused') await sql`UPDATE majstori SET is_paused = ${b.value} WHERE id = ${b.id}`;
           return out({ success: true });
         }
 
