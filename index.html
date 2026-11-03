@@ -113,6 +113,21 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <button onclick="scrollToMasters()">🔍 Барај</button>
 </div>
 
+<div style="max-width: 760px; margin: 0 auto 20px; text-align: center;">
+  <button onclick="openCategoriesModal()" style="background: #1a1a1a; border: 1px solid #ff6b35; color: #ff6b35; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%;">
+    📂 Види ги сите категории
+  </button>
+</div>
+
+<div id="categoriesModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #141414; border: 1px solid #333; border-radius: 20px; padding: 20px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
+    <button onclick="closeCategoriesModal()" style="position: absolute; top: 10px; right: 15px; background: transparent; border: none; color: #999; font-size: 24px; cursor: pointer;">✕</button>
+    <h2 style="color: #ff6b35; margin-bottom: 20px; text-align: center;">Сите категории</h2>
+    <div id="modalCategoriesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+      <!-- Овде JavaScript-от ќе ги стави копчињата -->
+    </div>
+  </div>
+</div>
 
 <div class="categories-wrapper">
   <div class="categories" id="categories-bar">
@@ -136,24 +151,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   </div>
 </div>
 
-  <!-- Копче за отворање на сите категории -->
-  <div style="max-width: 760px; margin: 0 auto 20px; text-align: center;">
-    <button onclick="openCategoriesModal()" style="background: #1a1a1a; border: 1px solid #ff6b35; color: #ff6b35; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%;">
-      📂 Види ги сите категории
-    </button>
-  </div>
-
-  <!-- Модал за сите категории -->
-  <div id="categoriesModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: #141414; border: 1px solid #333; border-radius: 20px; padding: 20px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
-      <button onclick="closeCategoriesModal()" style="position: absolute; top: 10px; right: 15px; background: transparent; border: none; color: #999; font-size: 24px; cursor: pointer;">✕</button>
-      <h2 style="color: #ff6b35; margin-bottom: 20px; text-align: center;">Сите категории</h2>
-      <div id="modalCategoriesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
-        <!-- Овде JavaScript-от ќе ги стави копчињата -->
-      </div>
-    </div>
-  </div>
-  
 <div class="main-layout" id="majstori-section">
   <div class="majstori-list">
     <h3>👷 Мајстори</h3>
@@ -255,13 +252,11 @@ function checkLoginStatus() {
   const headerRight = document.getElementById('headerRight');
   
   if(email) {
-    // Најавен си
     headerRight.innerHTML = `
       <a href="/dashboard.html" class="btn-profile">👤 Мој Профил</a>
       <button class="btn-auth" onclick="handleLogout()" style="background:transparent; border:1px solid #333; color:#999;">Одјави се</button>
     `;
   } else {
-    // Не си најавен
     headerRight.innerHTML = `<button class="btn-auth" onclick="openAuthModal()">Најава / Регистрација</button>`;
   }
 }
@@ -366,7 +361,7 @@ async function loadData(){
     renderMajstori();
        const mediaRes = await fetch('/api/media');
     const mediaData = await mediaRes.json();
-    allMedia = Array.isArray(mediaData) ? mediaData : []; // Ако не е листа, постави празна листа
+    allMedia = Array.isArray(mediaData) ? mediaData : [];
     document.getElementById('loading').style.display = 'none';
     renderMedia();
   } catch(e) { console.error("Грешка:", e); }
@@ -399,18 +394,9 @@ function renderMedia() {
     });
   }
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-  
-
-  
   if(filtered.length === 0) { grid.innerHTML = '<p style="color:#666;padding:15px;">Нема слики во оваа категорија.</p>'; return; }
-    const shuffledMedia = shuffleArray([...filtered]);
+  
+  const shuffledMedia = shuffleArray([...filtered]);
   grid.innerHTML = shuffledMedia.slice(0, 12).map(m => {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     const author = majstor ? majstor.name : 'Мајстор';
@@ -435,6 +421,44 @@ function filterByCity(city) {
 
 function scrollToMasters() {
   document.getElementById('majstori-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ФУНКЦИИ ЗА МОДАЛ НА КАТЕГОРИИ
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function openCategoriesModal() {
+  const grid = document.getElementById('modalCategoriesGrid');
+  grid.innerHTML = Object.entries(CAT_NAMES).map(([key, value]) => `
+    <button onclick="selectCategoryFromModal('${key}')" style="background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; font-size: 14px; font-weight: 600; display: flex; flex-direction: column; gap: 5px;">
+      <span>${value}</span>
+    </button>
+  `).join('');
+  
+  document.getElementById('categoriesModal').style.display = 'flex';
+}
+
+function closeCategoriesModal() {
+  document.getElementById('categoriesModal').style.display = 'none';
+}
+
+function selectCategoryFromModal(catKey) {
+  closeCategoriesModal();
+  const btn = document.querySelector(`.cat-btn[data-cat="${catKey}"]`);
+  if (btn) {
+    filterCat(catKey, btn);
+  } else {
+    currentFilter = catKey;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    renderMajstori();
+    renderMedia();
+    scrollToMasters();
+  }
 }
 </script>
 </body>
