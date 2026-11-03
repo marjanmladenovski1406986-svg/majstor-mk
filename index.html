@@ -113,23 +113,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <button onclick="scrollToMasters()">🔍 Барај</button>
 </div>
 
-  <!-- Копче за отворање на сите категории -->
-<div style="max-width: 760px; margin: 0 auto 10px; text-align: center;">
-  <button onclick="openCategoriesModal()" style="background: #1a1a1a; border: 1px solid #ff6b35; color: #ff6b35; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%;">
-    📂 Види ги сите категории
-  </button>
-</div>
-
-<!-- Модал за сите категории -->
-<div id="categoriesModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-  <div style="background: #141414; border: 1px solid #333; border-radius: 20px; padding: 20px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
-    <button onclick="closeCategoriesModal()" style="position: absolute; top: 10px; right: 15px; background: transparent; border: none; color: #999; font-size: 24px; cursor: pointer;">✕</button>
-    <h2 style="color: #ff6b35; margin-bottom: 20px; text-align: center;">Сите категории</h2>
-    <div id="modalCategoriesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
-      <!-- Овде JavaScript-от ќе ги стави копчињата -->
-    </div>
-  </div>
-</div>
 
 <div class="categories-wrapper">
   <div class="categories" id="categories-bar">
