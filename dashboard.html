@@ -227,21 +227,7 @@ async function uploadAvatar(input) {
   } catch(e) { toast('❌ Грешка: ' + e.message); }
 }
 
-async function uploadCover(input) {
-  const file = input.files[0]; if(!file) return;
-  const compressed = await compressImage(file, 1200, 0.7);
-  const fd = new FormData(); fd.append('file', compressed);
-  toast('Се качува...');
-  try {
-    const up = await fetch('/api/upload', {method:'POST', body:fd});
-    const j = await up.json();
-    if(j.secure_url) {
-      await fetch('/api/update-cover', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:majstor.id, url:j.secure_url}) });
-      toast('✅ Банерот е сменет!');
-      setTimeout(() => window.location.reload(), 1000);
-    } else { toast('❌ Грешка: ' + (j.error || 'Непозната')); }
-  } catch(e) { toast('❌ Грешка: ' + e.message); }
-}
+
 
 function renderGallery(){
   let gridHtml = media.map(m=>'<div class="media-item"><img src="'+m.url+'"><div class="media-actions"><button class="icon-btn" onclick="deleteImg('+m.id+')">🗑️</button></div></div>').join('');
