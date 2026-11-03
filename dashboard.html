@@ -172,13 +172,7 @@ function renderInfo(){
           '<button class="btn-ghost" style="padding:6px 12px; border-radius:6px; border:1px solid #333; background:#222; color:#fff; font-size:12px; cursor:pointer;" onclick="document.getElementById(\'avatarInput\').click()">📸 Смени слика</button>' +
           '<input type="file" id="avatarInput" hidden accept="image/*" onchange="uploadAvatar(this)">' +
         '</div>' +
-        '<div style="text-align:center; flex:1; min-width:200px;">' +
-          '<div style="width:100%; max-width:300px; height:80px; border-radius:10px; background:#222 center/cover; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; color:#666; font-size:12px; background-image:url(\''+(majstor.cover_url||'')+'\')">' +
-            (majstor.cover_url ? '' : 'Нема банер') +
-          '</div>' +
-          '<button class="btn-ghost" style="padding:6px 12px; border-radius:6px; border:1px solid #333; background:#222; color:#fff; font-size:12px; cursor:pointer;" onclick="document.getElementById(\'coverInput\').click()">🖼️ Смени банер</button>' +
-          '<input type="file" id="coverInput" hidden accept="image/*" onchange="uploadCover(this)">' +
-        '</div>' +
+        
       '</div>' +
       '<div class="grid-2">' +
         '<input id="e-name" class="input" value="' + (majstor.name||'') + '" placeholder="Име">' +
