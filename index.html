@@ -167,6 +167,11 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <h2 class="section-title">🔥 Најново</h2>
     <div class="loading" id="loading">Вчитувам слики...</div>
     <div class="grid" id="grid"></div>
+    <div style="text-align: center; margin-top: 20px;">
+  <button id="loadMoreBtn" onclick="loadMoreMedia()" style="background: #ff6b35; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; max-width: 300px; display: none;">
+    ⬇️ Вчитај повеќе слики
+  </button>
+</div>
   </div>
 </div>
 
@@ -400,6 +405,7 @@ function renderMajstori() {
   }).join('');
 }
 
+let loadedMediaCount = 12;  
 function renderMedia() {
   const grid = document.getElementById('grid');
   let filtered = allMedia.filter(m => {
@@ -416,15 +422,34 @@ function renderMedia() {
 
   if(filtered.length === 0) { grid.innerHTML = '<p style="color:#666;padding:15px;">Нема слики во оваа категорија.</p>'; return; }
   
-  const shuffledMedia = shuffleArray([...filtered]);
-  grid.innerHTML = shuffledMedia.slice(0, 12).map(m => {
+   const shuffledMedia = shuffleArray([...filtered]);
+  const mediaToShow = shuffledMedia.slice(0, loadedMediaCount);
+  
+  grid.innerHTML = mediaToShow.map(m => {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     const author = majstor ? majstor.name : 'Мајстор';
-    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}" alt="Слика"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span></div></div></a>`;
+    const category = majstor ? (CAT_NAMES[majstor.category] || majstor.category) : 'Мајстор';
+    
+    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}" alt="${author} - ${category}"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span></div></div></a>`;
   }).join('');
+  
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  if (loadedMediaCount < filtered.length) {
+    loadMoreBtn.style.display = 'inline-block';
+  } else {
+    loadMoreBtn.style.display = 'none';
+  }
 }
 
+function loadMoreMedia() {
+  loadedMediaCount += 12;
+  renderMedia();
+}
+
+
 function filterCat(cat, btn) {
+
+  loadedMediaCount = 12; 
   currentFilter = cat;
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
@@ -434,7 +459,8 @@ function filterCat(cat, btn) {
 }
 
 function filterByCity(city) {
-  currentCityFilter = city;
+ loadedMediaCount = 12;
+
   renderMajstori();
   renderMedia();
 }
