@@ -47,10 +47,19 @@ export default {
 
         if (path === "/api/delete-majstor" && method === "POST") {
           const b = await request.json();
-          await sql`DELETE FROM majstori WHERE id=${b.id}`;
+          const id = b.id;
+          
+          // Прво ги бришеме сликите и оценките поврзани со мајсторот
+          await sql`DELETE FROM majstor_media WHERE majstor_id = ${id}`;
+          await sql`DELETE FROM ratings WHERE majstor_id = ${id}`;
+          
+          // Потоа го бришеме самиот мајстор
+          await sql`DELETE FROM majstori WHERE id = ${id}`;
+          
           return out({ success: true });
         }
 
+        
         if (path === "/api/admin-change-password" && method === "POST") {
           const b = await request.json();
           await sql`UPDATE majstori SET password = ${b.password} WHERE id = ${b.id}`;
