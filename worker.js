@@ -58,10 +58,7 @@ export default {
           await sql`DELETE FROM majstori WHERE id = ${id}`;
           
           return out({ success: true });
-        }
-          
-          return out({ success: true });
-        }
+       
 
         
         if (path === "/api/admin-change-password" && method === "POST") {
