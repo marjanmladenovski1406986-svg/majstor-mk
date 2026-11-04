@@ -45,16 +45,20 @@ export default {
           return out({ success: true });
         }
 
-        if (path === "/api/delete-majstor" && method === "POST") {
+               if (path === "/api/delete-majstor" && method === "POST") {
           const b = await request.json();
-          const id = b.id;
+          const id = parseInt(b.id);
           
-          // Прво ги бришеме сликите и оценките поврзани со мајсторот
+          // Прво ги бришеме сликите, оценките и статистиката поврзани со мајсторот
           await sql`DELETE FROM majstor_media WHERE majstor_id = ${id}`;
           await sql`DELETE FROM ratings WHERE majstor_id = ${id}`;
+          await sql`DELETE FROM majstor_stats WHERE majstor_id = ${id}`;
           
           // Потоа го бришеме самиот мајстор
           await sql`DELETE FROM majstori WHERE id = ${id}`;
+          
+          return out({ success: true });
+        }
           
           return out({ success: true });
         }
