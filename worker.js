@@ -98,20 +98,62 @@ export default {
           return out(ratings);
         }
         
-        if (path === "/api/add-rating" && method === "POST") {
+               if (path === "/api/add-rating" && method === "POST") {
           const b = await request.json();
-          await sql`INSERT INTO ratings (majstor_id, user_id, rating, comment, status) VALUES (${b.majstor_id}, ${b.user_id}, ${b.rating}, ${b.comment || ''}, 'pending')`;
+          if (!b.majstor_id || !b.user_id || !b.rating) {
+            return out({ error: "Missing data" }, 400);
+          }
+          
+          // 1. Ја зачувуваме оценката
+          await sql`INSERT INTO ratings (majstor_id, user_id, rating, comment, status) 
+                    VALUES (${b.majstor_id}, ${b.user_id}, ${b.rating}, ${b.comment || ''}, 'pending')`;
+          
+          // 2. Ги пресметуваме новите просечни оценки (само одобрени)
+          const stats = await sql`
+            SELECT COUNT(*) as count, AVG(rating) as avg 
+            FROM ratings 
+            WHERE majstor_id = ${b.majstor_id} AND status = 'approved'
+          `;
+          
+          const count = parseInt(stats[0].count);
+          const avg = count > 0 ? parseFloat(stats[0].avg) : 0;
+          
+          // 3. Го ажурираме профилот на мајсторот
+          await sql`UPDATE majstori SET rating = ${avg}, rating_count = ${count} WHERE id = ${b.majstor_id}`;
+          
           return out({ success: true });
         }
 
         if (path === "/api/pending-ratings" && method === "GET") {
           return out(await sql`SELECT r.*, m.name as majstor_name FROM ratings r JOIN majstori m ON r.majstor_id = m.id WHERE r.status = 'pending' ORDER BY r.created_at DESC`);
         }
-        if (path === "/api/approve-rating" && method === "POST") {
+               if (path === "/api/approve-rating" && method === "POST") {
           const b = await request.json();
+          
+          // 1. Ја одобруваме оценката
           await sql`UPDATE ratings SET status = 'approved' WHERE id = ${b.id}`;
+          
+          // 2. Го наоѓаме majstor_id за таа оценка
+          const ratingData = await sql`SELECT majstor_id FROM ratings WHERE id = ${b.id}`;
+          if (ratingData.length > 0) {
+            const majstorId = ratingData[0].majstor_id;
+            
+            // 3. Ги пресметуваме новите просечни оценки
+            const stats = await sql`
+              SELECT COUNT(*) as count, AVG(rating) as avg 
+              FROM ratings 
+              WHERE majstor_id = ${majstorId} AND status = 'approved'
+            `;
+            const count = parseInt(stats[0].count);
+            const avg = count > 0 ? parseFloat(stats[0].avg) : 0;
+            
+            // 4. Го ажурираме профилот
+            await sql`UPDATE majstori SET rating = ${avg}, rating_count = ${count} WHERE id = ${majstorId}`;
+          }
+          
           return out({ success: true });
         }
+        
         if (path === "/api/reject-rating" && method === "POST") {
           const b = await request.json();
           await sql`DELETE FROM ratings WHERE id = ${b.id}`;
