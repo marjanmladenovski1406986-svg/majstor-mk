@@ -87,7 +87,13 @@ window.addEventListener('load', async () => {
     ]);
     const media = await mRes.json();
     const ratings = await rRes.json();
-
+    
+    // Статистика: Зголеми прегледи кога некој ќе го отвори профилот
+    fetch('/api/track', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ majstor_id: majstor.id, type: 'view' })
+    }).catch(() => {});
     renderProfile(majstor, media, ratings);
   } catch(e) {
     document.getElementById('mainContent').innerHTML = '<p style="color:#ff6b6b;text-align:center">Грешка при вчитување: ' + e.message + '</p>';
@@ -136,7 +142,7 @@ function renderProfile(m, media, ratings){
         <div class="meta">${CAT_NAMES[m.category]||m.category} • 📍 ${m.city||'-'} • ⭐ ${m.rating||0} (${m.rating_count||0})</div>
         <div class="badges">${badges.join('')}</div>
         <div class="contact-buttons">
-          ${m.phone ? `<a href="tel:${m.phone}" class="btn-contact">📞 ${m.phone}</a>` : ''}
+          ${m.phone ? `<a href="tel:${m.phone}" onclick="trackPhoneClick(${m.id})" class="btn-contact">📞 ${m.phone}</a>` : ''}
           ${m.facebook_url ? `<a href="${m.facebook_url}" target="_blank" class="btn-facebook">📘 Facebook</a>` : ''}
           <button onclick="shareProfile()" class="btn-share" style="background:#4db8ff; color:#fff; padding:10px 20px; border-radius:10px; border:none; font-weight:700; font-size:14px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">📤 Сподели</button>
         </div>
@@ -245,7 +251,13 @@ function shareProfile() {
     });
   }
 }
-  
+ function trackPhoneClick(id) {
+  fetch('/api/track', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ majstor_id: id, type: 'phone' })
+  }).catch(() => {});
+} 
 
 </script>
 </body>
