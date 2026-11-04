@@ -37,36 +37,30 @@ export default {
         }
 
         if (path === "/api/toggle-majstor" && method === "POST") {
-                  const b = await request.json();
-          // Мора вака, бидејќи Neon не дозволува динамични имиња на колони
+          const b = await request.json();
           if (b.field === 'verified') await sql`UPDATE majstori SET verified = ${b.value} WHERE id = ${b.id}`;
           if (b.field === 'featured') await sql`UPDATE majstori SET featured = ${b.value} WHERE id = ${b.id}`;
           if (b.field === 'is_paused') await sql`UPDATE majstori SET is_paused = ${b.value} WHERE id = ${b.id}`;
           return out({ success: true });
         }
 
-               if (path === "/api/delete-majstor" && method === "POST") {
+        if (path === "/api/delete-majstor" && method === "POST") {
           const b = await request.json();
           const id = parseInt(b.id);
           
-          // Прво ги бришеме сликите, оценките и статистиката поврзани со мајсторот
           await sql`DELETE FROM majstor_media WHERE majstor_id = ${id}`;
           await sql`DELETE FROM ratings WHERE majstor_id = ${id}`;
           await sql`DELETE FROM majstor_stats WHERE majstor_id = ${id}`;
-          
-          // Потоа го бришеме самиот мајстор
           await sql`DELETE FROM majstori WHERE id = ${id}`;
           
           return out({ success: true });
-       
+        }
 
-        
         if (path === "/api/admin-change-password" && method === "POST") {
           const b = await request.json();
           await sql`UPDATE majstori SET password = ${b.password} WHERE id = ${b.id}`;
           return out({ success: true });
         }
-        
 
         // ===== МЕДИА (Слики) =====
         if (path === "/api/media" && method === "GET") {
