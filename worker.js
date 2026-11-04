@@ -218,6 +218,19 @@ export default {
           return out({ success: true });
         }
 
+
+                // ===== КОНТАКТ ФОРМА =====
+        if (path === "/api/contact" && method === "POST") {
+          const b = await request.json();
+          if (!b.name || !b.email || !b.message) {
+            return out({ error: "Пополни ги сите полиња." }, 400);
+          }
+          await sql`INSERT INTO contact_messages (name, email, message) VALUES (${b.name}, ${b.email}, ${b.message})`;
+          return out({ success: true });
+        }
+
+
+        
         // ===== СТАТИСТИКА =====
         if (path === "/api/track" && method === "POST") {
           const b = await request.json();
