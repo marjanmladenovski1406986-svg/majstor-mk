@@ -186,14 +186,19 @@ function renderProfile(m, media, ratings){
   `;
 }
 
-
 async function submitRating(majstorId) {
-  // 1. Проверка дали си најавен преку твојот локален систем
-  const userEmail = localStorage.getItem('logged_email');
+  // 1. Проверка дали е најавен
+  const email = localStorage.getItem('logged_email');
+  const userType = localStorage.getItem('user_type');
 
-  if(!userEmail) {
-    alert("Мора да бидеш најавен за да оставиш оценка. Те пренасочувам кон почетна страна...");
-    window.location.href = '/'; // Врати го на почетна за да се најави
+  if (!email) {
+    alert("Мора да бидеш најавен за да оставиш оценка.");
+    return;
+  }
+
+  // 2. Проверка дали е мајстор (тие не смеат да ставаат оценки)
+  if (userType === 'majstor') {
+    alert("Само клиенти можат да оставаат оценки.");
     return;
   }
 
@@ -210,7 +215,7 @@ async function submitRating(majstorId) {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         majstor_id: parseInt(majstorId),
-        user_id: userEmail, // Го користиме мејлот на корисникот како ID
+        user_id: email,
         rating: parseInt(rating),
         comment: comment
       })
@@ -230,7 +235,7 @@ async function submitRating(majstorId) {
     msg.textContent = "❌ Грешка: " + e.message;
     msg.style.color = "#ff6b6b";
   }
-}  
+}
 
 function shareProfile() {
   const url = window.location.href;
