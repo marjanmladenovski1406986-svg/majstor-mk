@@ -83,11 +83,20 @@ const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод
 const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
 let majstor=null, media=[], ratings=[];
 
-function switchTab(t){
+async function switchTab(t){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelector('[data-tab="'+t+'"]').classList.add('active');
+  
   if(t==='info') renderInfo();
-  if(t==='gallery') renderGallery();
+  if(t==='gallery') {
+    // Пред да ја прикажеме галеријата, ги вчитуваме сликите од базата
+    try {
+      const r = await fetch('/api/media?majstor_id='+majstor.id);
+      media = await r.json();
+      if(!Array.isArray(media)) media = [];
+    } catch(e) { media = []; }
+    renderGallery();
+  }
   if(t==='stats') renderStats();
 }
 
