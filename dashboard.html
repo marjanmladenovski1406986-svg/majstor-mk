@@ -89,7 +89,6 @@ async function switchTab(t){
   
   if(t==='info') renderInfo();
   if(t==='gallery') {
-    // Пред да ја прикажеме галеријата, ги вчитуваме сликите од базата
     try {
       const r = await fetch('/api/media?majstor_id='+majstor.id);
       media = await r.json();
@@ -249,7 +248,7 @@ function renderGallery(){
         : '<div class="dropzone" onclick="document.getElementById(\'fileInput\').click()">' +
             '<div style="font-size:24px">📤</div><b>Кликни за качување слики</b>' +
             '<input type="file" id="fileInput" hidden accept="image/*" multiple onchange="handleFiles(this.files)">' +
-          '</div>')
+          '</div>') +
     '</div>' +
     '<div class="card"><div class="media-grid">' + gridHtml + '</div></div>';
 }
