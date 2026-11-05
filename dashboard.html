@@ -63,7 +63,7 @@ textarea.input{resize:vertical}
 <div class="container">
   <div class="sidebar" id="sidebar" style="display:none;">
     <div class="tab active" data-tab="info" onclick="switchTab('info')">📝 Основни <span class="count">•</span></div>
-    <div class="tab" data-tab="gallery" onclick="switchTab('gallery')">🖼️ Галерија <span class="count" id="galCount">0/25</span></div>
+    <div class="tab" data-tab="gallery" onclick="switchTab('gallery')">🖼️ Галерија <span class="count" id="galCount">0/50</span></div>
     <div class="tab" data-tab="stats" onclick="switchTab('stats')">📊 Статистика</div>
     <div style="margin-top:20px;padding-top:20px;border-top:1px solid #222">
       <div style="font-size:12px;color:#666">Статус</div>
@@ -235,8 +235,8 @@ function renderGallery(){
 
   document.getElementById('main').innerHTML=
     '<div class="card">' +
-      '<h2>🖼️ Галерија <span style="color:#888;font-weight:400">' + media.length + '/25</span></h2>' +
-      '<div class="progress"><div class="progress-fill" style="width:' + (media.length/25*100) + '%"></div></div>' +
+      '<h2>🖼️ Галерија <span style="color:#888;font-weight:400">' + media.length + '/50</span></h2>' +
+      '<div class="progress"><div class="progress-fill" style="width:' + (media.length/50*100) + '%"></div></div>' +
       '<p style="color:#888;font-size:13px;margin:10px 0">' + (media.length>=25?'Достигнат лимит':'Можеш да додадеш уште ' + (25-media.length) + ' слики') + '</p>' +
               (media.length >= 25 
         ? '<div class="dropzone" style="border-color:#ff6b6b; cursor:not-allowed;"><div style="font-size:24px">🚫</div><b>Достигнат лимит од 25 слики</b></div>'
