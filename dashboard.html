@@ -172,7 +172,6 @@ function renderInfo(){
           '<button class="btn-ghost" style="padding:6px 12px; border-radius:6px; border:1px solid #333; background:#222; color:#fff; font-size:12px; cursor:pointer;" onclick="document.getElementById(\'avatarInput\').click()">📸 Смени слика</button>' +
           '<input type="file" id="avatarInput" hidden accept="image/*" onchange="uploadAvatar(this)">' +
         '</div>' +
-        
       '</div>' +
       '<div class="grid-2">' +
         '<input id="e-name" class="input" value="' + (majstor.name||'') + '" placeholder="Име">' +
@@ -213,7 +212,7 @@ async function saveInfo(){
 
 async function uploadAvatar(input) {
   const file = input.files[0]; if(!file) return;
-  const compressed = await compressImage(file, 400, 0.8);
+  const compressed = await compressImage(file, 400, 0.6);
   const fd = new FormData(); fd.append('file', compressed);
   toast('Се качува...');
   try {
@@ -226,8 +225,6 @@ async function uploadAvatar(input) {
     } else { toast('❌ Грешка: ' + (j.error || 'Непозната')); }
   } catch(e) { toast('❌ Грешка: ' + e.message); }
 }
-
-
 
 function renderGallery(){
   let gridHtml = media.map(m=>'<div class="media-item"><img src="'+m.url+'"><div class="media-actions"><button class="icon-btn" onclick="deleteImg('+m.id+')">🗑️</button></div></div>').join('');
@@ -244,12 +241,12 @@ function renderGallery(){
             '<div style="font-size:24px">📤</div><b>Кликни за качување слики</b>' +
             '<input type="file" id="fileInput" hidden accept="image/*" multiple onchange="handleFiles(this.files)">' +
           '</div>')
-    '</div>' + 
+    '</div>' +
     '<div class="card"><div class="media-grid">' + gridHtml + '</div></div>';
 }
 
 async function handleFiles(files){
-    if (media.length >= 50) { toast('❌ Достигнат лимит од 50 слики!'); return; }
+  if (media.length >= 50) { toast('❌ Достигнат лимит од 50 слики!'); return; }
   const toUpload = Array.from(files).slice(0, 50-media.length);
   for(const file of toUpload){
     toast('Се качува ' + file.name + '...');
@@ -264,7 +261,6 @@ async function handleFiles(files){
     } catch(e) { toast('❌ Грешка: ' + e.message); }
   }
   
-  // Чекаме 1 секунда за базата да ги зачува сликите, па потоа ги прикажуваме
   setTimeout(async () => {
     const r = await fetch('/api/media?majstor_id='+majstor.id); 
     media = await r.json(); 
@@ -306,7 +302,7 @@ function logout() {
 }
 
 // АЛАТКА ЗА КОМПРЕСИЈА НА СЛИКИ
-function compressImage(file, maxWidth = 1200, quality = 0.7) {
+function compressImage(file, maxWidth = 1200, quality = 0.5) {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
