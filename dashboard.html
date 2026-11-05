@@ -249,8 +249,8 @@ function renderGallery(){
 }
 
 async function handleFiles(files){
-    if (media.length >= 25) { toast('❌ Достигнат лимит од 25 слики!'); return; }
-  const toUpload = Array.from(files).slice(0, 25-media.length);
+    if (media.length >= 50) { toast('❌ Достигнат лимит од 50 слики!'); return; }
+  const toUpload = Array.from(files).slice(0, 50-media.length);
   for(const file of toUpload){
     toast('Се качува ' + file.name + '...');
     const compressed = await compressImage(file, 1200, 0.5);
