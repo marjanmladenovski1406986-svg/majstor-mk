@@ -80,39 +80,32 @@ export default {
           return out(result[0]);
         }
 
-             if (path === "/api/delete-media" && method === "POST") {
+        if (path === "/api/delete-media" && method === "POST") {
           const b = await request.json();
           
-          // 1. Прво ја наоѓаме сликата во базата за да го земеме нејзиниот URL
           const mediaData = await sql`SELECT url FROM majstor_media WHERE id = ${b.id}`;
           
           if (mediaData.length > 0 && mediaData[0].url) {
             const imageUrl = mediaData[0].url;
             
-            // 2. Го извлекуваме fileId-то од ImageKit URL-то
             let fileName = imageUrl.split('/').pop();
-if (fileName.includes('?')) {
-  fileName = fileName.split('?')[0];
-}
+            if (fileName.includes('?')) {
+              fileName = fileName.split('?')[0];
+            }
             
-                     if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
+            if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
               try {
                 const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
-                console.log("Се обидувам да избришам:", fileName); 
-                
-                const res = await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
+                await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
                   method: 'DELETE',
                   headers: { 'Authorization': `Basic ${auth}` }
                 });
-                
-                console.log("Одговор од ImageKit:", res.status); 
               } catch (err) {
                 console.log("Грешка при бришење од ImageKit:", err.message);
               }
             }
-    
+          }
           
-          // 4. На крајот го бришеме записот од базата
           await sql`DELETE FROM majstor_media WHERE id=${b.id}`;
           return out({ success: true });
         }
@@ -129,17 +122,15 @@ if (fileName.includes('?')) {
           return out(ratings);
         }
         
-               if (path === "/api/add-rating" && method === "POST") {
+        if (path === "/api/add-rating" && method === "POST") {
           const b = await request.json();
           if (!b.majstor_id || !b.user_id || !b.rating) {
             return out({ error: "Missing data" }, 400);
           }
           
-          // 1. Ја зачувуваме оценката
           await sql`INSERT INTO ratings (majstor_id, user_id, rating, comment, status) 
                     VALUES (${b.majstor_id}, ${b.user_id}, ${b.rating}, ${b.comment || ''}, 'pending')`;
           
-          // 2. Ги пресметуваме новите просечни оценки (само одобрени)
           const stats = await sql`
             SELECT COUNT(*) as count, AVG(rating) as avg 
             FROM ratings 
@@ -149,7 +140,6 @@ if (fileName.includes('?')) {
           const count = parseInt(stats[0].count);
           const avg = count > 0 ? parseFloat(stats[0].avg) : 0;
           
-          // 3. Го ажурираме профилот на мајсторот
           await sql`UPDATE majstori SET rating = ${avg}, rating_count = ${count} WHERE id = ${b.majstor_id}`;
           
           return out({ success: true });
@@ -158,18 +148,16 @@ if (fileName.includes('?')) {
         if (path === "/api/pending-ratings" && method === "GET") {
           return out(await sql`SELECT r.*, m.name as majstor_name FROM ratings r JOIN majstori m ON r.majstor_id = m.id WHERE r.status = 'pending' ORDER BY r.created_at DESC`);
         }
-               if (path === "/api/approve-rating" && method === "POST") {
+        
+        if (path === "/api/approve-rating" && method === "POST") {
           const b = await request.json();
           
-          // 1. Ја одобруваме оценката
           await sql`UPDATE ratings SET status = 'approved' WHERE id = ${b.id}`;
           
-          // 2. Го наоѓаме majstor_id за таа оценка
           const ratingData = await sql`SELECT majstor_id FROM ratings WHERE id = ${b.id}`;
           if (ratingData.length > 0) {
             const majstorId = ratingData[0].majstor_id;
             
-            // 3. Ги пресметуваме новите просечни оценки
             const stats = await sql`
               SELECT COUNT(*) as count, AVG(rating) as avg 
               FROM ratings 
@@ -178,7 +166,6 @@ if (fileName.includes('?')) {
             const count = parseInt(stats[0].count);
             const avg = count > 0 ? parseFloat(stats[0].avg) : 0;
             
-            // 4. Го ажурираме профилот
             await sql`UPDATE majstori SET rating = ${avg}, rating_count = ${count} WHERE id = ${majstorId}`;
           }
           
@@ -245,6 +232,16 @@ if (fileName.includes('?')) {
           return out({ success: true });
         }
 
+        // ===== КОНТАКТ ФОРМА =====
+        if (path === "/api/contact" && method === "POST") {
+          const b = await request.json();
+          if (!b.name || !b.email || !b.message) {
+            return out({ error: "Пополни ги сите полиња." }, 400);
+          }
+          await sql`INSERT INTO contact_messages (name, email, message) VALUES (${b.name}, ${b.email}, ${b.message})`;
+          return out({ success: true });
+        }
+
         // ===== НАЈАВА И ПРОФИЛ =====
         if (path === "/api/login-user" && method === "POST") {
           const b = await request.json();
@@ -255,17 +252,16 @@ if (fileName.includes('?')) {
           return out({ error: 'Погрешен мејл или лозинка.' }, 401);
         }
 
-                if (path === "/api/register-user" && method === "POST") {
+        if (path === "/api/register-user" && method === "POST") {
           const b = await request.json();
           const checkM = await sql`SELECT id FROM majstori WHERE LOWER(email)=LOWER(${b.email})`;
           const checkC = await sql`SELECT id FROM clients WHERE LOWER(email)=LOWER(${b.email})`;
           if(checkM.length > 0 || checkC.length > 0) return out({ error: "Овој мејл веќе постои." }, 400);
           
           if(b.isMajstor) {
-            // Проверуваме колку мајстори има моментално
             const countRes = await sql`SELECT COUNT(*) as count FROM majstori`;
             const totalMajstori = parseInt(countRes[0].count);
-            const isFounder = totalMajstori < 50; // Ако се помалку од 50, новиот е Founder
+            const isFounder = totalMajstori < 50; 
 
             await sql`INSERT INTO majstori (email, password, name, category, city, is_founder) 
                       VALUES (${b.email}, ${b.password}, 'Нов Мајстор', 'opti', 'Скопје', ${isFounder})`;
@@ -291,19 +287,6 @@ if (fileName.includes('?')) {
           return out({ success: true });
         }
 
-
-                // ===== КОНТАКТ ФОРМА =====
-        if (path === "/api/contact" && method === "POST") {
-          const b = await request.json();
-          if (!b.name || !b.email || !b.message) {
-            return out({ error: "Пополни ги сите полиња." }, 400);
-          }
-          await sql`INSERT INTO contact_messages (name, email, message) VALUES (${b.name}, ${b.email}, ${b.message})`;
-          return out({ success: true });
-        }
-
-
-        
         // ===== СТАТИСТИКА =====
         if (path === "/api/track" && method === "POST") {
           const b = await request.json();
