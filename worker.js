@@ -47,12 +47,10 @@ export default {
         if (path === "/api/delete-majstor" && method === "POST") {
           const b = await request.json();
           const id = parseInt(b.id);
-          
           await sql`DELETE FROM majstor_media WHERE majstor_id = ${id}`;
           await sql`DELETE FROM ratings WHERE majstor_id = ${id}`;
           await sql`DELETE FROM majstor_stats WHERE majstor_id = ${id}`;
           await sql`DELETE FROM majstori WHERE id = ${id}`;
-          
           return out({ success: true });
         }
 
@@ -87,7 +85,6 @@ export default {
           
           if (mediaData.length > 0 && mediaData[0].url) {
             const imageUrl = mediaData[0].url;
-            
             let fileName = imageUrl.split('/').pop();
             if (fileName.includes('?')) {
               fileName = fileName.split('?')[0];
@@ -96,10 +93,14 @@ export default {
             if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
               try {
                 const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
-                await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
+                console.log("Се обидувам да избришам:", fileName); 
+                
+                const res = await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
                   method: 'DELETE',
                   headers: { 'Authorization': `Basic ${auth}` }
                 });
+                
+                console.log("Одговор од ImageKit:", res.status); 
               } catch (err) {
                 console.log("Грешка при бришење од ImageKit:", err.message);
               }
