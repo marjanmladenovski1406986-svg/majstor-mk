@@ -95,19 +95,22 @@ if (fileName.includes('?')) {
   fileName = fileName.split('?')[0];
 }
             
-            if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
+                     if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
               try {
                 const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
-                // 3. Бараме од ImageKit да ја избрише сликата
-                await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
+                console.log("Се обидувам да избришам:", fileName); 
+                
+                const res = await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
                   method: 'DELETE',
                   headers: { 'Authorization': `Basic ${auth}` }
                 });
+                
+                console.log("Одговор од ImageKit:", res.status); 
               } catch (err) {
                 console.log("Грешка при бришење од ImageKit:", err.message);
               }
             }
-          }
+    
           
           // 4. На крајот го бришеме записот од базата
           await sql`DELETE FROM majstor_media WHERE id=${b.id}`;
