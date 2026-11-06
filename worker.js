@@ -74,28 +74,26 @@ export default {
 
         if (path === "/api/add-media" && method === "POST") {
           const b = await request.json();
-          const result = await sql`INSERT INTO majstor_media (majstor_id, type, url, title) VALUES (${b.majstor_id}, 'image', ${b.url}, 'Слика од работа') RETURNING *`;
+          // Го зачувуваме и file_id-то
+          const result = await sql`INSERT INTO majstor_media (majstor_id, type, url, title, file_id) VALUES (${b.majstor_id}, 'image', ${b.url}, 'Слика од работа', ${b.file_id || null}) RETURNING *`;
           return out(result[0]);
         }
 
         if (path === "/api/delete-media" && method === "POST") {
           const b = await request.json();
           
-          const mediaData = await sql`SELECT url FROM majstor_media WHERE id = ${b.id}`;
+          // 1. Ја наоѓаме сликата во базата за да го земеме file_id-то
+          const mediaData = await sql`SELECT file_id FROM majstor_media WHERE id = ${b.id}`;
           
-          if (mediaData.length > 0 && mediaData[0].url) {
-            const imageUrl = mediaData[0].url;
-            let fileName = imageUrl.split('/').pop();
-            if (fileName.includes('?')) {
-              fileName = fileName.split('?')[0];
-            }
+          if (mediaData.length > 0 && mediaData[0].file_id) {
+            const fileId = mediaData[0].file_id;
             
-            if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
+            if (env.IMAGEKIT_PRIVATE_KEY) {
               try {
                 const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
-                console.log("Се обидувам да избришам:", fileName); 
+                console.log("Се обидувам да избришам (file_id):", fileId); 
                 
-                const res = await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
+                const res = await fetch(`https://api.imagekit.io/v1/files/${fileId}`, {
                   method: 'DELETE',
                   headers: { 'Authorization': `Basic ${auth}` }
                 });
@@ -107,6 +105,7 @@ export default {
             }
           }
           
+          // 2. Го бришеме записот од базата
           await sql`DELETE FROM majstor_media WHERE id=${b.id}`;
           return out({ success: true });
         }
@@ -327,7 +326,8 @@ export default {
               return out({ error: json.message || "ImageKit не ја прифати сликата" }, 500);
             }
             
-            return out({ secure_url: json.url, url: json.url });
+            // Го враќаме и fileId-то
+            return out({ secure_url: json.url, url: json.url, fileId: json.fileId });
           } catch (err) {
             return out({ error: "Мрежна грешка при качување: " + err.message }, 500);
           }
