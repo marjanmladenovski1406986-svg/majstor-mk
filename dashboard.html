@@ -280,12 +280,24 @@ async function handleFiles(files){
 
 async function deleteImg(id){
   if(!confirm('Избриши?')) return; 
-  await fetch('/api/delete-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id}) }); 
-  const r = await fetch('/api/media?majstor_id='+majstor.id); 
-  media = await r.json(); 
-  document.getElementById('galCount').textContent=media.length + '/50'; 
-  renderGallery(); 
-  toast('Избришано');
+  
+  toast('Се брише...');
+  
+  try {
+    await fetch('/api/delete-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id}) }); 
+    
+    // Чекаме 1.5 секунди за да има време ImageKit да ја избрише сликата
+    setTimeout(async () => {
+      const r = await fetch('/api/media?majstor_id='+majstor.id); 
+      media = await r.json(); 
+      document.getElementById('galCount').textContent=media.length + '/50'; 
+      renderGallery(); 
+      toast('✅ Избришано');
+    }, 1500);
+    
+  } catch(e) {
+    toast('❌ Грешка: ' + e.message);
+  }
 }
 
 function renderStats(){
