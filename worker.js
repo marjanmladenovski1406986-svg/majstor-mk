@@ -80,8 +80,33 @@ export default {
           return out(result[0]);
         }
 
-        if (path === "/api/delete-media" && method === "POST") {
+             if (path === "/api/delete-media" && method === "POST") {
           const b = await request.json();
+          
+          // 1. Прво ја наоѓаме сликата во базата за да го земеме нејзиниот URL
+          const mediaData = await sql`SELECT url FROM majstor_media WHERE id = ${b.id}`;
+          
+          if (mediaData.length > 0 && mediaData[0].url) {
+            const imageUrl = mediaData[0].url;
+            
+            // 2. Го извлекуваме fileId-то од ImageKit URL-то
+            const fileName = imageUrl.split('/').pop();
+            
+            if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
+              try {
+                const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
+                // 3. Бараме од ImageKit да ја избрише сликата
+                await fetch(`https://api.imagekit.io/v1/files/${fileName}`, {
+                  method: 'DELETE',
+                  headers: { 'Authorization': `Basic ${auth}` }
+                });
+              } catch (err) {
+                console.log("Грешка при бришење од ImageKit:", err.message);
+              }
+            }
+          }
+          
+          // 4. На крајот го бришеме записот од базата
           await sql`DELETE FROM majstor_media WHERE id=${b.id}`;
           return out({ success: true });
         }
