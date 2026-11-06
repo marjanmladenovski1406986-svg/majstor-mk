@@ -90,7 +90,10 @@ export default {
             const imageUrl = mediaData[0].url;
             
             // 2. Го извлекуваме fileId-то од ImageKit URL-то
-            const fileName = imageUrl.split('/').pop();
+            let fileName = imageUrl.split('/').pop();
+if (fileName.includes('?')) {
+  fileName = fileName.split('?')[0];
+}
             
             if (fileName && env.IMAGEKIT_PRIVATE_KEY) {
               try {
