@@ -269,6 +269,8 @@ async function handleFiles(files){
           headers:{'Content-Type':'application/json'}, 
           body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image', file_id:j.fileId}) 
         });
+           }
+          } catch(e) { toast('❌ Грешка: ' + e.message); }
       }
   
   setTimeout(async () => {
