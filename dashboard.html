@@ -263,11 +263,13 @@ async function handleFiles(files){
     try {
       const up = await fetch('/api/upload', {method:'POST', body:fd});
       const j = await up.json();
-      if(j.secure_url){
-        await fetch('/api/add-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image'}) });
+       if(j.secure_url){
+        await fetch('/api/add-media', { 
+          method:'POST', 
+          headers:{'Content-Type':'application/json'}, 
+          body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image', file_id:j.fileId}) 
+        });
       }
-    } catch(e) { toast('❌ Грешка: ' + e.message); }
-  }
   
   setTimeout(async () => {
     const r = await fetch('/api/media?majstor_id='+majstor.id); 
