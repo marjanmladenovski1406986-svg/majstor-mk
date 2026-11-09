@@ -248,13 +248,17 @@ function populateCities(){
 // 2. ПРОВЕРКА ДАЛИ СИ НАЈАВЕН
 function checkLoginStatus() {
   const headerRight = document.getElementById('headerRight');
+  
+  // Прво проверуваме дали Clerk не препознава
   if (window.Clerk && window.Clerk.user) {
     headerRight.innerHTML = `
       <a href="/dashboard.html" class="btn-profile">👤 Мој Профил</a>
       <button class="btn-auth" onclick="handleLogout()" style="background:transparent; border:1px solid #333; color:#999;">Одјави се</button>
     `;
-    return; 
+    return; // Прекини ја функцијата, не проверувај понатаму
   }
+
+  // Ако не е Clerk, провери старата локална најава
   const email = localStorage.getItem('logged_email');
   if(email) {
     headerRight.innerHTML = `
