@@ -240,6 +240,29 @@ let currentFilter = 'all';
 let currentCityFilter = '';
 
 // 1. ИНИЦИЈАЛИЗАЦИЈА
+  window.addEventListener('load', async () => {
+  // Иницијализирај Clerk
+  if (window.Clerk) {
+    await window.Clerk.load();
+    
+    // Ако корисникот е најавен преку Clerk, провери го во нашата база
+    if (window.Clerk.user) {
+      const token = await window.Clerk.session.getToken();
+      const res = await fetch('/api/clerk-login', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      
+      if (data.success && data.id) {
+        localStorage.setItem('logged_email', window.Clerk.user.primaryEmailAddress.emailAddress);
+        localStorage.setItem('user_type', data.isMajstor ? 'majstor' : 'client');
+        // Освежи ја страницата за да се прикаже најавата
+        window.location.reload();
+      }
+    }
+  }
+});
 window.addEventListener('load', async()=>{
   populateCities();
   checkLoginStatus();
