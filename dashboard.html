@@ -163,10 +163,10 @@ window.addEventListener('load', async()=>{
     const data = await res.json();
     let myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
     
-    if(!myProfile || !myProfile.id){
-      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p></div>';
-      return;
-    }
+             if(!myProfile || !myProfile.id){
+          document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p><button class="btn btn-orange" onclick="registerAsMajstor()" style="margin-top:15px;">Регистрирај се како мајстор</button></div>';
+          return;
+        }
     
     majstor = myProfile;
     const [mRes,rRes] = await Promise.all([
@@ -368,6 +368,22 @@ function compressImage(file, maxWidth = 1200, quality = 0.5) {
     };
   });
 }
+async function registerAsMajstor() {
+  const email = window.Clerk.user.primaryEmailAddress.emailAddress;
+  
+  const res = await fetch('/api/register-user', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ email: email, password: 'clerk_temp', isMajstor: true })
+  });
+  
+  if (res.ok) {
+    window.location.reload();
+  } else {
+    alert('Грешка при регистрација. Обиди се повторно.');
+  }
+}
+  
 </script>
 </body>
 </html>
