@@ -101,7 +101,6 @@ async function switchTab(t){
 }
 
 window.addEventListener('load', async()=>{
-  // 1. Иницијализирај Clerk
   if (window.Clerk) {
     await window.Clerk.load();
     
@@ -114,7 +113,6 @@ window.addEventListener('load', async()=>{
         const data = await res.json();
         let myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
         
-        // Ако не постои профил, прашајме Worker да го креира
         if(!myProfile || !myProfile.id){
           const token = await window.Clerk.session.getToken();
           const loginRes = await fetch('/api/clerk-login', {
@@ -151,7 +149,6 @@ window.addEventListener('load', async()=>{
     }
   }
 
-  // 2. Fallback: Ако не е Clerk, провери стара локална најава
   const email = localStorage.getItem('logged_email');
   if(!email) {
     document.getElementById('main').innerHTML='<div class="card"><h2>🔒 Не си најавен</h2><p>Те пренасочувам кон најава...</p></div>';
