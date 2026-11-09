@@ -266,8 +266,16 @@ function checkLoginStatus() {
   }
 }
 
-function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
-function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+function openAuthModal() {
+  if (window.Clerk) {
+    window.Clerk.openSignIn({
+      afterSignInUrl: window.location.href,
+      afterSignUpUrl: window.location.href,
+    });
+  } else {
+    alert("Clerk не е вчитан. Освежи ја страницата.");
+  }
+}
 
 // 3. РЕГИСТРАЦИЈА
 async function handleRegister() {
