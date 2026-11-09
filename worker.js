@@ -1,5 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 
+import { verifyToken } from '@clerk/backend';
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -242,6 +243,39 @@ export default {
           return out({ success: true });
         }
 
+        // ===== CLERK НАЈАВА (Нова) =====
+        if (path === "/api/clerk-login" && method === "POST") {
+          const authHeader = request.headers.get("Authorization");
+          if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return out({ error: "Нема валиден токен." }, 401);
+          }
+          
+          const token = authHeader.split(" ")[1];
+          try {
+            // Проверуваме дали токенот е валиден кај Clerk
+            const payload = await verifyToken(token, { secretKey: env.CLERK_SECRET_KEY });
+            const email = payload.email; // Го земаме мејлот од Clerk
+
+            // Проверуваме дали тој мејл постои во нашата база (Neon)
+            const majstor = await sql`SELECT id, name FROM majstori WHERE LOWER(email)=LOWER(${email}) LIMIT 1`;
+            if (majstor.length > 0) {
+              return out({ success: true, isMajstor: true, id: majstor[0].id, name: majstor[0].name });
+            }
+
+            const client = await sql`SELECT id FROM clients WHERE LOWER(email)=LOWER(${email}) LIMIT 1`;
+            if (client.length > 0) {
+              return out({ success: true, isMajstor: false, id: client[0].id });
+            }
+
+            // Ако мејлот не постои, враќаме success но без ID (за да се регистрира)
+            return out({ success: true, isNew: true, email: email });
+
+          } catch (e) {
+            return out({ error: "Невалиден Clerk токен: " + e.message }, 401);
+          }
+        }
+
+        
         // ===== НАЈАВА И ПРОФИЛ =====
         if (path === "/api/login-user" && method === "POST") {
           const b = await request.json();
