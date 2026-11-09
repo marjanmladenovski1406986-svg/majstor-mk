@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Majsto.mk — Најди проверен мајстор</title>
-  <script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA"src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <link rel="icon" type="image/png" href="/icon-192.png">
 <meta name="theme-color" content="#ff6b35">
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Inter, Arial, sans-serif; background: #0a0a0a; color: #fff; }
@@ -149,7 +149,7 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <button class="cat-btn" data-cat="dvorovi" onclick="filterCat('dvorovi', this)">🌳 Дворови</button>
     <button class="cat-btn" data-cat="cistenje" onclick="filterCat('cistenje', this)">🧹 Чистење</button>
     <button class="cat-btn" data-cat="opti" onclick="filterCat('opti', this)">🔨 Општи</button>
-        <button class="cat-btn" data-cat="bazeni" onclick="filterCat('bazeni', this)">🏊 Базени</button>
+    <button class="cat-btn" data-cat="bazeni" onclick="filterCat('bazeni', this)">🏊 Базени</button>
     <button class="cat-btn" data-cat="fasadi" onclick="filterCat('fasadi', this)">🏢 Фасади</button>
     <button class="cat-btn" data-cat="iskop" onclick="filterCat('iskop', this)">🚜 Ископ</button>
     <button class="cat-btn" data-cat="hidroizolacija" onclick="filterCat('hidroizolacija', this)">🛡️ Хидроизолација</button>
@@ -164,15 +164,10 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
     <div id="majstori-grid"></div>
   </div>
   <div>
-      <div id="partners-container"></div>
+    <div id="partners-container"></div>
     <h2 class="section-title">🔥 Најново</h2>
     <div class="loading" id="loading">Вчитувам слики...</div>
     <div class="grid" id="grid"></div>
-    <div style="text-align: center; margin-top: 20px;">
-  <button id="loadMoreBtn" onclick="loadMoreMedia()" style="background: #ff6b35; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; max-width: 300px; display: none;">
-    ⬇️ Вчитај повеќе слики
-  </button>
-</div>
   </div>
 </div>
 
@@ -213,23 +208,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <div class="footer-bottom"><p>© 2026 Мајстор.мк · Сите права задржани 🇲🇰</p></div>
 </footer>
 
-<!-- AUTH MODAL -->
-<div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px;">
-  <div style="background:#141414; border:1px solid #333; border-radius:20px; padding:30px; max-width:400px; width:100%; position:relative;">
-    <button onclick="closeAuthModal()" style="position:absolute; top:10px; right:15px; background:transparent; border:none; color:#999; font-size:24px; cursor:pointer;">✕</button>
-    <h2 style="color:#ff6b35; margin-bottom:20px; font-size:22px; text-align:center;">Најава / Регистрација</h2>
-    <input type="email" id="authEmail" placeholder="Е-пошта" style="width:100%; padding:12px; background:#222; border:1px solid #333; border-radius:10px; color:#fff; margin-bottom:10px;">
-    <input type="password" id="authPassword" placeholder="Лозинка (мин. 6 знаци)" style="width:100%; padding:12px; background:#222; border:1px solid #333; border-radius:10px; color:#fff; margin-bottom:10px;">
-    <label style="display:flex; align-items:center; gap:8px; color:#ccc; font-size:13px; margin-bottom:15px; cursor:pointer;">
-      <input type="checkbox" id="authIsMajstor" style="width:16px; height:16px; cursor:pointer;">
-      Сакам да се регистрирам како <b>Мајстор</b>
-    </label>
-    <button onclick="handleLogin()" style="width:100%; padding:14px; background:#ff6b35; color:#fff; border:none; border-radius:10px; font-weight:700; cursor:pointer; margin-bottom:8px;">Најави се</button>
-    <button onclick="handleRegister()" style="width:100%; padding:14px; background:transparent; border:1px solid #ff6b35; color:#ff6b35; border-radius:10px; font-weight:700; cursor:pointer;">Регистрирај се</button>
-    <p id="authMsg" style="color:#ff6b6b; font-size:13px; text-align:center; margin-top:10px;"></p>
-  </div>
-</div>
-
 <script>
 const CAT_NAMES={elektrika:"⚡ Електрика",vodovod:"💧 Водовод",gradeznistvo:"🏗️ Градежништво",popravki:"🔧 Поправки",finalni:"🎨 Финални работи",plockari:"🔲 Плочкари",gipsari:"🧱 Гипсари",stolari:"🚪 Столари",klima:"❄️ Клима",greenje:"🔥 Греење",krov:"🏠 Кров",sanitarii:"🚿 Санитарии",pvc:"🪟 ПВЦ",dvorovi:"🌳 Дворови",cistenje:"🧹 Чистење",opti:"🔨 Општи",bazeni:"🏊 Базени",fasadi:"🏢 Фасади",iskop:"🚜 Ископ",hidroizolacija:"🛡️ Хидроизолација",otpad:"🗑️ Отпад",videonadzor:"📹 Видео надзор"};
 const CITIES=['Скопје','Битола','Куманово','Прилеп','Тетово','Велес','Штип','Охрид','Гостивар','Струмица','Кавадарци','Кочани','Кичево','Струга','Радовиш','Гевгелија','Дебар','Крива Паланка','Свети Николе','Неготино','Делчево','Ресен','Пробиштип','Берово','Кратово','Крушево','Валандово','Македонски Брод','Демир Хисар','Демир Капија','Богданци','Дојран','Пехчево','Виница'];
@@ -238,9 +216,10 @@ let allMajstori = [];
 let allMedia = [];
 let currentFilter = 'all';
 let currentCityFilter = '';
+let loadedMediaCount = 12;
 
 // 1. ИНИЦИЈАЛИЗАЦИЈА
-  window.addEventListener('load', async () => {
+window.addEventListener('load', async()=>{
   // Иницијализирај Clerk
   if (window.Clerk) {
     await window.Clerk.load();
@@ -257,13 +236,10 @@ let currentCityFilter = '';
       if (data.success && data.id) {
         localStorage.setItem('logged_email', window.Clerk.user.primaryEmailAddress.emailAddress);
         localStorage.setItem('user_type', data.isMajstor ? 'majstor' : 'client');
-        // Освежи ја страницата за да се прикаже најавата
-        window.location.reload();
       }
     }
   }
-});
-window.addEventListener('load', async()=>{
+
   populateCities();
   checkLoginStatus();
   loadData();
@@ -276,9 +252,19 @@ function populateCities(){
 
 // 2. ПРОВЕРКА ДАЛИ СИ НАЈАВЕН
 function checkLoginStatus() {
-  const email = localStorage.getItem('logged_email');
   const headerRight = document.getElementById('headerRight');
   
+  // Прво проверуваме дали Clerk не препознава
+  if (window.Clerk && window.Clerk.user) {
+    headerRight.innerHTML = `
+      <a href="/dashboard.html" class="btn-profile">👤 Мој Профил</a>
+      <button class="btn-auth" onclick="handleLogout()" style="background:transparent; border:1px solid #333; color:#999;">Одјави се</button>
+    `;
+    return; 
+  }
+
+  // Ако не е Clerk, провери старата локална најава
+  const email = localStorage.getItem('logged_email');
   if(email) {
     headerRight.innerHTML = `
       <a href="/dashboard.html" class="btn-profile">👤 Мој Профил</a>
@@ -304,86 +290,20 @@ function openAuthModal() {
     alert("Clerk сè уште се вчитува. Освежи ја страницата и обиди се повторно.");
   }
 }
-// 3. РЕГИСТРАЦИЈА
-async function handleRegister() {
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value;
-  const isMajstor = document.getElementById('authIsMajstor').checked;
-  const msg = document.getElementById('authMsg');
-  
-  if(!email || !password) { msg.textContent = "Пополни мејл и лозинка."; return; }
-  if(password.length < 6) { msg.textContent = "Лозинката мора да има најмалку 6 знаци."; return; }
 
-  msg.textContent = "Се регистрирам...";
-  msg.style.color = "#ffb84d";
-
-  try {
-    const res = await fetch('/api/register-user', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, password, isMajstor })
-    });
-    
-    const data = await res.json();
-    
-    if(res.ok && data.success) {
-      msg.textContent = "✅ Успешна регистрација! Сега можеш да се најавиш.";
-      msg.style.color = "#6bff6b";
-    } else {
-      msg.textContent = "❌ " + (data.error || "Грешка при регистрација.");
-      msg.style.color = "#ff6b6b";
-    }
-  } catch(e) {
-    msg.textContent = "❌ Грешка: " + e.message;
-    msg.style.color = "#ff6b6b";
-  }
-}
-
-// 4. НАЈАВА
-async function handleLogin() {
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value;
-  const msg = document.getElementById('authMsg');
-
-  if(!email || !password) { msg.textContent = "Пополни мејл и лозинка."; return; }
-  
-  msg.textContent = "Се најавувам...";
-  msg.style.color = "#ffb84d";
-
-  try {
-    const res = await fetch('/api/login-user', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, password })
-    });
-    
-    const data = await res.json();
-    
-    if(res.ok && data.success) {
-      localStorage.setItem('logged_email', email);
-      localStorage.setItem('user_type', data.isMajstor ? 'majstor' : 'client');
-      msg.textContent = "✅ Успешна најава!";
-      msg.style.color = "#6bff6b";
-      
-      setTimeout(() => {
-        closeAuthModal();
-        window.location.reload();
-      }, 1000);
-    } else {
-      msg.textContent = "❌ " + (data.error || "Погрешен мејл или лозинка.");
-      msg.style.color = "#ff6b6b";
-    }
-  } catch(e) {
-    msg.textContent = "❌ Грешка: " + e.message;
-    msg.style.color = "#ff6b6b";
-  }
-}
-
-// 5. ОДЈАВА
 function handleLogout() {
-  localStorage.removeItem('logged_email');
-  localStorage.removeItem('user_type');
-  window.location.reload();
+  // Одјави се од Clerk ако си најавен
+  if (window.Clerk && window.Clerk.user) {
+    window.Clerk.signOut().then(() => {
+      localStorage.removeItem('logged_email');
+      localStorage.removeItem('user_type');
+      window.location.reload();
+    });
+  } else {
+    localStorage.removeItem('logged_email');
+    localStorage.removeItem('user_type');
+    window.location.reload();
+  }
 }
 
 // 6. ВЧИТУВАЊЕ НА ПОДАТОЦИ
@@ -397,32 +317,11 @@ async function loadData(){
     document.getElementById('founderCount').textContent = `${count}/50`;
     document.getElementById('founderFill').style.width = `${Math.min(100, count/50*100)}%`;
     document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
-
-
-    // Вчитување на партнери
-    try {
-      const pRes = await fetch('/api/partners');
-      const partners = await pRes.json();
-      if (Array.isArray(partners) && partners.length > 0) {
-        document.getElementById('partners-container').innerHTML = partners.map(p => `
-          <a href="${p.website_url}" target="_blank" class="partner-banner">
-            <div style="width: 90px; height: 90px; border-radius: 10px; flex-shrink: 0; background: #fff; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-              ${p.logo_url ? `<img src="${p.logo_url}" style="width:100%; height:100%; object-fit:contain;">` : '📢'}
-            </div>
-            <div style="flex: 1;">
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px;">🤝 Партнер</div>
-              <div style="font-size: 18px; color: #4da6ff; font-weight: 700; margin-bottom: 4px;">${p.name}</div>
-              <div style="font-size: 13px; color: #ccc;">${p.description || ''}</div>
-            </div>
-          </a>
-        `).join('');
-      }
-    } catch(e) { console.log("Грешка при партнери:", e); }
     
     renderMajstori();
-       const mediaRes = await fetch('/api/media');
+    const mediaRes = await fetch('/api/media');
     const mediaData = await mediaRes.json();
-    allMedia = Array.isArray(mediaData) ? mediaData : [];
+    allMedia = Array.isArray(mediaData) ? mediaData : []; 
     document.getElementById('loading').style.display = 'none';
     renderMedia();
   } catch(e) { console.error("Грешка:", e); }
@@ -441,7 +340,6 @@ function renderMajstori() {
   }).join('');
 }
 
-let loadedMediaCount = 12;  
 function renderMedia() {
   const grid = document.getElementById('grid');
   let filtered = allMedia.filter(m => {
@@ -458,15 +356,13 @@ function renderMedia() {
 
   if(filtered.length === 0) { grid.innerHTML = '<p style="color:#666;padding:15px;">Нема слики во оваа категорија.</p>'; return; }
   
-   const shuffledMedia = shuffleArray([...filtered]);
+  const shuffledMedia = shuffleArray([...filtered]);
   const mediaToShow = shuffledMedia.slice(0, loadedMediaCount);
   
   grid.innerHTML = mediaToShow.map(m => {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     const author = majstor ? majstor.name : 'Мајстор';
-    const category = majstor ? (CAT_NAMES[majstor.category] || majstor.category) : 'Мајстор';
-    
-    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}" alt="${author} - ${category}"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span></div></div></a>`;
+    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}" alt="Слика"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:12px; font-weight:600;">Види профил →</span></div></div></a>`;
   }).join('');
   
   const loadMoreBtn = document.getElementById('loadMoreBtn');
@@ -482,11 +378,9 @@ function loadMoreMedia() {
   renderMedia();
 }
 
-
 function filterCat(cat, btn) {
-
-  loadedMediaCount = 12; 
   currentFilter = cat;
+  loadedMediaCount = 12;
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
   renderMajstori();
@@ -495,8 +389,12 @@ function filterCat(cat, btn) {
 }
 
 function filterByCity(city) {
- loadedMediaCount = 12;
-
+  currentCityFilter = city;
+  currentFilter = 'all';
+  loadedMediaCount = 12;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  const allBtn = document.querySelector('.cat-btn[data-cat="all"]');
+  if (allBtn) allBtn.classList.add('active');
   renderMajstori();
   renderMedia();
 }
