@@ -366,6 +366,7 @@ function renderMedia() {
   }).join('');
   
   const loadMoreBtn = document.getElementById('loadMoreBtn');
+if (loadMoreBtn) {
   if (loadedMediaCount < filtered.length) {
     loadMoreBtn.style.display = 'inline-block';
   } else {
