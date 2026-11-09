@@ -4,6 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Дашборд — Majsto.mk</title>
 <link rel="icon" href="/icon-192.png"><meta name="theme-color" content="#ff6b35">
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWFqc3RvLm1rJA" src="https://clerk.majsto.mk/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Inter,system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
@@ -100,9 +101,46 @@ async function switchTab(t){
 }
 
 window.addEventListener('load', async()=>{
-  const email = localStorage.getItem('logged_email');
-  const userType = localStorage.getItem('user_type');
+  // 1. Иницијализирај Clerk
+  if (window.Clerk) {
+    await window.Clerk.load();
+    
+    // Ако корисникот е најавен преку Clerk, земи го неговиот мејл
+    if (window.Clerk.user) {
+      const email = window.Clerk.user.primaryEmailAddress.emailAddress;
+      localStorage.setItem('logged_email', email); 
+      
+      try {
+        const res = await fetch('/api/majstori');
+        const data = await res.json();
+        let myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
+        
+        if(!myProfile || !myProfile.id){
+          document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p></div>';
+          return;
+        }
+        
+        majstor = myProfile;
+        const [mRes,rRes] = await Promise.all([
+          fetch('/api/media?majstor_id='+majstor.id), 
+          fetch('/api/ratings?majstor_id='+majstor.id)
+        ]);
+        media = await mRes.json(); 
+        ratings = await rRes.json();
+        
+        document.getElementById('galCount').textContent=media.length + '/50';
+        document.getElementById('sidebar').style.display='block';
+        renderInfo();
+        return; 
+      } catch(e) {
+        document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
+        return;
+      }
+    }
+  }
 
+  // 2. Fallback: Ако не е Clerk, провери стара локална најава
+  const email = localStorage.getItem('logged_email');
   if(!email) {
     document.getElementById('main').innerHTML='<div class="card"><h2>🔒 Не си најавен</h2><p>Те пренасочувам кон најава...</p></div>';
     setTimeout(()=>{ window.location.href = '/'; }, 1500);
@@ -111,26 +149,10 @@ window.addEventListener('load', async()=>{
 
   document.getElementById('userName').textContent = email;
 
-  if(userType === 'client') {
-    document.getElementById('main').innerHTML='<div class="card"><h2>✅ Најавен си како Клиент</h2><p>Клиентите немаат Dashboard. Можеш да се вратиш на <a href="/" style="color:#ff6b35">почетна</a>.</p></div>';
-    return;
-  }
-
   try {
     const res = await fetch('/api/majstori');
     const data = await res.json();
-    let myProfile = null;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const adminId = urlParams.get('admin_id');
-    const ADMIN_EMAILS = ['marjanmladenovski1406986@gmail.com', 'majsto.info@gmail.com'];
-    
-    if (adminId && ADMIN_EMAILS.includes(email.toLowerCase())) {
-      myProfile = Array.isArray(data) ? data.find(m => m.id == adminId) : null;
-      document.getElementById('userName').innerHTML = `<span style="color:#ff6b35; font-weight:bold;">[АДМИН]</span> Уредуваш: ${myProfile?.name || 'Непознат'}`;
-    } else {
-      myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
-    }
+    let myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
     
     if(!myProfile || !myProfile.id){
       document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p></div>';
@@ -138,23 +160,16 @@ window.addEventListener('load', async()=>{
     }
     
     majstor = myProfile;
-    
-    try {
-        const mRes = await fetch('/api/media?majstor_id='+majstor.id);
-        media = await mRes.json();
-        if(!Array.isArray(media)) media = []; 
-    } catch(e) { media = []; }
-
-    try {
-        const rRes = await fetch('/api/ratings?majstor_id='+majstor.id);
-        ratings = await rRes.json();
-        if(!Array.isArray(ratings)) ratings = [];
-    } catch(e) { ratings = []; }
+    const [mRes,rRes] = await Promise.all([
+      fetch('/api/media?majstor_id='+majstor.id), 
+      fetch('/api/ratings?majstor_id='+majstor.id)
+    ]);
+    media = await mRes.json(); 
+    ratings = await rRes.json();
     
     document.getElementById('galCount').textContent=media.length + '/50';
     document.getElementById('sidebar').style.display='block';
     renderInfo();
-    
   } catch(e) {
     document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
   }
@@ -263,15 +278,15 @@ async function handleFiles(files){
     try {
       const up = await fetch('/api/upload', {method:'POST', body:fd});
       const j = await up.json();
-       if(j.secure_url){
+      if(j.secure_url){
         await fetch('/api/add-media', { 
           method:'POST', 
           headers:{'Content-Type':'application/json'}, 
           body:JSON.stringify({majstor_id:majstor.id, url:j.secure_url, type:'image', file_id:j.fileId}) 
         });
-           }
-          } catch(e) { toast('❌ Грешка: ' + e.message); }
       }
+    } catch(e) { toast('❌ Грешка: ' + e.message); }
+  }
   
   setTimeout(async () => {
     const r = await fetch('/api/media?majstor_id='+majstor.id); 
@@ -284,24 +299,12 @@ async function handleFiles(files){
 
 async function deleteImg(id){
   if(!confirm('Избриши?')) return; 
-  
-  toast('Се брише...');
-  
-  try {
-    await fetch('/api/delete-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id}) }); 
-    
-    // Чекаме 1.5 секунди за да има време ImageKit да ја избрише сликата
-    setTimeout(async () => {
-      const r = await fetch('/api/media?majstor_id='+majstor.id); 
-      media = await r.json(); 
-      document.getElementById('galCount').textContent=media.length + '/50'; 
-      renderGallery(); 
-      toast('✅ Избришано');
-    }, 1500);
-    
-  } catch(e) {
-    toast('❌ Грешка: ' + e.message);
-  }
+  await fetch('/api/delete-media', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id}) }); 
+  const r = await fetch('/api/media?majstor_id='+majstor.id); 
+  media = await r.json(); 
+  document.getElementById('galCount').textContent=media.length + '/50'; 
+  renderGallery(); 
+  toast('Избришано');
 }
 
 function renderStats(){
@@ -319,7 +322,10 @@ function renderStats(){
 
 function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
-function logout() {
+async function logout() {
+  if (window.Clerk && window.Clerk.user) {
+    await window.Clerk.signOut();
+  }
   localStorage.removeItem('logged_email');
   localStorage.removeItem('user_type');
   location.href = '/';
