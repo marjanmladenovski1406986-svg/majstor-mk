@@ -1,4 +1,3 @@
-
 import { neon } from '@neondatabase/serverless';
 import { verifyToken } from '@clerk/backend';
 
@@ -62,6 +61,48 @@ export default {
           return out({ success: true });
         }
 
+        // ===== CLERK НАЈАВА (Автоматско креирање) =====
+        if (path === "/api/clerk-login" && method === "POST") {
+          const authHeader = request.headers.get("Authorization");
+          if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return out({ error: "Нема валиден токен." }, 401);
+          }
+          
+          const token = authHeader.split(" ")[1];
+          try {
+            const payload = await verifyToken(token, { secretKey: env.CLERK_SECRET_KEY });
+            const email = payload.email;
+
+            // 1. Проверуваме дали постои како мајстор
+            const majstor = await sql`SELECT id, name FROM majstori WHERE LOWER(email)=LOWER(${email}) LIMIT 1`;
+            if (majstor.length > 0) {
+              return out({ success: true, isMajstor: true, id: majstor[0].id, name: majstor[0].name });
+            }
+
+            // 2. Проверуваме дали постои како клиент
+            const client = await sql`SELECT id FROM clients WHERE LOWER(email)=LOWER(${email}) LIMIT 1`;
+            if (client.length > 0) {
+              return out({ success: true, isMajstor: false, id: client[0].id });
+            }
+
+            // 3. Ако не постои никаде, го креираме како нов мајстор (Founder)
+            const countRes = await sql`SELECT COUNT(*) as count FROM majstori`;
+            const totalMajstori = parseInt(countRes[0].count);
+            const isFounder = totalMajstori < 50; 
+
+            const newMajstor = await sql`
+              INSERT INTO majstori (email, name, category, city, is_founder) 
+              VALUES (${email}, 'Нов Мајстор', 'opti', 'Скопје', ${isFounder}) 
+              RETURNING id, name
+            `;
+
+            return out({ success: true, isMajstor: true, id: newMajstor[0].id, name: newMajstor[0].name });
+
+          } catch (e) {
+            return out({ error: "Невалиден Clerk токен: " + e.message }, 401);
+          }
+        }
+
         // ===== МЕДИА (Слики) =====
         if (path === "/api/media" && method === "GET") {
           const majstorId = url.searchParams.get('majstor_id');
@@ -82,12 +123,10 @@ export default {
 
         if (path === "/api/delete-media" && method === "POST") {
           const b = await request.json();
-          
           const mediaData = await sql`SELECT file_id FROM majstor_media WHERE id = ${b.id}`;
           
           if (mediaData.length > 0 && mediaData[0].file_id) {
             const fileId = mediaData[0].file_id;
-            
             if (env.IMAGEKIT_PRIVATE_KEY) {
               try {
                 const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
@@ -95,12 +134,9 @@ export default {
                   method: 'DELETE',
                   headers: { 'Authorization': `Basic ${auth}` }
                 });
-              } catch (err) {
-                console.log("Грешка при бришење од ImageKit:", err.message);
-              }
+              } catch (err) { console.log("Грешка при бришење:", err.message); }
             }
           }
-          
           await sql`DELETE FROM majstor_media WHERE id=${b.id}`;
           return out({ success: true });
         }
@@ -122,21 +158,13 @@ export default {
           if (!b.majstor_id || !b.user_id || !b.rating) {
             return out({ error: "Missing data" }, 400);
           }
-          
           await sql`INSERT INTO ratings (majstor_id, user_id, rating, comment, status) 
                     VALUES (${b.majstor_id}, ${b.user_id}, ${b.rating}, ${b.comment || ''}, 'pending')`;
           
-          const stats = await sql`
-            SELECT COUNT(*) as count, AVG(rating) as avg 
-            FROM ratings 
-            WHERE majstor_id = ${b.majstor_id} AND status = 'approved'
-          `;
-          
+          const stats = await sql`SELECT COUNT(*) as count, AVG(rating) as avg FROM ratings WHERE majstor_id = ${b.majstor_id} AND status = 'approved'`;
           const count = parseInt(stats[0].count);
           const avg = count > 0 ? parseFloat(stats[0].avg) : 0;
-          
           await sql`UPDATE majstori SET rating = ${avg}, rating_count = ${count} WHERE id = ${b.majstor_id}`;
-          
           return out({ success: true });
         }
 
@@ -146,24 +174,15 @@ export default {
         
         if (path === "/api/approve-rating" && method === "POST") {
           const b = await request.json();
-          
           await sql`UPDATE ratings SET status = 'approved' WHERE id = ${b.id}`;
-          
           const ratingData = await sql`SELECT majstor_id FROM ratings WHERE id = ${b.id}`;
           if (ratingData.length > 0) {
             const majstorId = ratingData[0].majstor_id;
-            
-            const stats = await sql`
-              SELECT COUNT(*) as count, AVG(rating) as avg 
-              FROM ratings 
-              WHERE majstor_id = ${majstorId} AND status = 'approved'
-            `;
+            const stats = await sql`SELECT COUNT(*) as count, AVG(rating) as avg FROM ratings WHERE majstor_id = ${majstorId} AND status = 'approved'`;
             const count = parseInt(stats[0].count);
             const avg = count > 0 ? parseFloat(stats[0].avg) : 0;
-            
             await sql`UPDATE majstori SET rating = ${avg}, rating_count = ${count} WHERE id = ${majstorId}`;
           }
-          
           return out({ success: true });
         }
         
@@ -237,34 +256,6 @@ export default {
           return out({ success: true });
         }
 
-        // ===== CLERK НАЈАВА =====
-        if (path === "/api/clerk-login" && method === "POST") {
-          const authHeader = request.headers.get("Authorization");
-          if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return out({ error: "Нема валиден токен." }, 401);
-          }
-          
-          const token = authHeader.split(" ")[1];
-          try {
-            const payload = await verifyToken(token, { secretKey: env.CLERK_SECRET_KEY });
-            const email = payload.email;
-
-            const majstor = await sql`SELECT id, name FROM majstori WHERE LOWER(email)=LOWER(${email}) LIMIT 1`;
-            if (majstor.length > 0) {
-              return out({ success: true, isMajstor: true, id: majstor[0].id, name: majstor[0].name });
-            }
-
-            const client = await sql`SELECT id FROM clients WHERE LOWER(email)=LOWER(${email}) LIMIT 1`;
-            if (client.length > 0) {
-              return out({ success: true, isMajstor: false, id: client[0].id });
-            }
-
-            return out({ success: true, isNew: true, email: email });
-          } catch (e) {
-            return out({ error: "Невалиден Clerk токен: " + e.message }, 401);
-          }
-        }
-
         // ===== НАЈАВА И ПРОФИЛ =====
         if (path === "/api/login-user" && method === "POST") {
           const b = await request.json();
@@ -285,9 +276,7 @@ export default {
             const countRes = await sql`SELECT COUNT(*) as count FROM majstori`;
             const totalMajstori = parseInt(countRes[0].count);
             const isFounder = totalMajstori < 50; 
-
-            await sql`INSERT INTO majstori (email, password, name, category, city, is_founder) 
-                      VALUES (${b.email}, ${b.password}, 'Нов Мајстор', 'opti', 'Скопје', ${isFounder})`;
+            await sql`INSERT INTO majstori (email, password, name, category, city, is_founder) VALUES (${b.email}, ${b.password}, 'Нов Мајстор', 'opti', 'Скопје', ${isFounder})`;
           } else {
             await sql`INSERT INTO clients (email, password, name) VALUES (${b.email}, ${b.password}, 'Клиент')`;
           }
@@ -325,7 +314,6 @@ export default {
           if (!env.IMAGEKIT_PRIVATE_KEY || !env.IMAGEKIT_URL_ENDPOINT) {
             return out({ error: "ImageKit клучевите не се поставени во Cloudflare!" }, 500);
           }
-
           const fd = await request.formData();
           const file = fd.get('file');
           if (!file) return out({ error: "Нема слика" }, 400);
@@ -336,19 +324,15 @@ export default {
 
           try {
             const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
-            
             const res = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
               method: 'POST',
               headers: { 'Authorization': `Basic ${auth}` },
               body: imagekitData
             });
-            
             const json = await res.json();
-            
             if (!res.ok || !json.url) {
               return out({ error: json.message || "ImageKit не ја прифати сликата" }, 500);
             }
-            
             return out({ secure_url: json.url, url: json.url, fileId: json.fileId });
           } catch (err) {
             return out({ error: "Мрежна грешка при качување: " + err.message }, 500);
