@@ -256,7 +256,7 @@ export default {
           return out({ error: 'Погрешен мејл или лозинка.' }, 401);
         }
 
-        if (path === "/api/register-user" && method === "POST") {
+              if (path === "/api/register-user" && method === "POST") {
           const b = await request.json();
           const checkM = await sql`SELECT id FROM majstori WHERE LOWER(email)=LOWER(${b.email})`;
           const checkC = await sql`SELECT id FROM clients WHERE LOWER(email)=LOWER(${b.email})`;
@@ -266,7 +266,12 @@ export default {
             const countRes = await sql`SELECT COUNT(*) as count FROM majstori`;
             const totalMajstori = parseInt(countRes[0].count);
             const isFounder = totalMajstori < 50; 
-            await sql`INSERT INTO majstori (email, password, name, category, city, is_founder) VALUES (${b.email}, ${b.password}, 'Нов Мајстор', 'opti', 'Скопје', ${isFounder})`;
+            
+            // Ако лозинката е clerk_temp, ставаме NULL
+            const pass = b.password === 'clerk_temp' ? null : b.password;
+            
+            await sql`INSERT INTO majstori (email, password, name, category, city, is_founder) 
+                      VALUES (${b.email}, ${pass}, 'Нов Мајстор', 'opti', 'Скопје', ${isFounder})`;
           } else {
             await sql`INSERT INTO clients (email, password, name) VALUES (${b.email}, ${b.password}, 'Клиент')`;
           }
