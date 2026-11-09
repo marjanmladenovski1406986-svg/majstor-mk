@@ -220,11 +220,8 @@ let loadedMediaCount = 12;
 
 // 1. ИНИЦИЈАЛИЗАЦИЈА
 window.addEventListener('load', async()=>{
-  // Иницијализирај Clerk
   if (window.Clerk) {
     await window.Clerk.load();
-    
-    // Ако корисникот е најавен преку Clerk, провери го во нашата база
     if (window.Clerk.user) {
       const token = await window.Clerk.session.getToken();
       const res = await fetch('/api/clerk-login', {
@@ -232,14 +229,12 @@ window.addEventListener('load', async()=>{
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
-      
       if (data.success && data.id) {
         localStorage.setItem('logged_email', window.Clerk.user.primaryEmailAddress.emailAddress);
         localStorage.setItem('user_type', data.isMajstor ? 'majstor' : 'client');
       }
     }
   }
-
   populateCities();
   checkLoginStatus();
   loadData();
@@ -253,8 +248,6 @@ function populateCities(){
 // 2. ПРОВЕРКА ДАЛИ СИ НАЈАВЕН
 function checkLoginStatus() {
   const headerRight = document.getElementById('headerRight');
-  
-  // Прво проверуваме дали Clerk не препознава
   if (window.Clerk && window.Clerk.user) {
     headerRight.innerHTML = `
       <a href="/dashboard.html" class="btn-profile">👤 Мој Профил</a>
@@ -262,8 +255,6 @@ function checkLoginStatus() {
     `;
     return; 
   }
-
-  // Ако не е Clerk, провери старата локална најава
   const email = localStorage.getItem('logged_email');
   if(email) {
     headerRight.innerHTML = `
@@ -292,7 +283,6 @@ function openAuthModal() {
 }
 
 function handleLogout() {
-  // Одјави се од Clerk ако си најавен
   if (window.Clerk && window.Clerk.user) {
     window.Clerk.signOut().then(() => {
       localStorage.removeItem('logged_email');
@@ -306,7 +296,7 @@ function handleLogout() {
   }
 }
 
-// 6. ВЧИТУВАЊЕ НА ПОДАТОЦИ
+// 3. ВЧИТУВАЊЕ НА ПОДАТОЦИ
 async function loadData(){
   try {
     const mRes = await fetch('/api/majstori');
@@ -366,11 +356,12 @@ function renderMedia() {
   }).join('');
   
   const loadMoreBtn = document.getElementById('loadMoreBtn');
-if (loadMoreBtn) {
-  if (loadedMediaCount < filtered.length) {
-    loadMoreBtn.style.display = 'inline-block';
-  } else {
-    loadMoreBtn.style.display = 'none';
+  if (loadMoreBtn) {
+    if (loadedMediaCount < filtered.length) {
+      loadMoreBtn.style.display = 'inline-block';
+    } else {
+      loadMoreBtn.style.display = 'none';
+    }
   }
 }
 
@@ -404,7 +395,6 @@ function scrollToMasters() {
   document.getElementById('majstori-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ФУНКЦИИ ЗА МОДАЛ НА КАТЕГОРИИ
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -420,7 +410,6 @@ function openCategoriesModal() {
       <span>${value}</span>
     </button>
   `).join('');
-  
   document.getElementById('categoriesModal').style.display = 'flex';
 }
 
