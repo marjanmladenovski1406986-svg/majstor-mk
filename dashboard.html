@@ -114,20 +114,9 @@ window.addEventListener('load', async()=>{
         let myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
         
         if(!myProfile || !myProfile.id){
-          const token = await window.Clerk.session.getToken();
-          const loginRes = await fetch('/api/clerk-login', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          const loginData = await loginRes.json();
-          
-          if (loginData.success && loginData.id) {
-            window.location.reload(); 
-            return;
-          } else {
-            document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Грешка</h2><p>Не можевме да го креираме профилот.</p></div>';
-            return;
-          }
+          // Ако не постои, покажи копче за рачна регистрација
+          document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p><button class="btn btn-orange" onclick="registerAsMajstor()" style="margin-top:15px;">Регистрирај се како мајстор</button></div>';
+          return;
         }
         
         majstor = myProfile;
@@ -163,10 +152,10 @@ window.addEventListener('load', async()=>{
     const data = await res.json();
     let myProfile = Array.isArray(data) ? data.find(m => m.email && m.email.toLowerCase() === email.toLowerCase()) : null;
     
-             if(!myProfile || !myProfile.id){
-          document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p><button class="btn btn-orange" onclick="registerAsMajstor()" style="margin-top:15px;">Регистрирај се како мајстор</button></div>';
-          return;
-        }
+    if(!myProfile || !myProfile.id){
+      document.getElementById('main').innerHTML='<div class="card"><h2>⚠️ Немате профил на мајстор</h2><p>Мејлот <b>'+email+'</b> не е поврзан со мајстор.</p></div>';
+      return;
+    }
     
     majstor = myProfile;
     const [mRes,rRes] = await Promise.all([
@@ -183,6 +172,23 @@ window.addEventListener('load', async()=>{
     document.getElementById('main').innerHTML='<div class="card"><h2>❌ Грешка</h2><p>'+e.message+'</p></div>';
   }
 });
+
+async function registerAsMajstor() {
+  const email = window.Clerk.user.primaryEmailAddress.emailAddress;
+  
+  const res = await fetch('/api/register-user', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ email: email, password: 'clerk_temp', isMajstor: true })
+  });
+  
+  if (res.ok) {
+    window.location.reload();
+  } else {
+    const err = await res.json();
+    alert('Грешка при регистрација: ' + (err.error || 'Непозната'));
+  }
+}
 
 function renderInfo(){
   const isFounder = majstor.is_founder;
@@ -368,22 +374,6 @@ function compressImage(file, maxWidth = 1200, quality = 0.5) {
     };
   });
 }
-async function registerAsMajstor() {
-  const email = window.Clerk.user.primaryEmailAddress.emailAddress;
-  
-  const res = await fetch('/api/register-user', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ email: email, password: 'clerk_temp', isMajstor: true })
-  });
-  
-  if (res.ok) {
-    window.location.reload();
-  } else {
-    alert('Грешка при регистрација. Обиди се повторно.');
-  }
-}
-  
 </script>
 </body>
 </html>
