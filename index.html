@@ -287,6 +287,7 @@ function openAuthModal() {
 }
 
 function handleLogout() {
+  // Одјави се од Clerk ако си најавен
   if (window.Clerk && window.Clerk.user) {
     window.Clerk.signOut().then(() => {
       localStorage.removeItem('logged_email');
