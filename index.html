@@ -291,7 +291,6 @@ function checkLoginStatus() {
 
 function openAuthModal() {
   if (typeof window.Clerk !== 'undefined') {
-    // Го вчитуваме Clerk и чекаме да биде целосно подготвен
     window.Clerk.load().then(() => {
       window.Clerk.openSignIn({
         afterSignInUrl: window.location.href,
@@ -305,7 +304,6 @@ function openAuthModal() {
     alert("Clerk сè уште се вчитува. Освежи ја страницата и обиди се повторно.");
   }
 }
-
 // 3. РЕГИСТРАЦИЈА
 async function handleRegister() {
   const email = document.getElementById('authEmail').value.trim();
