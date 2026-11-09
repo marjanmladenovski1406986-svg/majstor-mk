@@ -290,13 +290,24 @@ function checkLoginStatus() {
 }
 
 function openAuthModal() {
-  if (window.Clerk) {
+  // Проверуваме дали Clerk постои
+  if (typeof window.Clerk !== 'undefined' && window.Clerk.openSignIn) {
     window.Clerk.openSignIn({
       afterSignInUrl: window.location.href,
       afterSignUpUrl: window.location.href,
     });
   } else {
-    alert("Clerk не е вчитан. Освежи ја страницата.");
+    // Ако не е вчитан, го вчитуваме и потоа отвораме
+    if (typeof window.Clerk !== 'undefined') {
+      window.Clerk.load().then(() => {
+        window.Clerk.openSignIn({
+          afterSignInUrl: window.location.href,
+          afterSignUpUrl: window.location.href,
+        });
+      });
+    } else {
+      alert("Clerk сè уште се вчитува. Освежи ја страницата и обиди се повторно.");
+    }
   }
 }
 
