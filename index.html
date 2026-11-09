@@ -290,24 +290,19 @@ function checkLoginStatus() {
 }
 
 function openAuthModal() {
-  // Проверуваме дали Clerk постои
-  if (typeof window.Clerk !== 'undefined' && window.Clerk.openSignIn) {
-    window.Clerk.openSignIn({
-      afterSignInUrl: window.location.href,
-      afterSignUpUrl: window.location.href,
+  if (typeof window.Clerk !== 'undefined') {
+    // Го вчитуваме Clerk и чекаме да биде целосно подготвен
+    window.Clerk.load().then(() => {
+      window.Clerk.openSignIn({
+        afterSignInUrl: window.location.href,
+        afterSignUpUrl: window.location.href,
+      });
+    }).catch((err) => {
+      console.error("Грешка при вчитување на Clerk:", err);
+      alert("Clerk не може да се вчита. Обиди се повторно.");
     });
   } else {
-    // Ако не е вчитан, го вчитуваме и потоа отвораме
-    if (typeof window.Clerk !== 'undefined') {
-      window.Clerk.load().then(() => {
-        window.Clerk.openSignIn({
-          afterSignInUrl: window.location.href,
-          afterSignUpUrl: window.location.href,
-        });
-      });
-    } else {
-      alert("Clerk сè уште се вчитува. Освежи ја страницата и обиди се повторно.");
-    }
+    alert("Clerk сè уште се вчитува. Освежи ја страницата и обиди се повторно.");
   }
 }
 
