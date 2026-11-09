@@ -85,18 +85,8 @@ export default {
               return out({ success: true, isMajstor: false, id: client[0].id });
             }
 
-            // 3. Ако не постои никаде, го креираме како нов мајстор (Founder)
-            const countRes = await sql`SELECT COUNT(*) as count FROM majstori`;
-            const totalMajstori = parseInt(countRes[0].count);
-            const isFounder = totalMajstori < 50; 
-
-            const newMajstor = await sql`
-              INSERT INTO majstori (email, name, category, city, is_founder) 
-              VALUES (${email}, 'Нов Мајстор', 'opti', 'Скопје', ${isFounder}) 
-              RETURNING id, name
-            `;
-
-            return out({ success: true, isMajstor: true, id: newMajstor[0].id, name: newMajstor[0].name });
+                      // 3. Ако не постои, враќаме isNew (НЕ го креираме автоматски)
+            return out({ success: true, isNew: true, email: email });
 
           } catch (e) {
             return out({ error: "Невалиден Clerk токен: " + e.message }, 401);
