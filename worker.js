@@ -221,6 +221,17 @@ export default {
           return out({ success: true });
         }
 
+                // ===== ПРОДАВНИЦИ =====
+        if (path === "/api/prodavnici" && method === "GET") {
+          return out(await sql`SELECT * FROM prodavnici ORDER BY id DESC`);
+        }
+        if (path === "/api/add-prodavnica" && method === "POST") {
+          const b = await request.json();
+          await sql`INSERT INTO prodavnici (name, description, logo_url, address, phone, website_url) 
+                    VALUES (${b.name}, ${b.description}, ${b.logo_url}, ${b.address}, ${b.phone}, ${b.website_url})`;
+          return out({ success: true });
+        }
+
         // ===== ФОРУМ =====
         if (path === "/api/forum" && method === "GET") {
           return out(await sql`SELECT * FROM majstor_forum ORDER BY created_at DESC`);
