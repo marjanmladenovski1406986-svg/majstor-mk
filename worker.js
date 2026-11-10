@@ -131,6 +131,37 @@ export default {
           return out({ success: true });
         }
 
+        // ===== КАЧУВАЊЕ НА СЛИКА ЗА ПРОДАВНИЦИ/ПАРТНЕРИ =====
+        if (path === "/api/upload-store" && method === "POST") {
+          if (!env.IMAGEKIT_PRIVATE_KEY || !env.IMAGEKIT_URL_ENDPOINT) {
+            return out({ error: "ImageKit клучевите не се поставени!" }, 500);
+          }
+          const fd = await request.formData();
+          const file = fd.get('file');
+          if (!file) return out({ error: "Нема слика" }, 400);
+
+          const imagekitData = new FormData();
+          imagekitData.append('file', file);
+          imagekitData.append('fileName', `store_${Date.now()}.jpg`);
+
+          try {
+            const auth = btoa(env.IMAGEKIT_PRIVATE_KEY + ":");
+            const res = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
+              method: 'POST',
+              headers: { 'Authorization': `Basic ${auth}` },
+              body: imagekitData
+            });
+            const json = await res.json();
+            if (!res.ok || !json.url) {
+              return out({ error: json.message || "ImageKit не ја прифати сликата" }, 500);
+            }
+            return out({ url: json.url });
+          } catch (err) {
+            return out({ error: "Мрежна грешка: " + err.message }, 500);
+          }
+        }
+
+        
         // ===== ОЦЕНКИ =====
         if (path === "/api/ratings" && method === "GET") {
           const majstorId = url.searchParams.get('majstor_id');
