@@ -21,7 +21,7 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
 .btn-profile { background: #2a2a2a; color: #fff; border: 1px solid #ff6b35; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 14px; font-family: inherit; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; }
 .btn-profile:hover { background: #ff6b35; color: #000; }
 
-/* ХЕРО СЕКЦИЈА - ПОЛОБАРА ПОЗАДИНА */
+/* ХЕРО СЕКЦИЈА */
 .hero { text-align: center; padding: 80px 20px 60px; position: relative; background: radial-gradient(circle at 50% 0%, #2a1a0a 0%, #0a0a0a 70%); }
 .hero h1 { font-size: clamp(32px, 5vw, 50px); margin-bottom: 20px; color: #fff; font-weight: 900; line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
 .hero h1 span { color: #ff6b35; }
@@ -41,13 +41,55 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
 .cat-btn.active { background: #ff6b35; border-color: #ff6b35; color: #000; font-weight: 700; }
 @media (min-width: 769px) { .categories { flex-wrap: wrap; justify-content: center; max-width: 1200px; margin: 0 auto; } }
 
-/* ПРЕБАРУВАЧ И БАНЕРИ (Сега се под категориите) */
-.search-section { max-width: 760px; margin: 0 auto 40px; padding: 0 20px; }
-.search-bar { background: rgba(22, 22, 22, 0.8); backdrop-filter: blur(10px); border: 1px solid #333; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-.search-bar select { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #444; background: #1a1a1a; color: #fff; font-size: 16px; cursor: pointer; outline: none; transition: 0.2s; }
-.search-bar select:focus { border-color: #ff6b35; }
-.btn-categories { background: transparent; border: 1px solid #ff6b35; color: #ff6b35; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; transition: 0.2s; }
-.btn-categories:hover { background: rgba(255, 107, 53, 0.1); }
+/* ПРЕБАРУВАЧ И БАНЕРИ (Нов распоред) */
+.search-section { max-width: 760px; margin: 0 auto 40px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Контејнер за копчињата - за да бидат исти */
+.filter-group { display: flex; flex-direction: column; gap: 12px; }
+
+/* Заеднички стил за двете копчиња (Селект и Копче) */
+.filter-group select, 
+.filter-group .btn-categories {
+  width: 100%;
+  height: 56px; /* Иста висина за двата елементи */
+  border-radius: 12px;
+  border: 1px solid #333;
+  background: #141414;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+/* Специфично за паѓачкото мени */
+.filter-group select {
+  padding: 0 20px;
+  appearance: none; /* Трга стандардна стрелка */
+  /* Додава бела стрелка за да изгледа убаво */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 12px;
+}
+
+/* Специфично за копчето */
+.filter-group .btn-categories {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ефект кога ќе се помине со глувче или кликне */
+.filter-group select:focus,
+.filter-group .btn-categories:hover {
+  border-color: #ff6b35;
+}
+
+/* БАНЕРОТ ЗА ПРОДАВНИЦИ (Одвоен) */
 .banner-link { display: block; width: 100%; border-radius: 12px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; }
 .banner-link:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
 .banner-link img { width: 100%; height: auto; display: block; object-fit: cover; }
@@ -140,7 +182,7 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   <div style="font-weight:900;color:#ff6b35; font-size: 20px;" id="founderCount">0/50</div>
 </div>
 
-<!-- 1. ЛЕНТА СО КАТЕГОРИИ (Сега е тука) -->
+<!-- 1. ЛЕНТА СО КАТЕГОРИИ -->
 <div class="categories-wrapper">
   <div class="categories" id="categories-bar">
     <button class="cat-btn active" data-cat="all" onclick="filterCat('all', this)">Сите</button>
@@ -169,9 +211,11 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </div>
 </div>
 
-<!-- 2. ПРЕБАРУВАЧ И БАНЕР (Сега се под категориите) -->
+<!-- 2. ПРЕБАРУВАЧ И БАНЕР (Нов, одвоен распоред) -->
 <div class="search-section">
-  <div class="search-bar">
+  
+  <!-- Двете копчиња сега се тука и се со иста форма -->
+  <div class="filter-group">
     <select id="cityFilter" onchange="filterByCity(this.value); scrollToMasters();">
       <option value="">📍 Сите градови</option>
     </select>
@@ -179,11 +223,12 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
     <button onclick="openCategoriesModal()" class="btn-categories">
       📂 Види ги сите категории
     </button>
-
-    <a href="/prodavnici.html" class="banner-link">
-      <img src="/banner.png" alt="Рекламирај ја твојата продавница">
-    </a>
   </div>
+
+  <!-- Банерот е целосно одвоен под копчињата -->
+  <a href="/prodavnici.html" class="banner-link">
+    <img src="/banner.png" alt="Рекламирај ја твојата продавница">
+  </a>
 </div>
 
 <!-- МОДАЛ ЗА КАТЕГОРИИ -->
@@ -515,4 +560,4 @@ function selectCategoryFromModal(catKey) {
 }
 </script>
 </body>
-        </html>
+</html>
