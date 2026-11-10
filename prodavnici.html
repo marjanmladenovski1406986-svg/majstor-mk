@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Партнерски Продавници — Majstor.mk</title>
+<link rel="icon" type="image/png" href="/icon-192.png">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Inter, Arial, sans-serif; background: #0a0a0a; color: #fff; }
+header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; }
+.logo { font-size: 20px; font-weight: 900; color: #ff6b35; text-decoration: none; }
+.btn-back { background: #2a2a2a; color: #fff; border: 1px solid #ff6b35; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
+
+.partners-section { padding: 60px 20px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); min-height: 80vh; }
+.partners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+
+.partner-card { background: #252525; border-radius: 16px; padding: 30px 20px; text-align: center; border: 1px solid #333; transition: all 0.3s ease; cursor: pointer; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.partner-card:hover { transform: translateY(-8px); border-color: #ff8c00; box-shadow: 0 10px 30px rgba(255, 140, 0, 0.15); }
+
+.partner-logo { width: 80px; height: 80px; background: linear-gradient(135deg, #ff8c00, #ffb700); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem; color: white; overflow: hidden; }
+.partner-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+.add-card { background: rgba(255, 140, 0, 0.05); border: 2px dashed #ff8c00; }
+.add-card:hover { background: rgba(255, 140, 0, 0.1); }
+.add-card .plus { font-size: 2.5rem; color: #ff8c00; margin-bottom: 15px; }
+
+@media (max-width: 480px) { .partners-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">🔨 Majstor.mk</a>
+  <a href="/" class="btn-back">← Назад кон сајтот</a>
+</header>
+
+<section class="partners-section">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 50px;">
+      <h2 style="font-size: 2.2rem; color: #ff8c00; margin-bottom: 15px; font-weight: 700;">🏪 Нашите Партнерски Продавници</h2>
+      <p style="color: #ccc; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Купи од проверени продавници во твојот град — квалитет и доверливост на едно место</p>
+      <div style="width: 80px; height: 4px; background: linear-gradient(90deg, #ff8c00, #ffb700); margin: 20px auto; border-radius: 2px;"></div>
+    </div>
+
+    <div class="partners-grid" id="partners-grid">
+      <p style="color: #666; text-align: center; grid-column: 1/-1;">Вчитувам продавници...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+window.addEventListener('load', async () => {
+  const grid = document.getElementById('partners-grid');
+  
+  // Картичката која секогаш стои на крајот
+  const addCardHtml = `
+    <a href="tel:076638703" class="partner-card add-card">
+      <div class="plus">+</div>
+      <h3 style="color: #ff8c00; font-size: 1.1rem; margin-bottom: 5px;">Сакаш да се рекламираш?</h3>
+      <p style="color: #888; font-size: 0.9rem;">Контактирај не и ти ќе се појавиш овде</p>
+    </a>
+  `;
+
+  try {
+    const res = await fetch('/api/prodavnici');
+    const stores = await res.json();
+
+    if (stores.length === 0) {
+      grid.innerHTML = addCardHtml;
+      return;
+    }
+
+    let storesHtml = stores.map(s => `
+      <a href="${s.website_url ? s.website_url : '#'}" target="${s.website_url ? '_blank' : '_self'}" class="partner-card">
+        <div class="partner-logo">
+          ${s.logo_url ? `<img src="${s.logo_url}" alt="${s.name}">` : '🏪'}
+        </div>
+        <h3 style="font-size: 1.3rem; margin-bottom: 8px;">${s.name}</h3>
+        <p style="color: #999; font-size: 0.95rem; margin-bottom: 15px;">
+          ${s.address ? `📌 ${s.address}` : '📌 Македонија'} 
+          ${s.phone ? ` • 📞 ${s.phone}` : ''}
+        </p>
+        <span style="display: inline-block; background: rgba(255, 140, 0, 0.15); color: #ffb700; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">✅ Проверен Партнер</span>
+      </a>
+    `).join('');
+
+    grid.innerHTML = storesHtml + addCardHtml;
+
+  } catch (e) {
+    grid.innerHTML = addCardHtml;
+  }
+});
+</script>
+</body>
+</html>
