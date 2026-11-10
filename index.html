@@ -41,17 +41,13 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
 .cat-btn.active { background: #ff6b35; border-color: #ff6b35; color: #000; font-weight: 700; }
 @media (min-width: 769px) { .categories { flex-wrap: wrap; justify-content: center; max-width: 1200px; margin: 0 auto; } }
 
-/* ПРЕБАРУВАЧ И БАНЕРИ (Нов распоред) */
+/* ПРЕБАРУВАЧ И БАНЕРИ */
 .search-section { max-width: 760px; margin: 0 auto 40px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
-
-/* Контејнер за копчињата - за да бидат исти */
 .filter-group { display: flex; flex-direction: column; gap: 12px; }
-
-/* Заеднички стил за двете копчиња (Селект и Копче) */
 .filter-group select, 
 .filter-group .btn-categories {
   width: 100%;
-  height: 56px; /* Иста висина за двата елементи */
+  height: 56px;
   border-radius: 12px;
   border: 1px solid #333;
   background: #141414;
@@ -64,32 +60,17 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   transition: 0.2s;
   box-sizing: border-box;
 }
-
-/* Специфично за паѓачкото мени */
 .filter-group select {
   padding: 0 20px;
-  appearance: none; /* Трга стандардна стрелка */
-  /* Додава бела стрелка за да изгледа убаво */
+  appearance: none;
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
   background-repeat: no-repeat;
   background-position: right 20px center;
   background-size: 12px;
 }
+.filter-group .btn-categories { display: flex; align-items: center; justify-content: center; }
+.filter-group select:focus, .filter-group .btn-categories:hover { border-color: #ff6b35; }
 
-/* Специфично за копчето */
-.filter-group .btn-categories {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Ефект кога ќе се помине со глувче или кликне */
-.filter-group select:focus,
-.filter-group .btn-categories:hover {
-  border-color: #ff6b35;
-}
-
-/* БАНЕРОТ ЗА ПРОДАВНИЦИ (Одвоен) */
 .banner-link { display: block; width: 100%; border-radius: 12px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; }
 .banner-link:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
 .banner-link img { width: 100%; height: auto; display: block; object-fit: cover; }
@@ -211,10 +192,8 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </div>
 </div>
 
-<!-- 2. ПРЕБАРУВАЧ И БАНЕР (Нов, одвоен распоред) -->
+<!-- 2. ПРЕБАРУВАЧ И БАНЕР -->
 <div class="search-section">
-  
-  <!-- Двете копчиња сега се тука и се со иста форма -->
   <div class="filter-group">
     <select id="cityFilter" onchange="filterByCity(this.value); scrollToMasters();">
       <option value="">📍 Сите градови</option>
@@ -225,7 +204,6 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
     </button>
   </div>
 
-  <!-- Банерот е целосно одвоен под копчињата -->
   <a href="/prodavnici.html" class="banner-link">
     <img src="/banner.png" alt="Рекламирај ја твојата продавница">
   </a>
@@ -401,10 +379,16 @@ function handleLogout() {
   }
 }
 
+// ОПТИМИЗИРАНО ВЧИТУВАЊЕ (Паралелно)
 async function loadData(){
   try {
-    try {
-      const pRes = await fetch('/api/partners');
+    const [pRes, mRes, mediaRes] = await Promise.all([
+      fetch('/api/partners').catch(()=>null),
+      fetch('/api/majstori').catch(()=>null),
+      fetch('/api/media').catch(()=>null)
+    ]);
+
+    if (pRes && pRes.ok) {
       const partners = await pRes.json();
       if (Array.isArray(partners) && partners.length > 0) {
         document.getElementById('partners-container').innerHTML = partners.map(p => `
@@ -420,24 +404,25 @@ async function loadData(){
           </a>
         `).join('');
       }
-    } catch(e) { console.log("Грешка при партнери:", e); }
+    }
 
-    const mRes = await fetch('/api/majstori');
-    allMajstori = await mRes.json();
-    
-    const count = allMajstori.length;
-    const left = Math.max(0, 50 - count);
-    document.getElementById('founderCount').textContent = `${count}/50`;
-    document.getElementById('founderFill').style.width = `${Math.min(100, count/50*100)}%`;
-    document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
-    
-    renderMajstori();
-    
-    const mediaRes = await fetch('/api/media');
-    const mediaData = await mediaRes.json();
-    allMedia = Array.isArray(mediaData) ? mediaData : []; 
-    document.getElementById('loading').style.display = 'none';
-    renderMedia();
+    if (mRes && mRes.ok) {
+      allMajstori = await mRes.json();
+      const count = allMajstori.length;
+      const left = Math.max(0, 50 - count);
+      document.getElementById('founderCount').textContent = `${count}/50`;
+      document.getElementById('founderFill').style.width = `${Math.min(100, count/50*100)}%`;
+      document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
+      renderMajstori();
+    }
+
+    if (mediaRes && mediaRes.ok) {
+      const mediaData = await mediaRes.json();
+      allMedia = Array.isArray(mediaData) ? mediaData : []; 
+      document.getElementById('loading').style.display = 'none';
+      renderMedia();
+    }
+
   } catch(e) { console.error("Грешка:", e); }
 }
 
@@ -480,7 +465,8 @@ function renderMedia() {
   grid.innerHTML = mediaToShow.map(m => {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     const author = majstor ? majstor.name : 'Мајстор';
-    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}" alt="Слика"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:13px; font-weight:600;">Види профил →</span></div></div></a>`;
+    // ОПТИМИЗАЦИЈА: Додадено ?tr=w-400,h-300,fo-auto за помали слики од ImageKit
+    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}?tr=w-400,h-300,fo-auto" alt="Слика"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:13px; font-weight:600;">Види профил →</span></div></div></a>`;
   }).join('');
   
   const loadMoreBtn = document.getElementById('loadMoreBtn');
@@ -560,4 +546,4 @@ function selectCategoryFromModal(catKey) {
 }
 </script>
 </body>
-</html>
+  </html>
