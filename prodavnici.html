@@ -12,7 +12,43 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .logo { font-size: 20px; font-weight: 900; color: #ff6b35; text-decoration: none; }
 .btn-back { background: #2a2a2a; color: #fff; border: 1px solid #ff6b35; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
 
-.partners-section { padding: 60px 20px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); min-height: 80vh; }
+/* НОВ БАНЕР ВО ПОЗАДИНА */
+.hero-banner {
+    width: 100%;
+    height: 250px; /* Висина на банерот */
+    /* Тука стави го линкот до сликата за банерот */
+    background-image: url('https://images.unsplash.com/photo-1530124566582-a618bc2615dc?q=80&w=1200&auto=format&fit=crop'); 
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7); /* Затемнување за текстот да се чита */
+}
+.hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+.hero-content h1 {
+    color: #ff8c00;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+.hero-content p {
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.partners-section { padding: 40px 20px 60px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); min-height: 60vh; }
 .partners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
 
 .partner-card { background: #252525; border-radius: 16px; padding: 30px 20px; text-align: center; border: 1px solid #333; transition: all 0.3s ease; cursor: pointer; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -25,7 +61,11 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .add-card:hover { background: rgba(255, 140, 0, 0.1); }
 .add-card .plus { font-size: 2.5rem; color: #ff8c00; margin-bottom: 15px; }
 
-@media (max-width: 480px) { .partners-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { 
+    .partners-grid { grid-template-columns: 1fr; } 
+    .hero-content h1 { font-size: 1.8rem; }
+    .hero-banner { height: 200px; }
+}
 </style>
 </head>
 <body>
@@ -35,17 +75,28 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <a href="/" class="btn-back">← Назад кон сајтот</a>
 </header>
 
+<!-- ГОЛЕМ БАНЕР -->
+<section class="hero-banner">
+    <div class="hero-content">
+        <h1>Нашите Партнерски Продавници</h1>
+        <p>Најдобра понуда, квалитет и доверба на едно место</p>
+    </div>
+</section>
+
 <section class="partners-section">
   <div style="max-width: 1200px; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 50px;">
-      <h2 style="font-size: 2.2rem; color: #ff8c00; margin-bottom: 15px; font-weight: 700;">🏪 Нашите Партнерски Продавници</h2>
-      <p style="color: #ccc; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Купи од проверени продавници во твојот град — квалитет и доверливост на едно место</p>
-      <div style="width: 80px; height: 4px; background: linear-gradient(90deg, #ff8c00, #ffb700); margin: 20px auto; border-radius: 2px;"></div>
+    
+    <!-- Заглавие -->
+    <div style="text-align: center; margin-bottom: 40px;">
+      <p style="color: #ccc; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Купи од проверени продавници во твојот град</p>
+      <div style="width: 80px; height: 4px; background: linear-gradient(90deg, #ff8c00, #ffb700); margin: 15px auto; border-radius: 2px;"></div>
     </div>
 
+    <!-- Мрежа со продавници -->
     <div class="partners-grid" id="partners-grid">
       <p style="color: #666; text-align: center; grid-column: 1/-1;">Вчитувам продавници...</p>
     </div>
+
   </div>
 </section>
 
@@ -53,7 +104,6 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 window.addEventListener('load', async () => {
   const grid = document.getElementById('partners-grid');
   
-  // Картичката која секогаш стои на крајот
   const addCardHtml = `
     <a href="tel:076638703" class="partner-card add-card">
       <div class="plus">+</div>
