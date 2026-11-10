@@ -12,61 +12,35 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
 .logo { font-size: 20px; font-weight: 900; color: #ff6b35; text-decoration: none; }
 .btn-back { background: #2a2a2a; color: #fff; border: 1px solid #ff6b35; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
 
-/* ГОЛЕМ БАНЕР */
-.hero-banner {
-    width: 100%;
-    height: 300px;
-    /* Тука е вметнат твојот банер од Alatka.mk */
-    background-image: url('https://ik.imagekit.io/x5ocgz2yb/730748902_1337703985152764_6749181110802137739_n.png?updatedAt=1794326281510'); 
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Заглавие на страницата */
+.page-header {
     text-align: center;
+    padding: 40px 20px 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
 }
-.hero-banner::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.6); /* Затемнување за текстот да се чита */
-}
-.hero-content {
-    position: relative;
-    z-index: 1;
-    padding: 20px;
-}
-.hero-content h1 {
-    color: #ff8c00;
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-}
-.hero-content p {
-    color: #fff;
-    font-size: 1.2rem;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-}
+.page-header h1 { color: #ff8c00; font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
+.page-header p { color: #ccc; font-size: 1.1rem; }
 
-.partners-section { padding: 40px 20px 60px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); min-height: 60vh; }
-.partners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+.partners-section { padding: 20px 20px 60px; min-height: 60vh; }
+.partners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
 
-.partner-card { background: #252525; border-radius: 16px; padding: 30px 20px; text-align: center; border: 1px solid #333; transition: all 0.3s ease; cursor: pointer; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.partner-card { background: #1a1a1a; border-radius: 16px; padding: 20px; text-align: center; border: 1px solid #333; transition: all 0.3s ease; cursor: pointer; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;}
 .partner-card:hover { transform: translateY(-8px); border-color: #ff8c00; box-shadow: 0 10px 30px rgba(255, 140, 0, 0.15); }
 
-.partner-logo { width: 80px; height: 80px; background: linear-gradient(135deg, #ff8c00, #ffb700); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem; color: white; overflow: hidden; }
-.partner-logo img { width: 100%; height: 100%; object-fit: cover; }
+/* Лого или банер во картичката */
+.partner-logo-banner { width: 100%; height: 180px; background: #222; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow: hidden; }
+.partner-logo-banner img { width: 100%; height: 100%; object-fit: cover; }
 
-.add-card { background: rgba(255, 140, 0, 0.05); border: 2px dashed #ff8c00; }
+.partner-logo-round { width: 80px; height: 80px; background: #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem; color: white; overflow: hidden; }
+.partner-logo-round img { width: 100%; height: 100%; object-fit: cover; }
+
+.add-card { background: rgba(255, 140, 0, 0.05); border: 2px dashed #ff8c00; min-height: 300px; }
 .add-card:hover { background: rgba(255, 140, 0, 0.1); }
 .add-card .plus { font-size: 2.5rem; color: #ff8c00; margin-bottom: 15px; }
 
 @media (max-width: 480px) { 
     .partners-grid { grid-template-columns: 1fr; } 
-    .hero-content h1 { font-size: 1.8rem; }
-    .hero-banner { height: 200px; }
+    .page-header h1 { font-size: 1.8rem; }
 }
 </style>
 </head>
@@ -77,28 +51,16 @@ header { background: #1a1a1a; padding: 15px 20px; display: flex; align-items: ce
   <a href="/" class="btn-back">← Назад кон сајтот</a>
 </header>
 
-<!-- ГОЛЕМ БАНЕР -->
-<section class="hero-banner">
-    <div class="hero-content">
-        <h1>Нашите Партнерски Продавници</h1>
-        <p>Најдобра понуда, квалитет и доверба на едно место</p>
-    </div>
-</section>
+<div class="page-header">
+    <h1>🏪 Нашите Партнерски Продавници</h1>
+    <p>Купи од проверени продавници во твојот град</p>
+</div>
 
 <section class="partners-section">
   <div style="max-width: 1200px; margin: 0 auto;">
-    
-    <!-- Заглавие -->
-    <div style="text-align: center; margin-bottom: 40px;">
-      <p style="color: #ccc; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Купи од проверени продавници во твојот град</p>
-      <div style="width: 80px; height: 4px; background: linear-gradient(90deg, #ff8c00, #ffb700); margin: 15px auto; border-radius: 2px;"></div>
-    </div>
-
-    <!-- Мрежа со продавници -->
     <div class="partners-grid" id="partners-grid">
       <p style="color: #666; text-align: center; grid-column: 1/-1;">Вчитувам продавници...</p>
     </div>
-
   </div>
 </section>
 
@@ -109,7 +71,7 @@ window.addEventListener('load', async () => {
   const addCardHtml = `
     <a href="tel:076638703" class="partner-card add-card">
       <div class="plus">+</div>
-      <h3 style="color: #ff8c00; font-size: 1.1rem; margin-bottom: 5px;">Сакаш да се рекламираш?</h3>
+      <h3 style="color: #ff8c00; font-size: 1.3rem; margin-bottom: 5px;">Сакаш да се рекламираш?</h3>
       <p style="color: #888; font-size: 0.9rem;">Контактирај не и ти ќе се појавиш овде</p>
     </a>
   `;
@@ -123,19 +85,26 @@ window.addEventListener('load', async () => {
       return;
     }
 
-    let storesHtml = stores.map(s => `
+    let storesHtml = stores.map(s => {
+      // Ако е Alatka.mk, користи го банерот како слика. Ако не, користи го логото во круг.
+      let imageHtml = '';
+      if (s.name.toLowerCase().includes('alatka')) {
+          imageHtml = `<div class="partner-logo-banner"><img src="https://ik.imagekit.io/x5ocgz2yb/730748902_1337703985152764_6749181110802137739_n.png?updatedAt=1794326281510" alt="${s.name}"></div>`;
+      } else {
+          imageHtml = `<div class="partner-logo-round">${s.logo_url ? `<img src="${s.logo_url}" alt="${s.name}">` : '🏪'}</div>`;
+      }
+
+      return `
       <a href="${s.website_url ? s.website_url : '#'}" target="${s.website_url ? '_blank' : '_self'}" class="partner-card">
-        <div class="partner-logo">
-          ${s.logo_url ? `<img src="${s.logo_url}" alt="${s.name}">` : '🏪'}
-        </div>
-        <h3 style="font-size: 1.3rem; margin-bottom: 8px;">${s.name}</h3>
+        ${imageHtml}
+        <h3 style="font-size: 1.4rem; margin-bottom: 8px;">${s.name}</h3>
         <p style="color: #999; font-size: 0.95rem; margin-bottom: 15px;">
           ${s.address ? `📌 ${s.address}` : '📌 Македонија'} 
           ${s.phone ? ` • 📞 ${s.phone}` : ''}
         </p>
-        <span style="display: inline-block; background: rgba(255, 140, 0, 0.15); color: #ffb700; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">✅ Проверен Партнер</span>
+        <span style="display: inline-block; background: rgba(255, 140, 0, 0.15); color: #ffb700; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(255,140,0,0.3);">✅ Проверен Партнер</span>
       </a>
-    `).join('');
+    `}).join('');
 
     grid.innerHTML = storesHtml + addCardHtml;
 
