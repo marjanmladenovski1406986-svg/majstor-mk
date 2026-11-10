@@ -100,7 +100,7 @@ export default {
           if (majstorId) {
             media = await sql`SELECT * FROM majstor_media WHERE majstor_id=${majstorId} AND type='image' ORDER BY id DESC`;
           } else {
-            media = await sql`SELECT * FROM majstor_media WHERE type='image' ORDER BY id DESC LIMIT 300`;
+            media = await sql`SELECT * FROM majstor_media WHERE type='image' ORDER BY id DESC LIMIT 30`;
           }
           return out(media);
         }
