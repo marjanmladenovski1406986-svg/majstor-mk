@@ -221,14 +221,30 @@ export default {
           return out({ success: true });
         }
 
-                // ===== ПРОДАВНИЦИ =====
+                     // ===== ПРОДАВНИЦИ =====
         if (path === "/api/prodavnici" && method === "GET") {
           return out(await sql`SELECT * FROM prodavnici ORDER BY id DESC`);
         }
-        if (path === "/api/add-prodavnica" && method === "POST") {
+        
+        if (path === "/api/save-prodavnica" && method === "POST") {
           const b = await request.json();
-          await sql`INSERT INTO prodavnici (name, description, logo_url, address, phone, website_url) 
-                    VALUES (${b.name}, ${b.description}, ${b.logo_url}, ${b.address}, ${b.phone}, ${b.website_url})`;
+          if (b.id) {
+            // Уредување на постоечка
+            await sql`UPDATE prodavnici SET 
+              name=${b.name}, description=${b.description}, logo_url=${b.logo_url}, 
+              banner_url=${b.banner_url}, address=${b.address}, phone=${b.phone}, website_url=${b.website_url} 
+              WHERE id=${b.id}`;
+          } else {
+            // Додавање на нова
+            await sql`INSERT INTO prodavnici (name, description, logo_url, banner_url, address, phone, website_url) 
+                      VALUES (${b.name}, ${b.description}, ${b.logo_url}, ${b.banner_url}, ${b.address}, ${b.phone}, ${b.website_url})`;
+          }
+          return out({ success: true });
+        }
+        
+        if (path === "/api/delete-prodavnica" && method === "POST") {
+          const b = await request.json();
+          await sql`DELETE FROM prodavnici WHERE id=${b.id}`;
           return out({ success: true });
         }
 
