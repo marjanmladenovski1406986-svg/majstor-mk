@@ -32,7 +32,16 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
 .founder-banner .bar { height: 10px; background: #222; border-radius: 20px; overflow: hidden; flex: 1; min-width: 120px; max-width: 200px; }
 .founder-banner .fill { height: 100%; background: #ff6b35; transition: width 1s ease-in-out; }
 
-/* ПРЕБАРУВАЧ И БАНЕРИ */
+/* КАТЕГОРИИ */
+.categories-wrapper { padding: 20px 0 30px; overflow: hidden; margin-top: 20px; }
+.categories { display: flex; gap: 12px; padding: 0 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.categories::-webkit-scrollbar { display: none; }
+.cat-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 12px 22px; border-radius: 30px; cursor: pointer; font-size: 14px; font-family: inherit; white-space: nowrap; flex-shrink: 0; scroll-snap-align: start; transition: 0.2s; }
+.cat-btn:hover { border-color: #ff6b35; }
+.cat-btn.active { background: #ff6b35; border-color: #ff6b35; color: #000; font-weight: 700; }
+@media (min-width: 769px) { .categories { flex-wrap: wrap; justify-content: center; max-width: 1200px; margin: 0 auto; } }
+
+/* ПРЕБАРУВАЧ И БАНЕРИ (Сега се под категориите) */
 .search-section { max-width: 760px; margin: 0 auto 40px; padding: 0 20px; }
 .search-bar { background: rgba(22, 22, 22, 0.8); backdrop-filter: blur(10px); border: 1px solid #333; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 .search-bar select { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #444; background: #1a1a1a; color: #fff; font-size: 16px; cursor: pointer; outline: none; transition: 0.2s; }
@@ -42,15 +51,6 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
 .banner-link { display: block; width: 100%; border-radius: 12px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; }
 .banner-link:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
 .banner-link img { width: 100%; height: auto; display: block; object-fit: cover; }
-
-/* КАТЕГОРИИ */
-.categories-wrapper { padding: 20px 0 40px; overflow: hidden; }
-.categories { display: flex; gap: 12px; padding: 0 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-.categories::-webkit-scrollbar { display: none; }
-.cat-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 12px 22px; border-radius: 30px; cursor: pointer; font-size: 14px; font-family: inherit; white-space: nowrap; flex-shrink: 0; scroll-snap-align: start; transition: 0.2s; }
-.cat-btn:hover { border-color: #ff6b35; }
-.cat-btn.active { background: #ff6b35; border-color: #ff6b35; color: #000; font-weight: 700; }
-@media (min-width: 769px) { .categories { flex-wrap: wrap; justify-content: center; max-width: 1200px; margin: 0 auto; } }
 
 /* ГЛАВЕН РАСПОРЕД */
 .main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 30px; padding: 0 20px 60px; max-width: 1400px; margin: 0 auto; }
@@ -127,47 +127,20 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </div>
 </header>
 
-<!-- ПОЛОБАРА ХЕРО СЕКЦИЈА -->
+<!-- ХЕРО СЕКЦИЈА -->
 <section class="hero">
   <h1>Најди <span>проверен мајстор</span><br>за 30 секунди</h1>
   <p>Само верифицирани мајстори. Слики од реална работа. Без измами, без провизија.</p>
 </section>
 
+<!-- БАНЕР ЗА FOUNDERS -->
 <div class="founder-banner">
   <div><b style="font-size: 16px;">🎉 Првите 50 мајстори БЕСПЛАТНО</b><br><span style="color:#aaa;font-size:14px" id="founderText">Вчитувам...</span></div>
   <div class="bar"><div class="fill" id="founderFill" style="width:0%"></div></div>
   <div style="font-weight:900;color:#ff6b35; font-size: 20px;" id="founderCount">0/50</div>
 </div>
 
-<!-- ПРЕБАРУВАЧ И БАНЕР -->
-<div class="search-section">
-  <div class="search-bar">
-    <select id="cityFilter" onchange="filterByCity(this.value); scrollToMasters();">
-      <option value="">📍 Сите градови</option>
-    </select>
-    
-    <button onclick="openCategoriesModal()" class="btn-categories">
-      📂 Види ги сите категории
-    </button>
-
-    <a href="/prodavnici.html" class="banner-link">
-      <img src="/banner.png" alt="Рекламирај ја твојата продавница">
-    </a>
-  </div>
-</div>
-
-<!-- МОДАЛ ЗА КАТЕГОРИИ -->
-<div id="categoriesModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-  <div style="background: #141414; border: 1px solid #333; border-radius: 20px; padding: 30px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
-    <button onclick="closeCategoriesModal()" style="position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: #999; font-size: 28px; cursor: pointer;">✕</button>
-    <h2 style="color: #ff6b35; margin-bottom: 25px; text-align: center; font-size: 24px;">Сите категории</h2>
-    <div id="modalCategoriesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
-      <!-- Овде JavaScript-от ќе ги стави копчињата -->
-    </div>
-  </div>
-</div>
-
-<!-- ЛЕНТА СО КАТЕГОРИИ -->
+<!-- 1. ЛЕНТА СО КАТЕГОРИИ (Сега е тука) -->
 <div class="categories-wrapper">
   <div class="categories" id="categories-bar">
     <button class="cat-btn active" data-cat="all" onclick="filterCat('all', this)">Сите</button>
@@ -193,6 +166,34 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
     <button class="cat-btn" data-cat="hidroizolacija" onclick="filterCat('hidroizolacija', this)">🛡️ Хидроизолација</button>
     <button class="cat-btn" data-cat="otpad" onclick="filterCat('otpad', this)">🗑️ Отпад</button>
     <button class="cat-btn" data-cat="videonadzor" onclick="filterCat('videonadzor', this)">📹 Видео надзор</button>
+  </div>
+</div>
+
+<!-- 2. ПРЕБАРУВАЧ И БАНЕР (Сега се под категориите) -->
+<div class="search-section">
+  <div class="search-bar">
+    <select id="cityFilter" onchange="filterByCity(this.value); scrollToMasters();">
+      <option value="">📍 Сите градови</option>
+    </select>
+    
+    <button onclick="openCategoriesModal()" class="btn-categories">
+      📂 Види ги сите категории
+    </button>
+
+    <a href="/prodavnici.html" class="banner-link">
+      <img src="/banner.png" alt="Рекламирај ја твојата продавница">
+    </a>
+  </div>
+</div>
+
+<!-- МОДАЛ ЗА КАТЕГОРИИ -->
+<div id="categoriesModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #141414; border: 1px solid #333; border-radius: 20px; padding: 30px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
+    <button onclick="closeCategoriesModal()" style="position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: #999; font-size: 28px; cursor: pointer;">✕</button>
+    <h2 style="color: #ff6b35; margin-bottom: 25px; text-align: center; font-size: 24px;">Сите категории</h2>
+    <div id="modalCategoriesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
+      <!-- Овде JavaScript-от ќе ги стави копчињата -->
+    </div>
   </div>
 </div>
 
@@ -514,4 +515,4 @@ function selectCategoryFromModal(catKey) {
 }
 </script>
 </body>
-</html>
+        </html>
