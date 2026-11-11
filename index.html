@@ -150,20 +150,17 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </div>
 </header>
 
-<!-- ХЕРО СЕКЦИЈА -->
 <section class="hero">
   <h1>Најди <span>проверен мајстор</span><br>за 30 секунди</h1>
   <p>Само верифицирани мајстори. Слики од реална работа. Без измами, без провизија.</p>
 </section>
 
-<!-- БАНЕР ЗА FOUNDERS -->
 <div class="founder-banner">
   <div><b style="font-size: 16px;">🎉 Првите 50 мајстори БЕСПЛАТНО</b><br><span style="color:#aaa;font-size:14px" id="founderText">Вчитувам...</span></div>
   <div class="bar"><div class="fill" id="founderFill" style="width:0%"></div></div>
   <div style="font-weight:900;color:#ff6b35; font-size: 20px;" id="founderCount">0/50</div>
 </div>
 
-<!-- 1. ЛЕНТА СО КАТЕГОРИИ -->
 <div class="categories-wrapper">
   <div class="categories" id="categories-bar">
     <button class="cat-btn active" data-cat="all" onclick="filterCat('all', this)">Сите</button>
@@ -192,7 +189,6 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </div>
 </div>
 
-<!-- 2. ПРЕБАРУВАЧ И БАНЕР -->
 <div class="search-section">
   <div class="filter-group">
     <select id="cityFilter" onchange="filterByCity(this.value); scrollToMasters();">
@@ -209,18 +205,15 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </a>
 </div>
 
-<!-- МОДАЛ ЗА КАТЕГОРИИ -->
 <div id="categoriesModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
   <div style="background: #141414; border: 1px solid #333; border-radius: 20px; padding: 30px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
     <button onclick="closeCategoriesModal()" style="position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: #999; font-size: 28px; cursor: pointer;">✕</button>
     <h2 style="color: #ff6b35; margin-bottom: 25px; text-align: center; font-size: 24px;">Сите категории</h2>
     <div id="modalCategoriesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
-      <!-- Овде JavaScript-от ќе ги стави копчињата -->
     </div>
   </div>
 </div>
 
-<!-- ГЛАВНА СОДРЖИНА -->
 <div class="main-layout" id="majstori-section">
   <div class="majstori-list">
     <h3>👷 Мајстори</h3>
@@ -240,7 +233,6 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </div>
 </div>
 
-<!-- ЦЕНИ -->
 <div class="pricing">
   <div class="price-card founder">
     <h3 style="font-size: 24px; margin-bottom: 10px;">🚀 FOUNDER</h3>
@@ -270,7 +262,6 @@ header { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); paddin
   </div>
 </div>
 
-<!-- ФУТЕР -->
 <footer class="footer">
   <div class="footer-container">
     <div class="footer-column">
@@ -332,6 +323,9 @@ function populateCities(){
 function checkLoginStatus() {
   const headerRight = document.getElementById('headerRight');
   if (window.Clerk && window.Clerk.user) {
+    const clerkEmail = window.Clerk.user.primaryEmailAddress?.emailAddress;
+    if (clerkEmail) localStorage.setItem('logged_email', clerkEmail);
+    
     headerRight.innerHTML = `
       <a href="/dashboard.html" class="btn-profile">👤 Мој Профил</a>
       <button class="btn-auth" onclick="handleLogout()" style="background:transparent; border:1px solid #333; color:#999;">Одјави се</button>
@@ -379,51 +373,64 @@ function handleLogout() {
   }
 }
 
-// ОПТИМИЗИРАНО ВЧИТУВАЊЕ (Паралелно)
+// ПОПРАВЕНО ВЧИТУВАЊЕ (Со видливи грешки)
 async function loadData(){
   try {
-    const [pRes, mRes, mediaRes] = await Promise.all([
-      fetch('/api/partners').catch(()=>null),
-      fetch('/api/majstori').catch(()=>null),
-      fetch('/api/media').catch(()=>null)
-    ]);
-
-    if (pRes && pRes.ok) {
-      const partners = await pRes.json();
-      if (Array.isArray(partners) && partners.length > 0) {
-        document.getElementById('partners-container').innerHTML = partners.map(p => `
-          <a href="${p.website_url}" target="_blank" class="partner-banner">
-            <div class="partner-logo-box">
-              ${p.logo_url ? `<img src="${p.logo_url}" alt="${p.name}">` : '📢'}
-            </div>
-            <div style="flex: 1;">
-              <div style="font-size: 13px; color: #999; margin-bottom: 4px;">🤝 Партнер</div>
-              <div style="font-size: 20px; color: #4da6ff; font-weight: 800; margin-bottom: 4px;">${p.name}</div>
-              <div style="font-size: 14px; color: #aaa;">${p.description || ''}</div>
-            </div>
-          </a>
-        `).join('');
+    // 1. Мајстори
+    try {
+      const mRes = await fetch('/api/majstori');
+      if (mRes.ok) {
+        allMajstori = await mRes.json();
+        const count = allMajstori.length;
+        const left = Math.max(0, 50 - count);
+        document.getElementById('founderCount').textContent = `${count}/50`;
+        document.getElementById('founderFill').style.width = `${Math.min(100, count/50*100)}%`;
+        document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
+        renderMajstori();
+      } else {
+        document.getElementById('majstori-grid').innerHTML = '<p style="color:#ff6b35;padding:15px;">Грешка при вчитување на мајстори.</p>';
       }
+    } catch (e) { console.error("Мајстори:", e); }
+
+    // 2. Партнери
+    try {
+      const pRes = await fetch('/api/partners');
+      if (pRes.ok) {
+        const partners = await pRes.json();
+        if (Array.isArray(partners) && partners.length > 0) {
+          document.getElementById('partners-container').innerHTML = partners.map(p => `
+            <a href="${p.website_url}" target="_blank" class="partner-banner">
+              <div class="partner-logo-box">
+                ${p.logo_url ? `<img src="${p.logo_url}" alt="${p.name}">` : '📢'}
+              </div>
+              <div style="flex: 1;">
+                <div style="font-size: 13px; color: #999; margin-bottom: 4px;">🤝 Партнер</div>
+                <div style="font-size: 20px; color: #4da6ff; font-weight: 800; margin-bottom: 4px;">${p.name}</div>
+                <div style="font-size: 14px; color: #aaa;">${p.description || ''}</div>
+              </div>
+            </a>
+          `).join('');
+        }
+      }
+    } catch(e) { console.error("Партнери:", e); }
+
+    // 3. Слики
+    try {
+      const mediaRes = await fetch('/api/media');
+      if (mediaRes.ok) {
+        const mediaData = await mediaRes.json();
+        allMedia = Array.isArray(mediaData) ? mediaData : []; 
+        document.getElementById('loading').style.display = 'none';
+        renderMedia();
+      } else {
+        document.getElementById('loading').textContent = 'Грешка: Серверот не врати слики.';
+      }
+    } catch(e) {
+      document.getElementById('loading').textContent = 'Мрежна грешка при вчитување на слики.';
+      console.error("Слики:", e); 
     }
 
-    if (mRes && mRes.ok) {
-      allMajstori = await mRes.json();
-      const count = allMajstori.length;
-      const left = Math.max(0, 50 - count);
-      document.getElementById('founderCount').textContent = `${count}/50`;
-      document.getElementById('founderFill').style.width = `${Math.min(100, count/50*100)}%`;
-      document.getElementById('founderText').textContent = left > 0 ? `Останати ${left} бесплатни места - пријави се!` : `Бесплатните места се пополнети - сега 1000 ден/год`;
-      renderMajstori();
-    }
-
-    if (mediaRes && mediaRes.ok) {
-      const mediaData = await mediaRes.json();
-      allMedia = Array.isArray(mediaData) ? mediaData : []; 
-      document.getElementById('loading').style.display = 'none';
-      renderMedia();
-    }
-
-  } catch(e) { console.error("Грешка:", e); }
+  } catch(e) { console.error("Главна грешка:", e); }
 }
 
 function renderMajstori() {
@@ -465,8 +472,8 @@ function renderMedia() {
   grid.innerHTML = mediaToShow.map(m => {
     const majstor = allMajstori.find(x => x.id == m.majstor_id);
     const author = majstor ? majstor.name : 'Мајстор';
-    // ОПТИМИЗАЦИЈА: Додадено ?tr=w-400,h-300,fo-auto за помали слики од ImageKit
-    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}?tr=w-400,h-300,fo-auto" alt="Слика"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:13px; font-weight:600;">Види профил →</span></div></div></a>`;
+    // Сликите се со ?tr=w-400,h-300,fo-auto за брзо вчитување. Ако не се вчитаат, прикажи црвено.
+    return `<a href="/profile.html?id=${m.majstor_id}" class="card"><div class="thumb no-play"><img loading="lazy" src="${m.url}?tr=w-400,h-300,fo-auto" alt="Слика" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#ff6b35;\\'>Сликата не се вчита</div>';"></div><div class="card-body"><div class="card-title">📸 Слика од работа</div><div class="card-author">👤 ${author}</div><div class="card-meta"><span style="color:#ff6b35; font-size:13px; font-weight:600;">Види профил →</span></div></div></a>`;
   }).join('');
   
   const loadMoreBtn = document.getElementById('loadMoreBtn');
@@ -546,4 +553,4 @@ function selectCategoryFromModal(catKey) {
 }
 </script>
 </body>
-  </html>
+      </html>
